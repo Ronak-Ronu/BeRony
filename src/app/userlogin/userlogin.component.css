@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap'); 
+
+.userloginmainbody{
+    height: 85vh;
+    
+}
+.headinglogin{
+    font-family: "Julius Sans One", sans-serif;
+    font-size: 64px;
+    font-weight: 400;
+    font-style: normal;
+    padding: 40px ;
+    margin-left: 20%;
+  
+
+}
+button
+{
+    margin: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}
+.footerheadinglogin{
+    font-family: "Julius Sans One", sans-serif;
+    font-size: 40px;
+    font-weight: 400;
+    font-style: normal;
+    display: flex;    
+    align-items: center;
+    justify-content: center;
+    margin-top: 6vh;
+}
+
+input{
+    margin: 0;   
+    height: 53px;
+    width: 350px;
+    font-size: 27px;
+    border: none;
+    border-radius: 2px;
+    border-bottom: 1px solid black;
+    margin-bottom: 5%;
+}
+input:focus
+{
+    outline: none;
+
+}
+.inputarea{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2%;
+    margin-top: 5vh;
+}

@@ -1,0 +1,115 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap'); */
+
+.readmainbody{
+    height: 85vh;
+    
+}
+.headingread{
+    font-size: 64px;
+    padding: 40px ;
+    margin-left: 10%;
+    font-family: "Julius Sans One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  
+}
+.searchbar,.searchbar input{
+    width: 30vw;
+    height: 6vh;
+    background-color: rgba(255, 255, 255,0.7);
+    border-radius: 10px;
+    font-size: 30px;
+}
+.searchbutton{
+    
+    background-color: #C6CAF9;
+    height: 7vh;
+    width: 7vw;
+    font-size: 34px;
+    border: 3px solid black;
+    border-radius: 10px;
+
+}
+.searchitems{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+}
+input:focus{
+    outline: none;
+    border-bottom:5px solid black;
+}
+.topitems{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    
+}
+.filterbutton{
+    background-color: #C6CAF9;
+    height: 7vh;
+    width: 7vw;
+    font-size: 30px;
+    border: 3px solid black;
+    border-radius: 10px;
+}
+.filters{
+    display: flex;
+    justify-content: space-around;
+    width: 50vw;
+    margin-left: 19%;
+    
+}
+.footerbuttoncls{
+    background-color: #C6CAF9;
+    height: 5vh;
+    width: 5vw;
+    font-size: 26px;
+    border: 3px solid black;
+    border-radius: 10px;
+}
+.thumbnail{
+    
+    height:257px ;
+    width: 399px;
+    background-color: grey;
+    border-radius: 10px ;
+ 
+
+}
+.contentdivs{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8%;
+    margin-top: 5%;
+    
+}
+
+.thumbnailname{
+    font-size: 25px;
+    height: 80%;
+    width: 500px;
+    text-wrap: pretty;
+}
+.footerbuttons{
+    display: flex;
+    align-items: center;
+    justify-content:space-evenly;
+}
+
+
+.invisiblediv
+{
+    width: 100px;
+}
+
+
+
+
+
+
+
+

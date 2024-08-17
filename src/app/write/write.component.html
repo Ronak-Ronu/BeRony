@@ -1,0 +1,101 @@
+<div class="writemainbody">
+
+    <div class="headingwrite">
+        <p>WRITE</p>
+    </div>
+   
+    <div class="bodyofwriting">
+        
+    <div class="container">
+
+        <div class="toolbar">
+            <button class="toolbarbutton">LINK</button>
+            <button class="toolbarbutton">IMAGE</button>
+            <button class="toolbarbutton">FORMAT</button>
+            <button class="toolbarbutton">IMPORT</button>
+        </div>
+        <form #writecontentform="ngForm">
+        
+        <div class="writecontentarea">
+           
+        
+                <textarea cols="83" 
+                  rows="2"
+                 placeholder="TITLE GOES HERE"
+                 name="title" 
+                 #title="ngModel"
+                 maxlength="300"
+                 [(ngModel)]="edittitle"
+                 required
+                 ></textarea>
+            
+            
+             <textarea cols="83"
+               rows="17"
+               maxlength="3000"
+               placeholder="Write whatever you like!"
+               name="bodyofcontent" 
+               #bodyofcontent="ngModel"
+               [(ngModel)]="editbodycontent"
+               required
+               ></textarea>
+
+            <textarea cols="83"
+             rows="2" 
+             maxlength="300" 
+             placeholder="Share your post script/ending note"
+             name="endnotecontent"
+             #endnotecontent="ngModel"
+             [(ngModel)]="editendnotecontent"
+             ></textarea>
+
+        </div>
+
+        <div class="footerbuttons">
+            <button class="footerbutton" (click)="publishblog(writecontentform.value)">PUBLISH</button>
+            <button class="footerbutton" (click)="saveasdraft(writecontentform.value)" >SAVE AS DRAFT</button>
+        </div>
+
+    </form>
+    </div>
+
+    <div class="draftcontainer">
+
+        <div class="headerofdraft">
+            <p>DRAFTS </p>
+            <div (click)="refreshcomponent()" class="refreshbtn">⟳</div>
+        </div>
+        <div *ngFor="let item of draftblogs">
+            <div class="draftsbody">
+            
+                <div class="draft1">
+                    <!-- <p>TITLE OF THE DRAFT</p> -->
+                     <p [innerHTML]="item.title">
+                        <!-- {{item.title}} -->
+                    </p>
+                    <button class="continuewritingbutton" (click)="publishdraft(item)" style="cursor: pointer;">PUBLISH</button>
+                    <button class="continuewritingbutton" (click)="editdraft(item)" style="cursor: pointer;">EDIT</button>
+
+                </div>
+                
+            </div>
+        </div>
+        
+
+        <div class="draftsbody">
+            
+            <div class="draft1">
+                <p>TITLE </p>
+                <button class="continuewritingbutton">PUBLISH</button>
+            </div>
+            
+        </div>
+     
+     
+   
+
+    </div>
+
+</div>
+
+</div>

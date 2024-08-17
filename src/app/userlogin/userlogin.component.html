@@ -1,0 +1,46 @@
+<div class="userloginmainbody">
+
+  
+  <div class="headinglogin">WANNA WRITE ?</div>
+  
+    
+    <div class="inputarea">
+      <div>
+
+        <input type="email" name="useremail" placeholder="Email" [(ngModel)]="email" />
+        <br>
+        
+        <input type="password"name="userpass" placeholder="Password" [(ngModel)]="password" />
+        
+        <br>
+        <input type="text" id="username" placeholder="Name" [(ngModel)]="name" />
+        <br>
+        
+      </div>
+<!--  
+      <button (click)="logout()">
+        Logout
+      </button>  -->
+      <div class="buttons">
+        <div class="button1">
+
+          <button (click)="login(email, password)">
+            <img src="assets/img/signinbutton.png" alt="signInButton"/>  
+          </button>
+        </div>
+          <div class="button2">
+
+            <button (click)="register(email, password, name)">
+              <img src="assets/img/signupbutton.png" alt="signInButton"/>  
+            </button>
+          </div>
+      </div>
+    
+    
+    </div>
+
+
+
+  <div class="footerheadinglogin">please signin / signup</div>
+  
+</div>

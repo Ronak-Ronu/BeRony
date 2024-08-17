@@ -1,0 +1,66 @@
+{
+  "posts": [
+    {
+      "id": "1c52",
+      "title": "Count(*) vs Count(1) in SQL.\n",
+      "bodyofcontent": "What They Do:\n\nCOUNT(*): This function simply counts all the rows in a table, no matter what. It doesn’t care about NULL values or anything else. It just wants to know how many rows there are.\n\nCOUNT(1): This function also counts all the rows in a table. The `1` is just a constant and does not refer to any specific column; it’s merely a placeholder. The database engine treats it the same way as `COUNT(*)`.\n\nPerformance Talk:\nWhen it comes to performance, there’s usually not much of a difference between the two. Modern databases are pretty smart and can handle both just fine. Some folks say `COUNT(1)` might be a tad faster in certain older databases because it’s counting a simple constant value, but honestly, the difference is usually so small that it doesn’t matter much.\n\n\n\n",
+      "endnotecontent": "You can read all of my blogs for free at : thebigdataengineer.com"
+    },
+    {
+      "id": "5081",
+      "title": " This is how you can present you Microproject Creatively",
+      "bodyofcontent": " Hello I am Ronak\n\nAs this page (berony) is the initiative from the student who is currently java full stack and angular 18 as front end framework with typescript .\n\nAnd welcome to my Story , I have done a angualar project where i used for now a json as a database where i can post,read and update my stories any time and any where.\n\nThis Page provides me a lot of exposure to the new minds in the world and the creative person i can collaborate and work more efficiently.",
+      "endnotecontent": " HAPPY LEARNING"
+    },
+    {
+      "id": "1",
+      "title": "The Journey of Becoming a Full Stack Developer",
+      "bodyofcontent": "Becoming a full stack developer is a challenging but rewarding journey. It involves mastering both frontend and backend technologies, which requires dedication and continuous learning.\\n1. Start with understanding the basics of HTML, CSS, and JavaScript.\\n2. Move on to learn a backend language like ",
+      "endnotecontent": "Keep coding and stay curious! The world of web development is vast and always evolving"
+    },
+    {
+      "id": "2",
+      "title": "technologies, which requires dedication and continuous ",
+      "bodyofcontent": "Becoming a full stack developer is a challenging but rewarding journey. It involves mastering both frontend and backend technologies, which requires dedication and continuous learning.\\n1. Start with understanding the basics of HTML, CSS, and JavaScript.\\n2. Move on to learn a backend language like ",
+      "endnotecontent": "Keep coding and stay curious! The world of web development is vast and always evolving"
+    },
+    {
+      "id": "1ac4",
+      "title": " afasfasfdasdf",
+      "bodyofcontent": " <h1>hello</h1>",
+      "endnotecontent": " aaa"
+    },
+    {
+      "id": "6c0c",
+      "title": " <i>You can now write html tags in blogs</i>",
+      "bodyofcontent": " <h1>\nHello this is h1 tag looks ugly but ignore it for the demonstration.\n</h1>\n<br/>\n<p>did this paragraph tag works with <i>italic</i></p>\n<br/>\n<p>lemme try the inline styling </p>\n\n<p style=\"color:white;\">did the color changed to white</p>",
+      "endnotecontent": " <b>HOPE THIS WORKS...</b><br/> HAPPY LEARNING"
+    },
+    {
+      "id": "b485",
+      "title": " new blog",
+      "bodyofcontent": "  new blog new blog",
+      "endnotecontent": "  new blog"
+    },
+    {
+      "id": "4f1e",
+      "title": " <i>can i can add images</i>",
+      "bodyofcontent": " <b>image tag in html is as folows</b>\n\n<img src=\"https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp\" style=\"height:100px;width:100px;\" />",
+      "endnotecontent": " HAPPY LEARNING"
+    }
+  ],
+  "drafts": [
+    {
+      "id": "2290",
+      "title": " <i>You can now write html tags in blogs</i>",
+      "bodyofcontent": " <h1>\nHello this is h1 tag looks ugly but ignore it for the demonstration.\n</h1>\n<br/>\n<p>did this paragraph tag works with <i>italic</i></p>\n<br/>\n<p>lemme try the inline styling </p>\n\n<p style=\"color:white;\">did the color changed to white</p>",
+      "endnotecontent": " <b>HOPE THIS WORKS...</b><br/> HAPPY LEARNING"
+    },
+    {
+      "id": "ee2e",
+      "title": " <i>You can now write html tags in blogs</i>",
+      "bodyofcontent": " <h1>\nHello this is h1 tag looks ugly but ignore it for the demonstration.\n</h1>\n<br/>\n<p>did this paragraph tag works with <i>italic</i></p>\n<br/>\n<p>lemme try the inline styling </p>\n\n<p style=\"color:white;\">did the color changed to white</p>",
+      "endnotecontent": " <b>HOPE THIS WORKS...</b><br/> HAPPY LEARNING"
+    }
+  ]
+}

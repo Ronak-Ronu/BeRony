@@ -1,0 +1,70 @@
+<div class="readmainbody">
+
+
+
+<div class="topitems">
+
+    <div class="headingread">
+        <p>READ</p>
+    </div>
+
+    <div class="searchitems">
+        <div class="searchbar">
+            <input type="text" placeholder="microsoft BSOD">
+        </div>
+        <button class="searchbutton">YUP</button>
+    </div>
+    
+</div>
+
+<!-- endoftopitems -->
+
+<div class="filters">
+    <button class="filterbutton">ALL</button>
+    <button class="filterbutton" style="width: 200PX ;">GADGETS</button>
+    <button class="filterbutton">DBMS</button>
+    <button class="filterbutton" style="width: 400PX;">PERSONAL DEVELOPMENT</button>
+
+</div>
+
+
+<!-- endoffilteritems -->
+
+
+
+
+<div *ngFor="let item of blogs">
+        
+<div class="contentdivs">
+    <div class="thumbnail">
+
+    </div>
+
+    <div class="rightcontentthumbnail">
+      
+        <div class="thumbnailname">
+            <p [innerHTML]="item.title">
+                <!-- {{item.title}} -->
+            </p>
+            <p [innerHTML]="item.endnotecontent">
+                <!-- {{item.endnotecontent}} -->
+            </p>
+        </div>
+
+        <div class="footerbuttons">
+            <button style="cursor: pointer;" class="footerbuttoncls" [routerLink]="'/reading/' + item.id" (click)="getid(item)">READ</button>
+            <div class="invisiblediv"></div>
+            <button class="footerbuttoncls">SAVE</button>
+            <button class="footerbuttoncls" style="cursor: pointer;" (click)="deletepost(item)">DEL</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+    </div>
+
+
+
+</div>

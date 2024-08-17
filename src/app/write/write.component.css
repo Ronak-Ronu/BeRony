@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
+
+.draftcontainer::-webkit-scrollbar {
+    width: 8px;
+}
+.draftcontainer::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+.draftcontainer::-webkit-scrollbar-thumb {
+    background: #929292; 
+    border-radius: 10px;
+}
+
+
+.writemainbody{
+    height: 85vh;
+ 
+  
+}
+.headingwrite{
+    font-family: "Julius Sans One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+    font-size: 64px;
+    /* font-weight: bold; */
+    padding: 40px ;
+    margin-left: 20%;
+
+}
+.container {
+    background-color: #f0efef;
+    border-radius: 10px;
+    margin-top: -40px;
+    height: 80vh;
+    width: 60vw;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-left: 8%;
+    
+    
+}
+.toolbar {
+    font-family: "Julius Sans One", sans-serif;
+    font-weight: 400;
+    font-style: normal;  
+    height: 10%;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    gap: 30px;
+
+}
+
+.toolbarbutton{
+    width: 140px;
+    height: 60px;
+    font-size:27px;
+    border-radius: 10px;
+}
+
+
+.writecontentarea{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    padding: 10px;
+    height: 80%;
+}
+
+textarea{
+    font-size: 24px;
+    padding: 10px;
+}
+.footerbutton{
+    width: 200px;
+    height: 60px;
+    background-color: rgb(194, 194, 194);
+    font-size: 22px;
+    border-radius: 10px;
+}
+.footerbuttons{
+    display: flex;
+    gap: 5%;
+    padding:10px;
+    margin-top: 5%;
+}
+.draftcontainer{
+    font-family: "Julius Sans One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  
+    height: 60vh;
+    width: 450px;
+    background-color: rgb(238, 238, 238);
+    margin-top: -2%;
+    padding: 9px;
+    overflow: auto;
+}
+
+
+.bodyofwriting{
+    display: flex;
+    gap: 5%;
+}
+
+.headerofdraft{
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 37px;
+    background-color: white;
+    border-radius: 10px;
+    gap: 10%;
+}
+.draftsbody{
+    height: 10%;
+    padding: 10px;
+    background-color: white;
+    margin-top: 6%;
+}
+.draft1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.draft1 p{
+    font-size: 22px;
+    font-weight: bolder;
+    line-height: 2rem;
+    width: 63%;
+}
+.continuewritingbutton{
+    height: 40px;
+    width: 30%;
+    border-radius: 10px;
+    margin-right: 10px;
+    font-size: 20px;
+}
+.refreshbtn{
+    height: auto;
+    width: auto;
+    border-radius: 10px;
+    font-size: 40px;
+    cursor: pointer;
+}
+.refreshbtn:hover{
+    border:5px dotted black;
+}
