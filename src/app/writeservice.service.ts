@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { WriteModel } from './Models/writemodel';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment'
 
 @Injectable()
 export class WriteserviceService {
@@ -11,8 +12,8 @@ export class WriteserviceService {
   
   constructor(private http:HttpClient) {
 
-    this.url="http://localhost:3000/api/posts"
-    this.drafturl="http://localhost:3000/api/drafts"
+    this.url=`${environment.beronyAPI}/api/posts`
+    this.drafturl=`${environment.beronyAPI}/api/drafts`
    }
 
       
