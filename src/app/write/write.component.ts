@@ -32,7 +32,7 @@ export class WriteComponent implements OnInit {
   publishdraft(draftdata:WriteModel)
   {
     this.writeservice.publishblog(draftdata);
-    this.writeservice.deletedraft(draftdata.id);
+    this.writeservice.deletedraft(draftdata._id);
   }
 
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WriteserviceService } from '../writeservice.service';
 import { WriteModel } from '../Models/writemodel';
-import { ActivatedRoute } from '@angular/router';
+// import { ActivatedRoute } from '@angular/router';
 // import { Router } from '@angular/router';
 
 @Component({
@@ -33,7 +33,7 @@ export class ReadComponent implements OnInit{
 
   getid(item:WriteModel)
   {
-    console.log(item.id);
+    console.log(item._id);
     console.log(item.title);
 
   }
@@ -41,7 +41,7 @@ export class ReadComponent implements OnInit{
 
   deletepost(post:WriteModel)
   {
-    this.readsevice.deletepostbyid(post.id)
+    this.readsevice.deletepostbyid(post._id)
     this.ngOnInit()
   }
   

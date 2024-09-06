@@ -1,5 +1,5 @@
 export class WriteModel{
-    id:number=0
+    _id:string=""
     title:string=" "
     bodyofcontent:string=" "
     endnotecontent:string=" "

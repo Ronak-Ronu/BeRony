@@ -52,7 +52,7 @@
         </div>
 
         <div class="footerbuttons">
-            <button style="cursor: pointer;" class="footerbuttoncls" [routerLink]="'/reading/' + item.id" (click)="getid(item)">READ</button>
+            <button style="cursor: pointer;" class="footerbuttoncls" [routerLink]="'/reading/' + item._id" (click)="getid(item)">READ</button>
             <div class="invisiblediv"></div>
             <button class="footerbuttoncls">SAVE</button>
             <button class="footerbuttoncls" style="cursor: pointer;" (click)="deletepost(item)">DEL</button>

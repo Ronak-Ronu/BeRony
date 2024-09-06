@@ -11,8 +11,8 @@ export class WriteserviceService {
   
   constructor(private http:HttpClient) {
 
-    this.url="http://localhost:3004/posts"
-    this.drafturl="http://localhost:3004/drafts"
+    this.url="http://localhost:3000/api/posts"
+    this.drafturl="http://localhost:3000/api/drafts"
    }
 
       
@@ -49,19 +49,19 @@ export class WriteserviceService {
     
 
     
-    getpublishpostdatabyid(id:number):Observable<WriteModel>
+    getpublishpostdatabyid(id:string):Observable<WriteModel>
     {
       return this.http.get<WriteModel>(this.url+"/"+id)
     }
 
 
-    deletepostbyid(id:number)
+    deletepostbyid(id:string)
     {
       this.http.delete<WriteModel>(this.url+"/"+id).subscribe();
       console.log("deleted"+id);
       
     }
-    deletedraft(id:number)
+    deletedraft(id:string)
     {
       this.http.delete<WriteModel>(this.drafturl+"/"+id).subscribe();
       console.log("draft deleted");
