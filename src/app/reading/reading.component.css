@@ -13,11 +13,16 @@
     border-radius: 10px;
 }
 .rightcommentsection::-webkit-scrollbar-thumb {
-    background: #929292; 
+    background: #727e8d; 
     border-radius: 10px;
 }
 
-
+.imagesection img{
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    object-position: center;     
+}
 .headingwrite{
     font-size: 64px;
     font-weight: bold;
@@ -26,11 +31,14 @@
 }
 
 .imagesection{
-    height: 35vh;
-    width: 50vw;
-    background-color: grey;
-    margin-left: 20%;
+    width: 50vh;
+    height: 50vh; 
+    left: 15%;
+    overflow: hidden;
+    position: relative; 
 }
+
+
 .leftreadingsection{
     width: 70vw;
 }

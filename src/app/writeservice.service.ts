@@ -14,18 +14,25 @@ export class WriteserviceService {
 
     this.url=`${environment.beronyAPI}/api/posts`
     this.drafturl=`${environment.beronyAPI}/api/drafts`
+    
+    // this.url='http://localhost:3000/api/posts'
+    // this.drafturl='http://localhost:3000/api/drafts'
    }
 
       
-    publishblog(blogdata:WriteModel)
+    publishblog(formData:FormData)
     {
       console.log("this is publish blog service");
-      this.http.post<WriteModel>(this.url,blogdata).subscribe((res:any)=>{
-          console.log(res.id);
-          this.postid=res.id
+      formData.forEach((value, key) => {
+        console.log(`FormData Key: ${key}, Value: ${value}`);
+      });
+    
+      this.http.post<WriteModel>(this.url,formData).subscribe((res:any)=>{
+          console.log(res);
+          this.postid=res._id
           
       })
-      console.log(blogdata);
+      console.log(formData);
     }
 
     draftblog(draftdata:WriteModel)

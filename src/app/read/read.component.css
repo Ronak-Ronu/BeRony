@@ -72,10 +72,13 @@ input:focus{
 }
 .thumbnail{
     
-    height:257px ;
     width: 399px;
-    background-color: grey;
+    height:300px ;
     border-radius: 10px ;
+    object-fit: contain; 
+    background-size: cover; 
+    background-position: center; 
+
  
 
 }

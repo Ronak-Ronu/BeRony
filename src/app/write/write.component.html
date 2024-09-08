@@ -7,17 +7,33 @@
     <div class="bodyofwriting">
         
     <div class="container">
-
+       
+        <form #writecontentform="ngForm">
         <div class="toolbar">
             <button class="toolbarbutton">LINK</button>
-            <button class="toolbarbutton">IMAGE</button>
+           
+            <button class="toolbarbutton" (click)="toggleImageUploadPopup()" >IMAGE</button>
+
+            <div class="popup-backdrop" *ngIf="showImageUploadPopup">
+                <div class="popup-modal">
+                    <h3>Select an Image to Upload</h3>
+                    <!-- <form (submit)="uploadBlogImage()"> -->
+                        <input type="file" (change)="handleImageUpload($event)" name="imageUrl">
+                        <!-- <button type="submit">Upload</button> -->
+                        <br><br>
+                    <!-- </form> -->
+                  <button (click)="closePopup()">Close</button>
+                </div>
+              </div>
+              
             <button class="toolbarbutton">FORMAT</button>
             <button class="toolbarbutton">IMPORT</button>
         </div>
-        <form #writecontentform="ngForm">
-        
+        <div *ngIf="selectedimagefile">
+            <b>{{selectedimagefile.name}}</b>
+        </div>
         <div class="writecontentarea">
-           
+
         
                 <textarea cols="83" 
                   rows="2"
@@ -58,7 +74,7 @@
 
     </form>
     </div>
-
+   
     <div class="draftcontainer">
 
         <div class="headerofdraft">

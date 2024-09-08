@@ -10,10 +10,12 @@ import { WriteserviceService } from '../writeservice.service';
 })
 export class WriteComponent implements OnInit {
   draftblogs:WriteModel[]=[]
-  edittitle:string=" "
-  editbodycontent:string=" "
-  editendnotecontent:string=" "
+  edittitle:string=""
+  editbodycontent:string=""
+  editendnotecontent:string=""
   editclicked:boolean=false
+  showImageUploadPopup: boolean = false;
+  selectedimagefile!:File | null;
 
 
   constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef){  }
@@ -22,17 +24,68 @@ export class WriteComponent implements OnInit {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.readdraftblog()
+
   }
-  publishblog(publishdata:WriteModel) {
-     
-    this.writeservice.publishblog(publishdata);
-    console.log(publishdata.bodyofcontent);
+
+
+publishblog(publishdata: WriteModel) {
+  const formData = new FormData();
+  formData.append('title', publishdata.title);
+  formData.append('bodyofcontent', publishdata.bodyofcontent);
+  formData.append('endnotecontent', publishdata.endnotecontent);
+
+  // Use 'imageUrl' as the key for the file if that's what your backend expects
+  if (this.selectedimagefile) {
+    formData.append('imageUrl', this.selectedimagefile);
+    
   }
+
+  formData.forEach((value, key) => {
+    console.log(`${key}:`, value);
+  });
+
+  this.writeservice.publishblog(formData)
+
+}
+
 
   publishdraft(draftdata:WriteModel)
   {
-    this.writeservice.publishblog(draftdata);
+    const formData = new FormData();
+    formData.append('title', this.edittitle);
+    formData.append('bodyofcontent', this.editbodycontent);
+    formData.append('endnotecontent', this.editendnotecontent);
+    console.log(this.selectedimagefile);
+    
+    if (this.selectedimagefile) {
+      formData.append('imageUrl', this.selectedimagefile); 
+    }
+
+    this.writeservice.publishblog(formData);
+
     this.writeservice.deletedraft(draftdata._id);
+  }
+
+  toggleImageUploadPopup() {
+    this.showImageUploadPopup = !this.showImageUploadPopup;
+
+  }
+
+  closePopup() {
+    this.showImageUploadPopup = false;
+  }
+
+
+  handleImageUpload(event:any)
+  {
+    this.selectedimagefile= event.target.files[0];
+    console.log(this.selectedimagefile?.name);
+    
+   
+  }
+  uploadBlogImage()
+  {
+    console.log(this.selectedimagefile);
   }
 
 
@@ -52,6 +105,7 @@ export class WriteComponent implements OnInit {
 
   }
 
+
   editdraft(draftdata:WriteModel)
   {
     this.edittitle=draftdata.title
@@ -60,6 +114,11 @@ export class WriteComponent implements OnInit {
     this.editclicked=true
     console.log(this.edittitle);
   }
+
+
+
+
+
 
   refreshcomponent(){
       this.readdraftblog()

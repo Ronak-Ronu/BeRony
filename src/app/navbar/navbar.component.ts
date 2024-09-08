@@ -8,27 +8,38 @@ import { Router } from '@angular/router';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit{
-  loggedInUser: any = null;
-
+  loggedInUser!: boolean;
+  loggedInUserAccount:any=null
 constructor(private router:Router){}
 ngOnInit(): void {
   this.checkLoginStatus();
 }
 async checkLoginStatus() {
   try {
-    this.loggedInUser = await account.get();
-    console.log('Logged in user:', this.loggedInUser);
+    
+    this.loggedInUserAccount = await account.get();
+    if (this.loggedInUserAccount) {
+      this.loggedInUser=true
+    }
+    else{
+      this.loggedInUser=true
+    }
+    // console.log('Logged in user:', this.loggedInUser);
   } catch (error) {
-    console.log('User not logged in:', error);
-    this.loggedInUser = null;
+    // console.log('User not logged in:', error);
+    this.loggedInUser = false;
   }
 }
 async logout() {
   await account.deleteSession('current');
-  this.loggedInUser = null;
+  this.loggedInUser = false;
   this.router.navigate(['/'])
 }
-
+async login() {
+  // await account.deleteSession('current');
+  this.loggedInUser = true;
+  this.router.navigate(['/userlogin'])
+}
 
 
 }

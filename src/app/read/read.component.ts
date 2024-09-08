@@ -46,5 +46,9 @@ export class ReadComponent implements OnInit{
   }
   
 
+  getBackgroundImage(item: WriteModel): string {
+    return `url(${item.imageUrl})`;
+  }
 
+  
 }

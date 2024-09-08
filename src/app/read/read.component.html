@@ -36,13 +36,13 @@
 <div *ngFor="let item of blogs">
         
 <div class="contentdivs">
-    <div class="thumbnail">
+    <div class="thumbnail" [ngStyle]="{'background-image': getBackgroundImage(item)}">
 
     </div>
 
     <div class="rightcontentthumbnail">
       
-        <div class="thumbnailname">
+        <div class="thumbnailname" >
             <p [innerHTML]="item.title">
                 <!-- {{item.title}} -->
             </p>
