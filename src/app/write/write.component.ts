@@ -1,6 +1,7 @@
 import { Component, OnInit ,ChangeDetectorRef} from '@angular/core';
 import { WriteModel } from '../Models/writemodel';
 import { WriteserviceService } from '../writeservice.service';
+import { account } from '../../lib/appwrite'; 
 
 
 @Component({
@@ -19,11 +20,15 @@ export class WriteComponent implements OnInit {
 
 
   constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef){  }
+  loggedInUserAccount:any=null
+  username!:string
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.readdraftblog()
+    this.getloggedinuserdata()
+
 
   }
 
@@ -47,7 +52,14 @@ publishblog(publishdata: WriteModel) {
   this.writeservice.publishblog(formData)
 
 }
-
+async getloggedinuserdata (){
+  this.loggedInUserAccount = await account.get();
+  if (this.loggedInUserAccount) {
+    this.username=this.loggedInUserAccount.name;
+    console.log(this.username);
+    
+  }
+}
 
   publishdraft(draftdata:WriteModel)
   {
@@ -114,9 +126,6 @@ publishblog(publishdata: WriteModel) {
     this.editclicked=true
     console.log(this.edittitle);
   }
-
-
-
 
 
 

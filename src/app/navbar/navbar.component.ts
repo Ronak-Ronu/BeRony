@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class NavbarComponent implements OnInit{
   loggedInUser!: boolean;
   loggedInUserAccount:any=null
+  
 constructor(private router:Router){}
 ngOnInit(): void {
   this.checkLoginStatus();
@@ -40,6 +41,5 @@ async login() {
   this.loggedInUser = true;
   this.router.navigate(['/userlogin'])
 }
-
 
 }

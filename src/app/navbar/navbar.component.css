@@ -48,6 +48,10 @@
   text-decoration: underline;  
 }
 
-.logoutbutton{
+#logoutbutton{
+  cursor: pointer;
+}
+
+#loginbutton{
   cursor: pointer;
 }

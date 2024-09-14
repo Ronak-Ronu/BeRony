@@ -10,9 +10,9 @@
 
     <div class="searchitems">
         <div class="searchbar">
-            <input type="text" placeholder="microsoft BSOD">
+            <input type="text" placeholder="microsoft BSOD" [(ngModel)]="searchQuery"  (keydown.enter)="onSearch()">
         </div>
-        <button class="searchbutton">YUP</button>
+        <button class="searchbutton" (click)="onSearch()">YUP</button>
     </div>
     
 </div>

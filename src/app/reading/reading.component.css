@@ -132,3 +132,24 @@
     font-size: 22px;
     padding: 5px;
 }
+.funnybutton{
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    font-size: 38px;
+    cursor: pointer;
+}
+.sadbutton{
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    font-size: 38px;
+    cursor: pointer;
+}
+.loveitbutton{
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    font-size: 38px;
+    cursor: pointer;
+}

@@ -11,8 +11,15 @@ import { WriteModel } from '../Models/writemodel';
 })
 export class ReadComponent implements OnInit{
   blogs: WriteModel[] = [];
+  loggedInUserAccount:any=null
+  username!:string
+  searchQuery:string=''
+  searchResults: any[] = [];
+
+
   ngOnInit(): void {
     this.readblogdata()
+    
     
   }
 
@@ -20,13 +27,20 @@ export class ReadComponent implements OnInit{
 
   
   readblogdata(){
-    this.readsevice.getpublishpostdata().subscribe(
+
+    this.readsevice.getpublishpostdata(this.searchQuery).subscribe(
       (data:WriteModel[])=>{
           this.blogs=data
           console.log(this.blogs);
           
       }
     )
+  }
+  onSearch()
+  {
+    this.readblogdata(); 
+
+    
   }
   
 
@@ -50,5 +64,7 @@ export class ReadComponent implements OnInit{
     return `url(${item.imageUrl})`;
   }
 
-  
+
+
+
 }

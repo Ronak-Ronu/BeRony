@@ -6,14 +6,23 @@
 
     <div class="leftreadingsection">
         
-        <div class="imagesection">     
-            <img [src]="post.imageUrl" [alt]="post.title">
+        <div class="imagesection"> 
+            <div *ngIf="filetype==='png' || filetype==='jpg'|| filetype==='jpeg' || filetype==='svg' ">
+                <img [src]="post.imageUrl" [alt]="post.imageUrl"/>
+            </div>
+            <div *ngIf="filetype==='mp4'">
+                <video [src]="post.imageUrl" ></video>
+            </div>
         </div>
 
         <div class="buttonsection">
-            <button class="footerbutton">READ ALOUD</button>
-            <button class="footerbutton">SAVE</button>
+            <button class="footerbutton"> <img src="../../assets/img/readaloud.png" alt="">READ ALOUD</button>
+            <button class="footerbutton"><img src="../../assets/img/bookmark.png" alt=""> SAVE</button>
             <button class="footerbutton" (click)="share()">SHARE</button>
+            <button class="funnybutton" (click)="addLike('funny')">🤣</button>
+            <button class="sadbutton" (click)="addLike('sad')">😟</button>
+            <button class="loveitbutton"  (click)="addLike('loveit')">😘</button>
+
         </div>
 
 

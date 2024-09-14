@@ -18,12 +18,12 @@ import { WrongpageComponent } from './wrongpage/wrongpage.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserloginComponent } from './userlogin/userlogin.component';
 import { routeauthguardGuard } from './routeauthguard.guard';
+
 const routes  = [
 
   {path: '', component: HomeComponent},
   {path: 'read', component: ReadComponent},
   {path: 'write', component: WriteComponent,canActivate:[routeauthguardGuard]},
-  
   {path: 'whosrony', component: WhosronyComponent},
   // {path: 'reading', component: ReadingComponent},
   { path: 'reading/:postid', component: ReadingComponent },
@@ -46,6 +46,7 @@ const routes  = [
     ReadingComponent,
     WrongpageComponent,
     UserloginComponent,
+
   ],
   imports: [
     BrowserModule,

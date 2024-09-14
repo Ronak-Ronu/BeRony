@@ -32,6 +32,8 @@
         <div *ngIf="selectedimagefile">
             <b>{{selectedimagefile.name}}</b>
         </div>
+        
+
         <div class="writecontentarea">
 
         
@@ -43,7 +45,9 @@
                  maxlength="300"
                  [(ngModel)]="edittitle"
                  required
-                 ></textarea>
+                 >
+                
+                </textarea>
             
             
              <textarea cols="83"
@@ -63,6 +67,7 @@
              name="endnotecontent"
              #endnotecontent="ngModel"
              [(ngModel)]="editendnotecontent"
+             [value]="username"
              ></textarea>
 
         </div>

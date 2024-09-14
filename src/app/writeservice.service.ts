@@ -50,12 +50,14 @@ export class WriteserviceService {
     }
 
 
-    getpublishpostdata():Observable<WriteModel[]>
-    {
-      return this.http.get<WriteModel[]>(this.url)
+    // getpublishpostdata():Observable<WriteModel[]>
+    // {
+    //   return this.http.get<WriteModel[]>(this.url)
+    // }
+    getpublishpostdata(searchQuery: string = ''): Observable<WriteModel[]> {
+      return this.http.get<WriteModel[]>(`${this.url}?q=${encodeURIComponent(searchQuery)}`);
     }
     
-
     
     getpublishpostdatabyid(id:string):Observable<WriteModel>
     {
