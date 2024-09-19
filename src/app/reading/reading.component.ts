@@ -4,6 +4,7 @@ import { WriteModel } from '../Models/writemodel';
 import { WriteserviceService } from '../writeservice.service';
 // import { WriteserviceService } from '../writeservice.service';
 import {NgNavigatorShareService} from 'ng-navigator-share'
+import { account } from '../../lib/appwrite';
 
 @Component({
   selector: 'app-reading',
@@ -15,11 +16,18 @@ export class ReadingComponent implements OnInit {
   username!:string
   filetype!:any
   _id:any;
-
+  postid:any
   userReaction:string=''
-  funnycount:number=0
-  sadcount:number=0
-  loveitcount:number=0
+  funnycount!:number
+  sadcount!:number
+  loveitcount!:number
+  loggedInUserAccount:any=null
+
+  userReactions: { [key: string]: boolean } = {
+    funny: false,
+    sad: false,
+    loveit: false
+  };
 
 
   constructor(private service:WriteserviceService,private router:ActivatedRoute,private ngnavigateservice:NgNavigatorShareService) {}
@@ -27,6 +35,7 @@ export class ReadingComponent implements OnInit {
 
   ngOnInit(): void {
     this.readblogdatabyid()
+    this.getloggedinuserdata()
   //   this._id=this.router.snapshot.paramMap.get("postid")
     
   //   this.service.getpublishpostdatabyid(this._id).subscribe((data:WriteModel)=>{
@@ -36,8 +45,18 @@ export class ReadingComponent implements OnInit {
     
   // })
 
-  }
 
+  }
+  async getloggedinuserdata (){
+    this.loggedInUserAccount = await account.get();
+    if (this.loggedInUserAccount) {
+      this.username=this.loggedInUserAccount.name;
+      console.log(this.username);
+      
+    }
+  }
+  
+  
   readblogdatabyid(){
   //   this._id=this.router.snapshot.paramMap.get("postid")
     
@@ -50,9 +69,8 @@ export class ReadingComponent implements OnInit {
     
   // })
   this.router.paramMap.subscribe(params => {
-    const postid = params.get('postid');
-    if (postid) {
-        this.service.getpublishpostdatabyid(postid).subscribe({
+    this.postid = params.get('postid');
+    this.service.getpublishpostdatabyid(this.postid).subscribe({
             next: (data: WriteModel) => {
                 this.post = data;
                 console.log(this.post);
@@ -61,14 +79,12 @@ export class ReadingComponent implements OnInit {
             },
             error: (error) => {
                 console.error('Error fetching post data:', error);
-                // Handle error, e.g., redirect or show error message
             }
         });
-    } else {
-        console.error('Post ID is missing from the URL');
-        // Handle missing post ID
-    }
-});
+    });
+    console.log(account.getSession);
+    
+
 
   }
 
@@ -77,24 +93,40 @@ export class ReadingComponent implements OnInit {
     this.ngnavigateservice.share({
       title:this.post.title,
       text:this.post.endnotecontent,
-      url:'https://github.com/Ronak-Ronu'
+      url:`http://localhost:4200/reading/${this.postid}`
     }).then((res)=>{
       console.log(res);
     })
   }
   
-  addLike(emoji:string)
-  {
-    if (emoji==='funny') {
-      this.funnycount+=1;
-    }
-    if(emoji==='sad')
-    {
-      this.sadcount+=1;
-    }
-    if(emoji==='loveit')
-    {
-      this.loveitcount+=1
+  updateReactionCount(emoji: string, likecount: number) {
+    if (this.username) {
+      this.service.updateReaction(this.postid, emoji, likecount>=0).subscribe({
+        next: (updatedPost:any) => {
+
+          this.funnycount = updatedPost.funnycount;
+          this.sadcount = updatedPost.sadcount;
+          this.loveitcount = updatedPost.loveitcount;
+          console.log(updatedPost);
+          
+        },
+        error: (error:any) => {
+          console.error('Error updating reaction count:', error);
+        }
+      });
+    } else {
+      console.log('Please log in to like the post.');
     }
   }
+    
+  addLike(emoji: string) {
+    if (this.userReactions[emoji]) {
+      this.userReactions[emoji] = false;
+      this.updateReactionCount(emoji, -1);
+    } else {
+      this.userReactions[emoji] = true;
+      this.updateReactionCount(emoji, 1);
+    }
+  }
+  
 }

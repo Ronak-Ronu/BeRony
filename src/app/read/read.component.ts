@@ -19,8 +19,6 @@ export class ReadComponent implements OnInit{
 
   ngOnInit(): void {
     this.readblogdata()
-    
-    
   }
 
   constructor(private readsevice:WriteserviceService){}

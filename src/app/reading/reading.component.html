@@ -19,9 +19,27 @@
             <button class="footerbutton"> <img src="../../assets/img/readaloud.png" alt="">READ ALOUD</button>
             <button class="footerbutton"><img src="../../assets/img/bookmark.png" alt=""> SAVE</button>
             <button class="footerbutton" (click)="share()">SHARE</button>
-            <button class="funnybutton" (click)="addLike('funny')">🤣</button>
-            <button class="sadbutton" (click)="addLike('sad')">😟</button>
-            <button class="loveitbutton"  (click)="addLike('loveit')">😘</button>
+            <div>
+
+                <button class="funnybutton" [class.liked]="userReactions['funny']" (click)="addLike('funny')">🤣</button>
+                <span style="font-size: 30px;">
+                    {{funnycount}}
+                </span>
+            </div>
+            <div>
+
+                <button class="sadbutton" [class.liked]="userReactions['sad']" (click)="addLike('sad')">😟</button>
+                <span style="font-size: 30px;">
+                    {{sadcount}}
+                </span>
+            </div>
+            <div>
+
+                <button class="loveitbutton" [class.liked]="userReactions['loveit']" (click)="addLike('loveit')">😘</button>
+                <span style="font-size: 30px;">
+                    {{loveitcount}}
+                </span>
+            </div>
 
         </div>
 
@@ -69,7 +87,7 @@
             </div>
 
 
-            <div class="user1">
+            <!-- <div class="user1">
                 <div class="userdata">
                     <div class="userprofile"></div>
                     <div class="username">Procrastination Master</div>
@@ -87,9 +105,9 @@
                 <div class="usercomment">
                     <p>I'm not arguing, I'm just passionately expressing my point of view while completely dismissing yours</p>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="user1">
+            <!-- <div class="user1">
                 <div class="userdata">
                     <div class="userprofile"></div>
                     <div class="username">Lord of the Memes</div>
@@ -97,9 +115,9 @@
                 <div class="usercomment">
                     <p>I'm not arguing, I'm just explaining why I'm right. Again </p>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="user1">
+            <!-- <div class="user1">
                 <div class="userdata">
                     <div class="userprofile"></div>
                     <div class="username">Lord McSassface</div>
@@ -107,7 +125,7 @@
                 <div class="usercomment">
                     <p>Today's goals: eat Cheetos, play video games, maybe write a blog post... maybe not </p>
                 </div>
-            </div>
+            </div> -->
 
         </div>
     </div>
