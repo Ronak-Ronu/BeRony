@@ -11,6 +11,7 @@ import { account } from '../../lib/appwrite';
   templateUrl: './reading.component.html',
   styleUrls: ['./reading.component.css']
 })
+
 export class ReadingComponent implements OnInit {
   post!:WriteModel
   username!:string
@@ -36,6 +37,8 @@ export class ReadingComponent implements OnInit {
   ngOnInit(): void {
     this.readblogdatabyid()
     this.getloggedinuserdata()
+    this.checkUserReactions();
+
   //   this._id=this.router.snapshot.paramMap.get("postid")
     
   //   this.service.getpublishpostdatabyid(this._id).subscribe((data:WriteModel)=>{
@@ -56,7 +59,8 @@ export class ReadingComponent implements OnInit {
     }
   }
   
-  
+
+
   readblogdatabyid(){
   //   this._id=this.router.snapshot.paramMap.get("postid")
     
@@ -101,6 +105,7 @@ export class ReadingComponent implements OnInit {
   
   updateReactionCount(emoji: string, likecount: number) {
     if (this.username) {
+     
       this.service.updateReaction(this.postid, emoji, likecount>=0).subscribe({
         next: (updatedPost:any) => {
 
@@ -118,15 +123,37 @@ export class ReadingComponent implements OnInit {
       console.log('Please log in to like the post.');
     }
   }
-    
+  
+
   addLike(emoji: string) {
-    if (this.userReactions[emoji]) {
-      this.userReactions[emoji] = false;
-      this.updateReactionCount(emoji, -1);
-    } else {
-      this.userReactions[emoji] = true;
-      this.updateReactionCount(emoji, 1);
-    }
+    if (this.username) {
+      const localStorageKey = `reaction_${this.postid}_${emoji}`;
+      const alreadyLiked = localStorage.getItem(localStorageKey);
+       if (alreadyLiked) {
+        localStorage.removeItem(localStorageKey);
+
+        this.updateReactionCount(emoji, -1);
+        this.userReactions[emoji] = false;
+       }
+       else
+       {
+        localStorage.setItem(localStorageKey, 'true');
+
+         this.updateReactionCount(emoji, 1);
+        this.userReactions[emoji] = true;
+       }
+      
   }
+}
+
+checkUserReactions() {
+  const reactions = ['funny', 'sad', 'loveit'];
+  reactions.forEach((emoji) => {
+    const localStorageKey = `reaction_${this.postid}_${emoji}`;
+    if (localStorage.getItem(localStorageKey)) {
+      this.userReactions[emoji] = true; 
+    }
+  });
+}
   
 }
