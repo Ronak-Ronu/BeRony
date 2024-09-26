@@ -22,6 +22,7 @@
     height: 100%; 
     object-fit: cover; 
     object-position: center;     
+    margin-left: 17%;
 }
 .headingwrite{
     font-size: 64px;
@@ -120,6 +121,7 @@
     margin-top: 5%;
     background-color: rgb(95, 95, 95);
 }
+
 .username{
     font-size: 25px;
 }
@@ -169,3 +171,14 @@
 
 }
 
+
+.postadmindetails{
+    width: auto;
+    margin-top: 5%;
+    margin-left: 20%;
+    margin-bottom: 10%;
+    font-size: 30px;
+    border-radius: 20px;
+    background-color: rgb(255, 228, 255);
+
+}

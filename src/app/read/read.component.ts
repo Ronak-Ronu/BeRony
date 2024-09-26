@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { WriteserviceService } from '../writeservice.service';
 import { WriteModel } from '../Models/writemodel';
+import { account } from '../../lib/appwrite';
 // import { ActivatedRoute } from '@angular/router';
 // import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-read',
@@ -15,15 +17,17 @@ export class ReadComponent implements OnInit{
   username!:string
   searchQuery:string=''
   searchResults: any[] = [];
-
   showFilters = false;
+  userId!:string
   
 
   ngOnInit(): void {
     this.readblogdata()
+    this.getloggedinuserdata()
+
   }
 
-  constructor(private readsevice:WriteserviceService){}
+  constructor(private readsevice:WriteserviceService,private toastr: ToastrService){}
 
   
   readblogdata(){
@@ -54,12 +58,38 @@ export class ReadComponent implements OnInit{
   }
 
 
+  async getloggedinuserdata (){
+    this.loggedInUserAccount = await account.get();
+    if (this.loggedInUserAccount) {
+      this.username=this.loggedInUserAccount.name;
+      this.userId=this.loggedInUserAccount.$id;
+     
+    }
+  }
+
+
+
   deletepost(post:WriteModel)
   {
-    this.readsevice.deletepostbyid(post._id)
-    this.ngOnInit()
-  }
+    try {
+
+      if (post.userId===this.userId) {
+        this.readsevice.deletepostbyid(post._id)
+        console.log("post deleted");
+        this.toastr.success("We will miss this post")
+        this.ngOnInit()
+      }
+      this.toastr.error("you are not author of this post");
+      console.log("you are not author of this post.");
+      
+
+    } catch (error) {
+      console.log("cannot delete post",error);
+      
+    }
   
+  }
+
 
   getBackgroundImage(item: WriteModel): string {
     return `url(${item.imageUrl})`;

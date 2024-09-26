@@ -7,4 +7,6 @@ export class WriteModel{
     funnycount:number=0
     sadcount:number=0
     loveitcount:number=0
+    userId:string=""
+    username:string=""
 }

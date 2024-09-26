@@ -15,6 +15,7 @@ import { account } from '../../lib/appwrite';
 export class ReadingComponent implements OnInit {
   post!:WriteModel
   username!:string
+  postadmin!:string
   filetype!:any
   _id:any;
   postid:any
@@ -38,7 +39,7 @@ export class ReadingComponent implements OnInit {
     this.readblogdatabyid()
     this.getloggedinuserdata()
     this.checkUserReactions();
-
+    
   //   this._id=this.router.snapshot.paramMap.get("postid")
     
   //   this.service.getpublishpostdatabyid(this._id).subscribe((data:WriteModel)=>{
@@ -62,16 +63,7 @@ export class ReadingComponent implements OnInit {
 
 
   readblogdatabyid(){
-  //   this._id=this.router.snapshot.paramMap.get("postid")
-    
-  //   this.service.getpublishpostdatabyid(this._id).subscribe((data:WriteModel)=>{
-  //   this.post = data ;
-  //   console.log(this.post);
-  //   console.log(this._id);
-  //   this.filetype=this.post.imageUrl.split('.').pop()
-  //   console.log(this.filetype);
-    
-  // })
+
   this.router.paramMap.subscribe(params => {
     this.postid = params.get('postid');
     this.service.getpublishpostdatabyid(this.postid).subscribe({

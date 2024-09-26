@@ -24,12 +24,14 @@ export class WriteComponent implements OnInit {
   constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef){  }
   loggedInUserAccount:any=null
   username!:string
+  userId!:string
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.readdraftblog()
     this.getloggedinuserdata()
+
 
 
   }
@@ -40,8 +42,8 @@ publishblog(publishdata: WriteModel) {
   formData.append('title', publishdata.title);
   formData.append('bodyofcontent', publishdata.bodyofcontent);
   formData.append('endnotecontent', publishdata.endnotecontent);
-
-  // Use 'imageUrl' as the key for the file if that's what your backend expects
+  formData.append('userId',this.userId)
+  formData.append('username',this.username)
   if (this.selectedimagefile) {
     formData.append('imageUrl', this.selectedimagefile);
     
@@ -58,8 +60,9 @@ async getloggedinuserdata (){
   this.loggedInUserAccount = await account.get();
   if (this.loggedInUserAccount) {
     this.username=this.loggedInUserAccount.name;
+    this.userId=this.loggedInUserAccount.$id;
     console.log(this.username);
-    
+    console.log(this.userId);
   }
 }
 
@@ -69,6 +72,8 @@ async getloggedinuserdata (){
     formData.append('title', this.edittitle);
     formData.append('bodyofcontent', this.editbodycontent);
     formData.append('endnotecontent', this.editendnotecontent);
+
+    
     console.log(this.selectedimagefile);
     
     if (this.selectedimagefile) {

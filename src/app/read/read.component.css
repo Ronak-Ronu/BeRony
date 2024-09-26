@@ -140,6 +140,7 @@ input:focus{
     justify-content: center;
     gap: 8%;
     margin-top: 7%;
+    margin-bottom: 5%;
     
 }
 
@@ -179,8 +180,8 @@ input:focus{
 
 
 }
- .recommendations{
-}
+ /* .recommendations{
+} */
 
 .toppicks{
     padding: 10px;
