@@ -86,7 +86,6 @@ export class ReadingComponent implements OnInit {
             }
         });
     });
-    console.log(account.getSession);
     
 
 
@@ -143,6 +142,10 @@ export class ReadingComponent implements OnInit {
         this.userReactions[emoji] = true;
        }
       
+  }
+  else{
+    console.log("login to like posts");
+    
   }
 }
 

@@ -12,7 +12,7 @@
         <div class="searchbar">
             <input type="text" placeholder="microsoft BSOD" [(ngModel)]="searchQuery"  (keydown.enter)="onSearch()">
         </div>
-        <button class="searchbutton" (click)="onSearch()">YUP</button>
+        <button class="searchbutton" (click)="onSearch()">YUP ↵</button>
     </div>
     
 </div>
@@ -20,10 +20,19 @@
 <!-- endoftopitems -->
 
 <div class="filters">
-    <button class="filterbutton">ALL</button>
-    <button class="filterbutton" style="width: 200PX ;">GADGETS</button>
-    <button class="filterbutton">DBMS</button>
-    <button class="filterbutton" style="width: 400PX;">PERSONAL DEVELOPMENT</button>
+    <button class="filterbutton" (click)="toggleFilters()" style="width: 200px ;">
+        <div *ngIf="!showFilters" >
+                Filter <span style="font-size: 35px;">👉</span>
+        </div>
+        <div *ngIf="showFilters">
+            Filter <span style="font-size: 35px;">👈</span>
+    </div>
+    </button>
+    <button class="filterbutton1" *ngIf="showFilters" [ngClass]="{'enter': showFilters, 'exit': !showFilters}" style="width: 200px ;">GADGETS</button>
+    <button class="filterbutton1" *ngIf="showFilters">DBMS</button>
+    
+    <button class="filterbutton1" *ngIf="showFilters"style="min-width:20vw; font-size: 25px;">PERSONAL DEVELOPMENT</button>
+    <button class="filterbutton1" *ngIf="showFilters">Lifestyle</button>
 
 </div>
 
@@ -33,38 +42,83 @@
 
 
 
+<div class="readcontainer">
+
+<div class="blogscontainer">
 <div *ngFor="let item of blogs">
-        
-<div class="contentdivs">
-    <div class="thumbnail" [ngStyle]="{'background-image': getBackgroundImage(item)}">
-
-    </div>
-
-    <div class="rightcontentthumbnail">
-      
-        <div class="thumbnailname" >
-            <p [innerHTML]="item.title">
-                <!-- {{item.title}} -->
-            </p>
-            <p [innerHTML]="item.endnotecontent">
-                <!-- {{item.endnotecontent}} -->
-            </p>
-        </div>
-
-        <div class="footerbuttons">
-            <button style="cursor: pointer;" class="footerbuttoncls" [routerLink]="'/reading/' + item._id" (click)="getid(item)">READ</button>
-            <div class="invisiblediv"></div>
-            <button class="footerbuttoncls">SAVE</button>
-            <button class="footerbuttoncls" style="cursor: pointer;" (click)="deletepost(item)">DEL</button>
+            
+        <div class="contentdivs">
+        <div class="thumbnail" [ngStyle]="{'background-image': getBackgroundImage(item)}">
 
         </div>
 
+        <div class="rightcontentthumbnail">
+            
+            <div class="thumbnailname" >
+                <p [innerHTML]="item.title">
+                    <!-- {{item.title}} -->
+                </p>
+                <p [innerHTML]="item.endnotecontent">
+                    <!-- {{item.endnotecontent}} -->
+                </p>
+            </div>
+
+            <div class="footerbuttons">
+                <button style="cursor: pointer;" class="footerbuttoncls" [routerLink]="'/reading/' + item._id" (click)="getid(item)">READ</button>
+                <div class="invisiblediv"></div>
+                <button class="footerbuttoncls">SAVE</button>
+                <button class="footerbuttoncls" style="cursor: pointer;" (click)="deletepost(item)">DEL</button>
+
+            </div>
+
+        </div>
+        </div>
     </div>
+</div>
+<div class="leftshowcontainer"> 
+    <div class="recommendations">
+       <div>
+
+           <span style="font-size: 30px;">Recommeded Topics</span>
+        </div>
+
+        <br>
+       <div>
+
+           <button class="recommendationsbutton" >Anime</button>
+           <button class="recommendationsbutton" >Self Improvement</button>
+           <button class="recommendationsbutton" >Music</button>
+           <button class="recommendationsbutton" >Lifestyle</button>
+           <button class="recommendationsbutton" >Games</button>
+           <button class="recommendationsbutton" >Comedy</button>
+        </div>
+    
+    </div>
+    <hr>
+    <div class="toppicks">
+            <div class="pick1">
+                <div class="pickinfo">
+                    <div class="pickprofile"></div>
+                    <p>Michle from BeRony</p>
+                </div>
+                <div class="pickbrief">
+                    <b>This is the best page to showcase your life and journey .&hearts; </b>
+                </div>
+                <div class="readtime">
+                    Jan 21, 2024 · 6 min read
+                </div>
+            </div>
+
+            <div class="seeall">
+                See all (12)
+            </div>
+
+    </div>
+
 
 </div>
 
-    </div>
 
-
+</div>
 
 </div>

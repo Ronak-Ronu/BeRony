@@ -27,9 +27,10 @@
               </div>
               
             <button class="toolbarbutton">FORMAT</button>
-            <button class="toolbarbutton">IMPORT</button>
+            <button class="toolbarbutton">VIEW</button>
         </div>
         <div *ngIf="selectedimagefile">
+            <img [src]="imageUrl" width="30%" height="30%" alt="">
             <b>{{selectedimagefile.name}}</b>
         </div>
         

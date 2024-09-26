@@ -17,6 +17,8 @@ export class WriteComponent implements OnInit {
   editclicked:boolean=false
   showImageUploadPopup: boolean = false;
   selectedimagefile!:File | null;
+  imageUrl!:string | null;
+
 
 
   constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef){  }
@@ -92,7 +94,12 @@ async getloggedinuserdata (){
   {
     this.selectedimagefile= event.target.files[0];
     console.log(this.selectedimagefile?.name);
-    
+    if (this.selectedimagefile) {
+      this.imageUrl = URL.createObjectURL(this.selectedimagefile);
+    } else {
+      this.imageUrl = null;
+    }
+      
    
   }
   uploadBlogImage()

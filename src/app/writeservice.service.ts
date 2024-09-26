@@ -12,11 +12,11 @@ export class WriteserviceService {
   
   constructor(private http:HttpClient) {
 
-    this.url=`${environment.beronyAPI}/api/posts`
-    this.drafturl=`${environment.beronyAPI}/api/drafts`
+    // this.url=`${environment.beronyAPI}/api/posts`
+    // this.drafturl=`${environment.beronyAPI}/api/drafts`
     
-    // this.url='http://localhost:3000/api/posts'
-    // this.drafturl='http://localhost:3000/api/drafts'
+    this.url='http://localhost:3000/api/posts'
+    this.drafturl='http://localhost:3000/api/drafts'
    }
 
       
@@ -69,7 +69,6 @@ export class WriteserviceService {
     {
       this.http.delete<WriteModel>(this.url+"/"+id).subscribe();
       console.log("deleted"+id);
-      
     }
     deletedraft(id:string)
     {

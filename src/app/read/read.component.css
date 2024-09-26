@@ -27,8 +27,9 @@
     height: 7vh;
     width: 7vw;
     font-size: 34px;
-    border: 3px solid black;
+    border: 2px solid black;
     border-radius: 10px;
+    cursor: pointer;
 
 }
 .searchitems{
@@ -47,20 +48,74 @@ input:focus{
     justify-content: space-around;
     
 }
-.filterbutton{
-    background-color: #C6CAF9;
-    height: 7vh;
+.filterbutton {
+    background-color: #d9dcf8;
+    min-width: 9vw;
+    max-width: 9vw;
     width: 7vw;
-    font-size: 30px;
-    border: 3px solid black;
-    border-radius: 10px;
+    height: 7vh;
+    font-size: 27px;
+    border: 1px solid black;
+    border-radius: 50px;
+    margin-left: 10px;
+    cursor: pointer;
+    padding: 10px;
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+
+  .filterbutton1 {
+    background-color: #d5d8f9;
+    min-width: 9vw;
+    max-width: 9vw;
+    width: 7vw;
+    min-height: 7vh;
+    max-height: 7vh;
+    height: 7vh;
+    font-size: 27px;
+    border: 1px solid black;
+    border-radius: 50px;
+    margin-left: 2%;
+    cursor: pointer;
+    overflow: visible;
+    padding: 10px;
+    animation: fadeIn 0.5s forwards;
+}
+
+
+.recommendationsbutton{
+    background-color: #d5d8f9;
+    min-height: 4vh;
+    max-height: 4vh;
+    height: 4vh;
+    font-size: 20px;
+    border: 1px solid black;
+    border-radius: 50px;
+    margin-left: 2%;
+    margin-top: 2%;
+    margin-bottom: 5%;
+    cursor: pointer;
+    padding: 10px;
+    animation: fadeIn 0.5s forwards;
+ 
+
+
 }
 .filters{
     display: flex;
-    justify-content: space-around;
-    width: 50vw;
-    margin-left: 19%;
-    
+    justify-content: flex-start;
+    height: auto;
+    margin-left: 4%;
+    overflow-y: scroll;
+    -ms-overflow-style: none; 
+    scrollbar-width: none;
 }
 .footerbuttoncls{
     background-color: #C6CAF9;
@@ -78,22 +133,19 @@ input:focus{
     object-fit: contain; 
     background-size: cover; 
     background-position: center; 
-
- 
-
 }
 .contentdivs{
     display: flex;
     flex-direction: row;
     justify-content: center;
     gap: 8%;
-    margin-top: 5%;
+    margin-top: 7%;
     
 }
 
 .thumbnailname{
     font-size: 25px;
-    height: 80%;
+    height: 70%;
     width: 500px;
     text-wrap: pretty;
 }
@@ -112,5 +164,54 @@ input:focus{
 
 
 
+.readcontainer{
+    display: flex;
+    justify-content: space-between;
+    padding-left: 5%;
+    padding-right: 5%;
+}
 
+.leftshowcontainer{
+    height: 60vh;
+    border-left: 0.5px solid rgb(118, 117, 117);
+    width:25%;
+    padding: 10px;
+
+
+}
+ .recommendations{
+}
+
+.toppicks{
+    padding: 10px;
+}
+.pick1 .pickinfo{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 23px;
+}
+.pick1 .pickinfo .pickprofile{
+    height: 27px;
+    width: 27px;
+    border-radius: 100px;
+    background-color: rgb(151, 76, 227);
+    margin-right: 3%;
+}
+
+.pick1 .pickbrief
+{
+    font-size: 20px;
+}
+.pick1 .readtime{
+    margin-top: 20px;
+}
+.seeall
+{
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 10%;
+    color: rgb(78, 161, 164);
+}
 

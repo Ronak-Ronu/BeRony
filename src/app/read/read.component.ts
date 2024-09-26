@@ -16,6 +16,8 @@ export class ReadComponent implements OnInit{
   searchQuery:string=''
   searchResults: any[] = [];
 
+  showFilters = false;
+  
 
   ngOnInit(): void {
     this.readblogdata()
@@ -38,10 +40,11 @@ export class ReadComponent implements OnInit{
   {
     this.readblogdata(); 
 
-    
   }
   
-
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+  }
 
   getid(item:WriteModel)
   {
