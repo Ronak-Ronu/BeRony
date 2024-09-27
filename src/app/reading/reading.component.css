@@ -182,3 +182,27 @@
     background-color: rgb(255, 228, 255);
 
 }
+
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 10px;
+    gap: 10px;
+
+  }
+  
+  .tag {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #bdc2fb; 
+    color: #333333;
+
+    padding: 10px 10px;
+    border-radius: 3px;
+    font-size: 23px;
+    border-radius: 50px;
+    border:1px solid white;
+
+  }

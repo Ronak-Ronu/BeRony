@@ -80,9 +80,22 @@
              name="endnotecontent"
              #endnotecontent="ngModel"
              [(ngModel)]="editendnotecontent"
-             [value]="username"
              ></textarea>
 
+             <div class="tagsinputarea">
+                <input
+                    [(ngModel)]="tagInput"
+                    name="tagInput"
+                    (keydown)="onKeyDown($event)"
+                    placeholder="Press Enter to add tag"
+                />
+            </div>
+            <div class="tags">
+                <span *ngFor="let tag of tags" class="tag">{{ tag }}
+                    <div style="cursor: pointer;color: blueviolet;font-weight: bolder;" [@tagAnimation] (click)="removeTag(tag)">X</div>
+                </span>
+            </div>
+            
         </div>
 
         <div class="footerbuttons">

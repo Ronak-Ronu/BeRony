@@ -25,6 +25,7 @@ export class ReadingComponent implements OnInit {
   sadcount!:number
   loveitcount!:number
   loggedInUserAccount:any=null
+  tagsarray:string[]=[]
 
   userReactions: { [key: string]: boolean } = {
     funny: false,
@@ -72,7 +73,10 @@ export class ReadingComponent implements OnInit {
                 this.post = data;
                 console.log(this.post);
                 this.filetype = this.post.imageUrl.split('.').pop();
+                this.tagsarray = this.post.tags;
                 console.log(this.filetype);
+                console.log(this.tagsarray);
+                
             },
             error: (error) => {
                 console.error('Error fetching post data:', error);

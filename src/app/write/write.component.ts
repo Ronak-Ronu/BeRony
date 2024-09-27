@@ -2,12 +2,26 @@ import { Component, OnInit ,ChangeDetectorRef} from '@angular/core';
 import { WriteModel } from '../Models/writemodel';
 import { WriteserviceService } from '../writeservice.service';
 import { account } from '../../lib/appwrite'; 
+import { trigger, state, style, animate, transition } from '@angular/animations';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
   selector: 'app-write',
   templateUrl: './write.component.html',
-  styleUrl: './write.component.css'
+  styleUrl: './write.component.css',
+  animations: [
+    trigger('tagAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-10px)' }),
+        animate('200ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('700ms ease-out', style({ opacity: 0, transform: 'translateY(20px)' }))
+      ])
+    ])
+  ]
+
 })
 export class WriteComponent implements OnInit {
   draftblogs:WriteModel[]=[]
@@ -24,10 +38,11 @@ export class WriteComponent implements OnInit {
   previewTitle:String=""
   previewBodyContent:String=""
   previewEndNote:String=""
+  tagInput: string = ''
+  tags:string[]=[]
 
 
-
-  constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef){  }
+  constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef,private toastr: ToastrService){  }
   loggedInUserAccount:any=null
   username!:string
   userId!:string
@@ -48,6 +63,7 @@ publishblog(publishdata: WriteModel) {
   formData.append('title', publishdata.title);
   formData.append('bodyofcontent', publishdata.bodyofcontent);
   formData.append('endnotecontent', publishdata.endnotecontent);
+  formData.append('tags', JSON.stringify(this.tags));
   formData.append('userId',this.userId)
   formData.append('username',this.username)
   if (this.selectedimagefile) {
@@ -173,4 +189,41 @@ async getloggedinuserdata (){
     this.ispreview=!this.ispreview
   }
 
+
+  onKeyDown(event: KeyboardEvent) {
+    // console.log('Key pressed:', event.key);
+    try {
+      if (event.key === 'Enter' || event.key === ',' || event.key === ';') {
+        event.preventDefault();
+        const trimmedTag = this.tagInput.trim();
+        this.addTag(trimmedTag);
+        this.tagInput = ''; 
+        this.cdr.detectChanges(); 
+    }
+    } catch (error) {
+      console.log(error);
+      
+    }
+   
 }
+
+
+addTag(tag: string) {
+  // console.log('Trying to add tag:', tag);
+  if (!this.tags.includes(tag) && this.tagInput!=='' && this.tagInput!==' ') {
+      this.tags.push(tag);
+      // console.log('Added tag:', tag);
+      this.cdr.detectChanges();
+  } else {
+    this.toastr.error("Tag already exists or empty")
+      // console.log('Tag already exists or is empty.'); 
+  }
+}
+
+  removeTag(tag:string)
+  {
+    this.tags = this.tags.filter(t => t !== tag);
+  }
+
+}
+

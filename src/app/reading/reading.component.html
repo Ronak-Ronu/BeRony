@@ -81,7 +81,14 @@
       <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi quasi aliquam aliquid voluptatum, possimus aspernatur facilis omnis eum dolorum alias, totam unde adipisci repudiandae rerum</p> -->
     </div>
     <div style="height: 1px; background-color: grey;width: 70%;margin-left: 17%;margin-top: 2%;margin-bottom: 2%;"></div>
-    <div class="postadmindetails">Written with ♥️ by - {{ post.username }}</div>
+    <div class="postadmindetails">Written with ♥️ by - {{ post.username }}
+
+      
+    </div>
+  
+  
+  
+  
   </div>
   <div class="rightcommentsection">
     <div class="discussionheader">
@@ -154,5 +161,13 @@
                 </div>
             </div> -->
     </div>
+    
+  </div>
+  
+</div>
+
+<div *ngIf="tagsarray.length" style="margin-left: 13%;margin-bottom: 5%;margin-top: -5%;">
+  <div class="tags">
+    <span *ngFor="let tag of tagsarray" class="tag">{{ tag }}</span>
   </div>
 </div>
