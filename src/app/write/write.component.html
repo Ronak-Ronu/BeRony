@@ -1,18 +1,30 @@
 <div class="writemainbody">
+    <div class="previewWindow" *ngIf="ispreview">
+        <div style="cursor: pointer;font-size: 25px;color: blueviolet;" (click)="closepreview()"><u>Close</u> </div>
+        
+        <div class="previewcontentbody">
 
+            <div class="titleinpreview" [innerHTML]="previewTitle"></div>
+            <hr>
+            <div class="contentinpreview" [innerHTML]="previewBodyContent"></div>
+            <hr>
+            <div class="endnoteinpreview" [innerHTML]="previewEndNote"></div>
+             
+        </div>
+   
+    </div>
     <div class="headingwrite">
         <p>WRITE</p>
     </div>
    
     <div class="bodyofwriting">
-        
+     
     <div class="container">
        
         <form #writecontentform="ngForm">
         <div class="toolbar">
-            <button class="toolbarbutton">LINK</button>
-           
-            <button class="toolbarbutton" (click)="toggleImageUploadPopup()" >IMAGE</button>
+            <button style="cursor: pointer;" class="toolbarbutton">LINK</button>
+            <button style="cursor: pointer;" class="toolbarbutton" (click)="toggleImageUploadPopup()" >IMAGE</button>
 
             <div class="popup-backdrop" *ngIf="showImageUploadPopup">
                 <div class="popup-modal">
@@ -26,8 +38,8 @@
                 </div>
               </div>
               
-            <button class="toolbarbutton">FORMAT</button>
-            <button class="toolbarbutton">VIEW</button>
+            <button style="cursor: pointer;" class="toolbarbutton">FORMAT</button>
+            <button style="cursor: pointer;" class="toolbarbutton" (click)="preview()" >PREVIEW</button>
         </div>
         <div *ngIf="selectedimagefile">
             <img [src]="imageUrl" width="30%" height="30%" alt="">
@@ -112,12 +124,10 @@
             </div>
             
         </div>
-     
-     
-   
-
-    </div>
+</div>
 
 </div>
+
+
 
 </div>

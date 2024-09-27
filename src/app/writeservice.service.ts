@@ -18,6 +18,7 @@ export class WriteserviceService {
     this.url='http://localhost:3000/api/posts'
     this.drafturl='http://localhost:3000/api/drafts'
    }
+   
 
       
     publishblog(formData:FormData)

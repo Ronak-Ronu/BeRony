@@ -19,6 +19,7 @@ export class ReadComponent implements OnInit{
   searchResults: any[] = [];
   showFilters = false;
   userId!:string
+  isloadingblogs:boolean=true
   
 
   ngOnInit(): void {
@@ -31,14 +32,22 @@ export class ReadComponent implements OnInit{
 
   
   readblogdata(){
-
+    try {
+      
+   
+    this.isloadingblogs = true;
     this.readsevice.getpublishpostdata(this.searchQuery).subscribe(
       (data:WriteModel[])=>{
           this.blogs=data
+          this.isloadingblogs=false
           console.log(this.blogs);
           
       }
     )
+      } catch (error) {
+          console.log(error);
+          this.isloadingblogs=false
+      } 
   }
   onSearch()
   {
@@ -73,14 +82,16 @@ export class ReadComponent implements OnInit{
   {
     try {
 
-      if (post.userId===this.userId) {
+      if (post.userId===this.userId && this.loggedInUserAccount) {
         this.readsevice.deletepostbyid(post._id)
         console.log("post deleted");
-        this.toastr.success("We will miss this post")
+        this.toastr.success("<h3>We will miss this post</h3>")
         this.ngOnInit()
       }
-      this.toastr.error("you are not author of this post");
-      console.log("you are not author of this post.");
+      else{
+        this.toastr.error("you are not author of this post");
+        console.log("you are not author of this post.");
+      }
       
 
     } catch (error) {

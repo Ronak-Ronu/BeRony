@@ -15,7 +15,7 @@
 
 .writemainbody{
     height: 85vh;
- 
+    position: relative;
   
 }
 .headingwrite{
@@ -186,3 +186,52 @@ textarea{
     margin-top: 15px;
   }
   
+  .previewWindow{
+    width: 47%;
+    height: 98%;
+    position: absolute;
+    border-radius: 50px;
+    border: 1px solid black;
+    margin-left: 20%;
+    margin-top: 6%;
+ 
+    padding: 50px;
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+
+
+  .previewcontentbody {
+    margin-top: 5%;
+    padding: 20px;
+    max-height: calc(90% - 140px); 
+    overflow-y: auto;
+    overflow-x: hidden;
+
+}
+
+.titleinpreview,
+.contentinpreview,
+.endnoteinpreview {
+    margin-bottom: 5%;
+}
+
+
+
+
+
+.previewcontentbody::-webkit-scrollbar {
+    width: 5px; 
+}
+
+.previewcontentbody::-webkit-scrollbar-thumb {
+    background-color: rgba(146, 168, 255, 0.5); 
+    border-radius:20px; 
+    
+}
+
+.previewcontentbody::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    width: 20px;
+}
+

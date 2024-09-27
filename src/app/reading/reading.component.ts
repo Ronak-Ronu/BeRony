@@ -5,6 +5,7 @@ import { WriteserviceService } from '../writeservice.service';
 // import { WriteserviceService } from '../writeservice.service';
 import {NgNavigatorShareService} from 'ng-navigator-share'
 import { account } from '../../lib/appwrite';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-reading',
@@ -32,7 +33,7 @@ export class ReadingComponent implements OnInit {
   };
 
 
-  constructor(private service:WriteserviceService,private router:ActivatedRoute,private ngnavigateservice:NgNavigatorShareService) {}
+  constructor(private service:WriteserviceService,private router:ActivatedRoute,private ngnavigateservice:NgNavigatorShareService,private toastr: ToastrService) {}
 
 
   ngOnInit(): void {
@@ -111,6 +112,7 @@ export class ReadingComponent implements OnInit {
         }
       });
     } else {
+      this.toastr.error("Please log in to like the post.")
       console.log('Please log in to like the post.');
     }
   }

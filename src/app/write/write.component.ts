@@ -18,6 +18,12 @@ export class WriteComponent implements OnInit {
   showImageUploadPopup: boolean = false;
   selectedimagefile!:File | null;
   imageUrl!:string | null;
+  previewBlog:WriteModel[]=[];
+  ispreview:boolean=false
+
+  previewTitle:String=""
+  previewBodyContent:String=""
+  previewEndNote:String=""
 
 
 
@@ -51,6 +57,7 @@ publishblog(publishdata: WriteModel) {
 
   formData.forEach((value, key) => {
     console.log(`${key}:`, value);
+
   });
 
   this.writeservice.publishblog(formData)
@@ -72,7 +79,6 @@ async getloggedinuserdata (){
     formData.append('title', this.edittitle);
     formData.append('bodyofcontent', this.editbodycontent);
     formData.append('endnotecontent', this.editendnotecontent);
-
     
     console.log(this.selectedimagefile);
     
@@ -146,5 +152,25 @@ async getloggedinuserdata (){
       this.cdr.detectChanges();
   }
 
+  preview()
+  {
+    this.ispreview=true
+    console.log("preview");
+        const formData = new FormData();
+      formData.append('title', this.edittitle);
+      formData.append('bodyofcontent', this.editbodycontent);
+      formData.append('endnotecontent', this.editendnotecontent);
+     
+
+        console.log(formData.get('title'));
+     
+              this.previewTitle=formData.get('title') as string ;
+              this.previewBodyContent=formData.get('bodyofcontent') as string ;
+              this.previewEndNote=formData.get('endnotecontent') as string ;
+
+  }
+  closepreview(){
+    this.ispreview=!this.ispreview
+  }
 
 }

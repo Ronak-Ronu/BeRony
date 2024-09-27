@@ -1,7 +1,4 @@
 <div class="readmainbody">
-
-
-
 <div class="topitems">
 
     <div class="headingread">
@@ -12,7 +9,7 @@
         <div class="searchbar">
             <input type="text" placeholder="microsoft BSOD" [(ngModel)]="searchQuery"  (keydown.enter)="onSearch()">
         </div>
-        <button class="searchbutton" (click)="onSearch()">YUP ↵</button>
+        <button class="searchbutton" (click)="onSearch()">YUP <span style="font-size: 40px;">↵</span></button>
     </div>
     
 </div>
@@ -39,12 +36,13 @@
 
 <!-- endoffilteritems -->
 
-
-
-
 <div class="readcontainer">
 
 <div class="blogscontainer">
+    <div *ngIf="isloadingblogs" class="loader"> 
+        Loading beautiful blogs for {{username}} ♥️ 
+    </div>
+
 <div *ngFor="let item of blogs">
             
         <div class="contentdivs">
@@ -55,12 +53,20 @@
         <div class="rightcontentthumbnail">
             
             <div class="thumbnailname" >
-                <p [innerHTML]="item.title">
+                <b [innerHTML]="item.title">
                     <!-- {{item.title}} -->
-                </p>
+                </b>
                 <p [innerHTML]="item.endnotecontent">
                     <!-- {{item.endnotecontent}} -->
                 </p>
+                <div style="display: flex;align-items: center;">
+
+                    <div class="pickprofileblog"></div>
+                    <div>
+
+                        <u style="cursor: pointer;">{{item.username}}</u>
+                    </div>
+                </div>
             </div>
 
             <div class="footerbuttons">
@@ -98,10 +104,13 @@
     </div>
     <hr>
     <div class="toppicks">
+        <div>
+            <span style="font-size: 30px;">Top Picks</span>
+         </div>
             <div class="pick1">
                 <div class="pickinfo">
                     <div class="pickprofile"></div>
-                    <p>Michle from BeRony</p>
+                    <p><u style="cursor: pointer;">Michle</u> from BeRony</p>
                 </div>
                 <div class="pickbrief">
                     <b>This is the best page to showcase your life and journey .&hearts; </b>

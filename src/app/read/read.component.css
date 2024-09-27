@@ -26,7 +26,7 @@
     background-color: #C6CAF9;
     height: 7vh;
     width: 7vw;
-    font-size: 34px;
+    font-size: 25px;
     border: 2px solid black;
     border-radius: 10px;
     cursor: pointer;
@@ -177,8 +177,7 @@ input:focus{
     border-left: 0.5px solid rgb(118, 117, 117);
     width:25%;
     padding: 10px;
-
-
+    margin-top: 2%;
 }
  /* .recommendations{
 } */
@@ -199,7 +198,13 @@ input:focus{
     background-color: rgb(151, 76, 227);
     margin-right: 3%;
 }
-
+.pickprofileblog{
+    height: 27px;
+    width: 27px;
+    border-radius: 100px;
+    background-color: rgb(151, 76, 227);
+    margin-right: 3%;
+}
 .pick1 .pickbrief
 {
     font-size: 20px;
@@ -216,3 +221,8 @@ input:focus{
     color: rgb(78, 161, 164);
 }
 
+
+.loader{
+   margin-top: 10%;
+    font-size: 40px;
+}
