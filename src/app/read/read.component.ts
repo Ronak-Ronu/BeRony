@@ -20,7 +20,7 @@ export class ReadComponent implements OnInit{
   showFilters = false;
   userId!:string
   isloadingblogs:boolean=true
-  
+  selectedTag: string | null = null;
 
   ngOnInit(): void {
     this.readblogdata()
@@ -34,9 +34,8 @@ export class ReadComponent implements OnInit{
   readblogdata(){
     try {
       
-   
     this.isloadingblogs = true;
-    this.readsevice.getpublishpostdata(this.searchQuery).subscribe(
+    this.readsevice.getpublishpostdata(this.searchQuery,this.selectedTag).subscribe(
       (data:WriteModel[])=>{
           this.blogs=data
           this.isloadingblogs=false
@@ -107,6 +106,11 @@ export class ReadComponent implements OnInit{
   }
 
 
-
+  filterByTag(usersselectedtag:string)
+  {
+    this.selectedTag = this.selectedTag === usersselectedtag ? null : usersselectedtag
+    console.log(this.selectedTag);
+    this.readblogdata();
+  }
 
 }

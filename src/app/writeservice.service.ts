@@ -12,11 +12,11 @@ export class WriteserviceService {
   
   constructor(private http:HttpClient) {
 
-    // this.url=`${environment.beronyAPI}/api/posts`
-    // this.drafturl=`${environment.beronyAPI}/api/drafts`
+    this.url=`${environment.beronyAPI}/api/posts`
+    this.drafturl=`${environment.beronyAPI}/api/drafts`
     
-    this.url='http://localhost:3000/api/posts'
-    this.drafturl='http://localhost:3000/api/drafts'
+    // this.url='http://localhost:3000/api/posts'
+    // this.drafturl='http://localhost:3000/api/drafts'
    }
    
 
@@ -55,8 +55,17 @@ export class WriteserviceService {
     // {
     //   return this.http.get<WriteModel[]>(this.url)
     // }
-    getpublishpostdata(searchQuery: string = ''): Observable<WriteModel[]> {
-      return this.http.get<WriteModel[]>(`${this.url}?q=${encodeURIComponent(searchQuery)}`);
+    getpublishpostdata(searchQuery: string = '',tag: string | null =null): Observable<WriteModel[]> {
+      const params: any = {};
+      if (searchQuery) {
+        params.q = encodeURIComponent(searchQuery);
+      }
+      if (tag) {
+        params.tags = tag;
+      }
+    
+      console.log("Fetching posts with params:", params);
+      return this.http.get<WriteModel[]>(this.url,{params});
     }
     
     
