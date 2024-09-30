@@ -83,6 +83,7 @@
     overflow: auto;
     border: 1px solid black;
     border-radius: 10px;
+
 }
 .containerforeading{
     display: flex;
@@ -206,3 +207,67 @@
     border:1px solid white;
 
   }
+
+.refreshbtn{
+    height: auto;
+    width: auto;
+    border-radius: 10px;
+    font-size: 40px;
+    cursor: pointer;
+}
+/* 
+.submitComment
+{
+    border: none;
+    border-radius: 2px;
+    font-size: 20px;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    background-color: rgb(161, 161, 255);
+}
+.inputbox
+{
+    display: flex;
+    justify-content: space-between;
+} */
+
+
+.inputbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.textarea-container textarea {
+    width: 350px;
+    resize: none;
+    height: 40px;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 10px;
+    outline: none;
+   
+}
+
+
+.submitComment {
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    padding: 12px 20px;
+    cursor: pointer;
+    background-color: rgb(161, 161, 255);
+    color: white;
+    font-weight: bolder;
+}
+
+.submitComment:hover {
+    background-color: rgb(140, 140, 246);
+}

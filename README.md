@@ -25,15 +25,15 @@ So, why wait? Start creating and let the world see your work!
 ### Workflow
 ![alt text](beronyworkflow.drawio.png)
 
-
 >  note: this is older workflow image and not updated to latest
 
 
 ### Future Features
 - Authentication & Authorization ✅
 - Share blogs throughtout various social media ✅
-- Create and share video blogs or vlogs
+- Comment Section to share thoughts about posts ✅
 - Reeling Blogs and vlogs
+- Create and share video blogs or vlogs
 - will introduce Android,ios applications
 - collaborative blogging
 - monetize your ideas

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WriteModel } from '../Models/writemodel';
 import { WriteserviceService } from '../writeservice.service';
@@ -6,6 +6,8 @@ import { WriteserviceService } from '../writeservice.service';
 import {NgNavigatorShareService} from 'ng-navigator-share'
 import { account } from '../../lib/appwrite';
 import { ToastrService } from 'ngx-toastr';
+import { Client, Databases, ID, Query } from 'appwrite';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-reading',
@@ -26,22 +28,34 @@ export class ReadingComponent implements OnInit {
   loveitcount!:number
   loggedInUserAccount:any=null
   tagsarray:string[]=[]
+  newCommentText:string='';
+  comments: any[] = [];
+
 
   userReactions: { [key: string]: boolean } = {
     funny: false,
     sad: false,
     loveit: false
   };
+  databases: Databases;
 
 
-  constructor(private service:WriteserviceService,private router:ActivatedRoute,private ngnavigateservice:NgNavigatorShareService,private toastr: ToastrService) {}
+  constructor(private service:WriteserviceService,private cdr: ChangeDetectorRef,private router:ActivatedRoute,private ngnavigateservice:NgNavigatorShareService,private toastr: ToastrService)
+   {
+    const client = new Client().
+    setEndpoint(environment.appwriteEndpoint)
+    .setProject(environment.appwriteProjectId);
+
+
+    this.databases = new Databases(client);
+  }
 
 
   ngOnInit(): void {
     this.readblogdatabyid()
     this.getloggedinuserdata()
     this.checkUserReactions();
-    
+    this.fetchComments();
   //   this._id=this.router.snapshot.paramMap.get("postid")
     
   //   this.service.getpublishpostdatabyid(this._id).subscribe((data:WriteModel)=>{
@@ -156,5 +170,56 @@ checkUserReactions() {
     }
   });
 }
-  
+
+
+async addComment()
+{
+    if (this.newCommentText.trim() && this.postid && this.loggedInUserAccount) {
+      try {
+        const response = await this.databases.createDocument(
+          environment.databaseId, 
+          environment.collectionId, 
+          ID.unique(), 
+          {
+            postId: this.postid,
+            userId: this.loggedInUserAccount.$id,
+            commentText: this.newCommentText,
+            createdAt: new Date().toISOString(),
+            username: this.loggedInUserAccount.name
+          }
+        );
+        // console.log('Comment added:', response);
+        
+        this.newCommentText = ''; 
+        this.comments.push(this.newCommentText);
+      } catch (error) {
+        console.error('Error adding comment:', error);
+      }
+    } else {
+      console.error('Please log in to add comment');
+    }
+
+}
+async fetchComments()
+{
+  if (this.postid) {
+    try {
+      const response = await this.databases.listDocuments(
+        environment.databaseId, 
+        environment.collectionId, 
+        [Query.equal('postId', this.postid)]
+      );
+      this.comments = response.documents;
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  }
+
+}
+
+refreshcomponent(){
+  this.fetchComments()
+  this.cdr.detectChanges();
+}
+
 }

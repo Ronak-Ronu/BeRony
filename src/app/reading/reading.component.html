@@ -92,9 +92,53 @@
   </div>
   <div class="rightcommentsection">
     <div class="discussionheader">
-      <h1>DISCUSSION</h1>
+      <h1>DISCUSSION</h1><div (click)="refreshcomponent()" class="refreshbtn">⟳</div>
     </div>
-    <div class="userandcomments">
+    <div class="addcommentsection">
+      <div *ngIf="loggedInUserAccount">
+        <h2>Leave a Comment</h2>
+        <div class="inputbox">
+          <div class="textarea-container">
+              <textarea
+                  [(ngModel)]="newCommentText"
+                  name="newCommentText"
+                  maxlength="300"
+                  placeholder="What's your thought on this :)"
+                  (keydown.enter)="addComment()"
+              ></textarea>
+          </div>
+          <div class="button-container">
+              <button class="submitComment" (click)="addComment()">Post</button>
+          </div>
+      </div>
+      
+      </div>
+      <div *ngIf="!loggedInUserAccount">
+        <p>Please log in to leave a comment</p>
+      </div>
+    </div>
+    <div *ngFor="let comment of comments" class="userandcomments">
+      
+      <div class="user1">
+        <div class="userdata">
+          <div class="userprofile"></div>
+          <div class="username">{{username}}
+
+            <br>
+            <small>{{ comment.createdAt | date:'short' }}</small>
+
+          </div>
+          
+        </div>
+        <div class="usercomment">
+          <p [innerHTML]="comment.commentText">
+            <!-- {{comment.commentText}} -->
+          </p>
+        </div>
+      </div>
+
+
+<!-- 
       <div class="user1">
         <div class="userdata">
           <div class="userprofile"></div>
@@ -106,60 +150,10 @@
             difference
           </p>
         </div>
-      </div>
+      </div> -->
 
-      <div class="user1">
-        <div class="userdata">
-          <div class="userprofile"></div>
-          <div class="username">Blogzilla</div>
-        </div>
-        <div class="usercomment">
-          <p>
-            I'm not a morning person, I'm not a night person, I'm a 'whenever
-            the coffee kicks in' person
-          </p>
-        </div>
-      </div>
-
-      <!-- <div class="user1">
-                <div class="userdata">
-                    <div class="userprofile"></div>
-                    <div class="username">Procrastination Master</div>
-                </div>
-                <div class="usercomment">
-                    <p>I'm not a blogger, I'm a professional procrastinator with a blog </p>
-                </div>
-            </div>
-
-            <div class="user1">
-                <div class="userdata">
-                    <div class="userprofile"></div>
-                    <div class="username">Laughing Laura</div>
-                </div>
-                <div class="usercomment">
-                    <p>I'm not arguing, I'm just passionately expressing my point of view while completely dismissing yours</p>
-                </div>
-            </div> -->
-
-      <!-- <div class="user1">
-                <div class="userdata">
-                    <div class="userprofile"></div>
-                    <div class="username">Lord of the Memes</div>
-                </div>
-                <div class="usercomment">
-                    <p>I'm not arguing, I'm just explaining why I'm right. Again </p>
-                </div>
-            </div> -->
-
-      <!-- <div class="user1">
-                <div class="userdata">
-                    <div class="userprofile"></div>
-                    <div class="username">Lord McSassface</div>
-                </div>
-                <div class="usercomment">
-                    <p>Today's goals: eat Cheetos, play video games, maybe write a blog post... maybe not </p>
-                </div>
-            </div> -->
+     
+  
     </div>
     
   </div>
