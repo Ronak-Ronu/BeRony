@@ -49,6 +49,8 @@ async register(email: string, password: string, name: string) {
     if(error?.message)
     {
       console.log(error.message);
+      this.toastr.error(error.message)
+
     }
     
   }

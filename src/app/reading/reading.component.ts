@@ -8,6 +8,7 @@ import { account } from '../../lib/appwrite';
 import { ToastrService } from 'ngx-toastr';
 import { Client, Databases, ID, Query } from 'appwrite';
 import { environment } from '../../environments/environment';
+import axios from 'axios';
 
 @Component({
   selector: 'app-reading',
@@ -30,7 +31,8 @@ export class ReadingComponent implements OnInit {
   tagsarray:string[]=[]
   newCommentText:string='';
   comments: any[] = [];
-
+  gifSearchQuery: string = ''; 
+  gifs: any[] = []; 
 
   userReactions: { [key: string]: boolean } = {
     funny: false,
@@ -192,6 +194,7 @@ async addComment()
         
         this.newCommentText = ''; 
         this.comments.push(this.newCommentText);
+        this.ngOnInit()
       } catch (error) {
         console.error('Error adding comment:', error);
       }
@@ -221,5 +224,34 @@ refreshcomponent(){
   this.fetchComments()
   this.cdr.detectChanges();
 }
+
+
+  
+async searchGifs() {
+  const apiKey = environment.giphyAPIKEY; // Replace with your Giphy API key
+  try {
+    const response = await axios.get(`https://api.giphy.com/v1/gifs/search`, {
+      params: {
+        api_key: apiKey,
+        q: this.gifSearchQuery,
+        limit: 16 // Limit results
+      }
+    });
+    this.gifs = response.data.data; // Set gifs with the response data
+  } catch (error) {
+    console.error('Error fetching GIFs', error);
+  }
+}
+
+selectGif(gif: any) {
+  // const gifUrl = gif.images.original.url
+  const gifUrl=gif.images.fixed_height.url
+  console.log('Click to send gif:', gif);
+  this.newCommentText+=`<img style="width:40% !important; height: auto;" src="${gifUrl}" />`
+  console.log(this.newCommentText);
+  this.addComment()
+
+}
+
 
 }

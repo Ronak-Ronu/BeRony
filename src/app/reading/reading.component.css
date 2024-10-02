@@ -271,3 +271,22 @@
 .submitComment:hover {
     background-color: rgb(140, 140, 246);
 }
+
+
+.gif-container {
+    display: flex;
+    flex-wrap: wrap;
+    height: 400px;
+    overflow-y: auto;
+  }
+  
+  .gif {
+    margin: 5px;
+    cursor: pointer;
+  }
+  
+  .gif img {
+    width: 200px; 
+    height: auto;
+  }
+  

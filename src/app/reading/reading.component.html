@@ -111,6 +111,26 @@
               <button class="submitComment" (click)="addComment()">Post</button>
           </div>
       </div>
+      <div>
+        <input style="width: 90%;font-size: 25px;margin-left: 2%;height: 35px;"
+          type="text" 
+          [(ngModel)]="gifSearchQuery" 
+          (input)="searchGifs()" 
+          placeholder="Comment gif?" 
+        />
+        
+        <div *ngIf="gifs.length">
+          <div class="gif-container">
+            <div 
+              class="gif" 
+              *ngFor="let gif of gifs" 
+              (click)="selectGif(gif)">
+              <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title" />
+            </div>
+          </div>
+        </div>
+      </div>
+      
       
       </div>
       <div *ngIf="!loggedInUserAccount">
@@ -136,23 +156,6 @@
           </p>
         </div>
       </div>
-
-
-<!-- 
-      <div class="user1">
-        <div class="userdata">
-          <div class="userprofile"></div>
-          <div class="username">The Daily Grind</div>
-        </div>
-        <div class="usercomment">
-          <p>
-            I'm not arguing, I'm just explaining why I'm right. There's a
-            difference
-          </p>
-        </div>
-      </div> -->
-
-     
   
     </div>
     

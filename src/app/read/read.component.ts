@@ -5,11 +5,12 @@ import { account } from '../../lib/appwrite';
 // import { ActivatedRoute } from '@angular/router';
 // import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-
+import { environment } from '../../environments/environment';
+import axios from 'axios';
 @Component({
   selector: 'app-read',
   templateUrl: './read.component.html',
-  styleUrl: './read.component.css'
+  styleUrls: ['./read.component.css']
 })
 export class ReadComponent implements OnInit{
   blogs: WriteModel[] = [];
@@ -21,6 +22,8 @@ export class ReadComponent implements OnInit{
   userId!:string
   isloadingblogs:boolean=true
   selectedTag: string | null = null;
+  
+
 
   ngOnInit(): void {
     this.readblogdata()
@@ -112,5 +115,9 @@ export class ReadComponent implements OnInit{
     console.log(this.selectedTag);
     this.readblogdata();
   }
+
+
+  
+
 
 }
