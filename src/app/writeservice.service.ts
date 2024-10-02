@@ -55,7 +55,7 @@ export class WriteserviceService {
     // {
     //   return this.http.get<WriteModel[]>(this.url)
     // }
-    getpublishpostdata(searchQuery: string = '',tag: string | null =null): Observable<WriteModel[]> {
+    getpublishpostdata(searchQuery: string = '',tag: string | null =null,page:number,limit:number): Observable<WriteModel[]> {
       const params: any = {};
       if (searchQuery) {
         params.q = encodeURIComponent(searchQuery);
@@ -63,11 +63,18 @@ export class WriteserviceService {
       if (tag) {
         params.tags = tag;
       }
+      if(page)
+      {
+        params.page=page
+      }
+      if(limit)
+      {
+        params.limit=limit
+      }
     
       console.log("Fetching posts with params:", params);
       return this.http.get<WriteModel[]>(this.url,{params});
     }
-    
     
     getpublishpostdatabyid(id:string):Observable<WriteModel>
     {

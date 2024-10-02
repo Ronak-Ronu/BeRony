@@ -99,9 +99,6 @@ export class ReadingComponent implements OnInit {
             }
         });
     });
-    
-
-
   }
 
 

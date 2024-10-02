@@ -121,11 +121,11 @@
         
         <div *ngIf="gifs.length">
           <div class="gif-container">
-            <div 
+            <div  style="background-color: rgb(190, 190, 190);"
               class="gif" 
               *ngFor="let gif of gifs" 
               (click)="selectGif(gif)">
-              <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title" />
+              <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title"/>
             </div>
           </div>
         </div>

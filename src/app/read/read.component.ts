@@ -22,6 +22,8 @@ export class ReadComponent implements OnInit{
   userId!:string
   isloadingblogs:boolean=true
   selectedTag: string | null = null;
+  page:number=1
+  limit:number=4
   
 
 
@@ -38,7 +40,7 @@ export class ReadComponent implements OnInit{
     try {
       
     this.isloadingblogs = true;
-    this.readsevice.getpublishpostdata(this.searchQuery,this.selectedTag).subscribe(
+    this.readsevice.getpublishpostdata(this.searchQuery,this.selectedTag,this.page,this.limit).subscribe(
       (data:WriteModel[])=>{
           this.blogs=data
           this.isloadingblogs=false
@@ -95,7 +97,6 @@ export class ReadComponent implements OnInit{
         console.log("you are not author of this post.");
       }
       
-
     } catch (error) {
       console.log("cannot delete post",error);
       
@@ -116,8 +117,16 @@ export class ReadComponent implements OnInit{
     this.readblogdata();
   }
 
-
-  
+  nextpage()
+  {
+    this.page+=1;
+    this.ngOnInit()
+  }
+  prevpage()
+  {
+    this.page-=1;
+    this.ngOnInit()
+  }
 
 
 }

@@ -122,8 +122,14 @@ input:focus{
     height: 5vh;
     width: 5vw;
     font-size: 26px;
-    border: 3px solid black;
-    border-radius: 10px;
+    border: 1px solid black;
+    border-radius: 10px;transition: all 0.3s ease-in; 
+}
+.footerbuttoncls:hover{
+    background-color: #adb4f9;
+    border-radius: 5px;
+
+
 }
 .thumbnail{
     
@@ -225,4 +231,25 @@ input:focus{
 .loader{
    margin-top: 10%;
     font-size: 40px;
+}
+
+.nextandprevbtn
+{
+    margin-top: 10px;
+    height: 5px;
+    padding: 20px;
+    background-color: #babff9;
+     border-radius: 5px;
+     font-size: 20px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     cursor: pointer;
+     transition: all 0.3s ease-in-out; 
+ 
+}
+
+.nextandprevbtn:hover {
+    background-color: #a3aaff;
+    color: white; 
 }

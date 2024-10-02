@@ -82,6 +82,14 @@
     </div>
 </div>
 
+<div *ngIf="page>1">
+<div (click)="prevpage()" class="nextandprevbtn" >prev</div>
+
+</div>
+
+    <div (click)="nextpage()" class="nextandprevbtn"  >
+        next
+    </div>
 
 <div class="leftshowcontainer"> 
     <div class="recommendations">
@@ -102,9 +110,6 @@
            <button class="recommendationsbutton" (click)="filterByTag('Movie')">Movie</button>
            <button class="recommendationsbutton" (click)="filterByTag('Toppers')">Toppers</button>
            <button class="recommendationsbutton" (click)="filterByTag('CSBS')">CSBS</button>
-
-
-
         </div>
     
     </div>

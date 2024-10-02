@@ -18,7 +18,7 @@
 }
 
 .imagesection img{
-    width: 100%; 
+    width: 70%; 
     height: 100%; 
     object-fit: cover; 
     object-position: center;     
@@ -32,8 +32,7 @@
 }
 
 .imagesection{
-    width: 50vh;
-    height: 50vh; 
+    width: 60%;
     left: 15%;
     overflow: hidden;
     position: relative; 
