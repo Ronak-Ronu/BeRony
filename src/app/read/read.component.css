@@ -203,14 +203,26 @@ input:focus{
     border-radius: 100px;
     background-color: rgb(151, 76, 227);
     margin-right: 3%;
+
 }
 .pickprofileblog{
-    height: 27px;
-    width: 27px;
+    height: 35px;
+    width: 35px;
     border-radius: 100px;
     background-color: rgb(151, 76, 227);
     margin-right: 3%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
 }
+
+.pickprofileblog img {
+    width: 100%; 
+    height: auto; 
+    object-fit: cover; 
+}
+
 .pick1 .pickbrief
 {
     font-size: 20px;
@@ -233,23 +245,26 @@ input:focus{
     font-size: 40px;
 }
 
-.nextandprevbtn
-{
-    margin-top: 10px;
-    height: 5px;
-    padding: 20px;
-    background-color: #babff9;
-     border-radius: 5px;
-     font-size: 20px;
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     cursor: pointer;
-     transition: all 0.3s ease-in-out; 
- 
+
+.seemorebutton {
+    padding:20px;
+    margin-left: 5%;
 }
 
-.nextandprevbtn:hover {
-    background-color: #a3aaff;
-    color: white; 
+.seemorebutton button {
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid #aeb4f6;
+    color: black;              
+    padding: 10px 20px;       
+    font-size: 16px;          
+    font-weight: bolder;
+    border-radius: 5px;          
+    cursor: pointer;          
+    transition: all 0.3s ease;
 }
+
+.seemorebutton button:hover {
+    color: blue;
+}
+

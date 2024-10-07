@@ -1,43 +1,45 @@
 @import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
-*{
+
+* {
   font-family: "Julius Sans One", sans-serif;
   font-weight: 400;
   font-style: normal;
 }
-.logo{
-    width: 200px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 49px;
-}
- .logoimage{
-    height: 100px;
-    width: 100px;
-    background-color: grey;
-    border-radius: 6px;
-    margin-left: -59px;
 
- }
-.logoname{
+.logo {
+  width: 200px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 49px;
+}
+
+.logoimage {
+  height: 100px;
+  width: 100px;
+  background-color: grey;
+  border-radius: 6px;
+  margin-left: -59px;
+}
+
+.logoname {
   transform: rotate(270deg);
   font-weight: bolder;
   font-size: 20px;
 }
-.rightcontent{
+
+.rightcontent {
   width: 50vw;
   display: flex;
   justify-content: space-around;
   align-items: flex-end;
-  gap: 59px;
+  margin: 20px;
 }
 
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-right: 200px;
-
 }
 
 .rightcontent {
@@ -45,13 +47,45 @@
   flex-direction: row;
   align-items: flex-end; 
   font-size: 40px;
-  text-decoration: underline;  
+  gap: 10;
 }
 
-#logoutbutton{
+#logoutbutton,
+#loginbutton {
   cursor: pointer;
 }
 
-#loginbutton{
-  cursor: pointer;
+/* Mobile styles */
+@media (max-width: 600px) {
+  .logo {
+    flex-direction: column;
+    margin-top: 20px;
+  }
+
+  .logoname {
+    transform: rotate(0deg);
+    font-size: 20px; /* Smaller font size */
+    margin-top: 10px; /* Add spacing */
+  }
+
+  .rightcontent {
+    flex-direction: column; /* Stack right content items */
+    align-items: center; /* Center items */
+    font-size: 20px; /* Smaller font size */
+  }
+
+  .navbar {
+    flex-direction: column; /* Stack navbar items vertically */
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .rightcontent {
+    font-size: 30px; /* Adjust font size for tablets */
+    gap: 10px; /* Adjust gap */
+  }
+
+  .navbar {
+    margin-right: 0px; /* Less margin for tablets */
+  }
 }

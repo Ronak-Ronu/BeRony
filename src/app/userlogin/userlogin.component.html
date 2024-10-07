@@ -6,7 +6,8 @@
     
     <div class="inputarea">
       <div>
-
+        <input type="file" (change)="onFileChange($event)" />
+<br>
         <input type="email" name="useremail" placeholder="Email" [(ngModel)]="email" />
         <br>
         

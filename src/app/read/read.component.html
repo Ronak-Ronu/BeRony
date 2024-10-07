@@ -61,7 +61,9 @@
                 </p>
                 <div style="display: flex;align-items: center;">
 
-                    <div class="pickprofileblog"></div>
+                    <div class="pickprofileblog">
+                        <img [src]="'https://cloud.appwrite.io/v1/storage/buckets/'+bucketName+'/files/' + item.userId + '/view?project='+project+'&mode='+mode+''" alt="">
+                    </div>
                     <div>
 
                         <u style="cursor: pointer;">{{item.username}}</u>
@@ -82,14 +84,6 @@
     </div>
 </div>
 
-<div *ngIf="page>1">
-<div (click)="prevpage()" class="nextandprevbtn" >prev</div>
-
-</div>
-
-    <div (click)="nextpage()" class="nextandprevbtn"  >
-        next
-    </div>
 
 <div class="leftshowcontainer"> 
     <div class="recommendations">
@@ -141,6 +135,9 @@
 </div>
 
 
+</div>
+<div class="seemorebutton">
+    <button (click)="seemore()">Whats Next?</button>
 </div>
 
 </div>

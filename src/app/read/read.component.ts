@@ -6,7 +6,6 @@ import { account } from '../../lib/appwrite';
 // import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
-import axios from 'axios';
 @Component({
   selector: 'app-read',
   templateUrl: './read.component.html',
@@ -22,12 +21,19 @@ export class ReadComponent implements OnInit{
   userId!:string
   isloadingblogs:boolean=true
   selectedTag: string | null = null;
-  page:number=1
-  limit:number=4
-  
+  bucketName:string | null = null;
+  project:string | null = null;
+  mode:string | null = null;
+  start = 0;
+  limit = 5; 
 
 
   ngOnInit(): void {
+    this.bucketName=environment.bucketName;
+    this.project=environment.project;
+    this.mode=environment.mode;
+
+
     this.readblogdata()
     this.getloggedinuserdata()
 
@@ -38,11 +44,10 @@ export class ReadComponent implements OnInit{
   
   readblogdata(){
     try {
-      
     this.isloadingblogs = true;
-    this.readsevice.getpublishpostdata(this.searchQuery,this.selectedTag,this.page,this.limit).subscribe(
+    this.readsevice.getpublishpostdata(this.searchQuery,this.selectedTag,this.start,this.limit).subscribe(
       (data:WriteModel[])=>{
-          this.blogs=data
+          this.blogs=this.blogs.concat(data);
           this.isloadingblogs=false
           console.log(this.blogs);
           
@@ -82,15 +87,15 @@ export class ReadComponent implements OnInit{
 
 
 
-  deletepost(post:WriteModel)
+ async deletepost(post:WriteModel)
   {
     try {
 
       if (post.userId===this.userId && this.loggedInUserAccount) {
-        this.readsevice.deletepostbyid(post._id)
+       await this.readsevice.deletepostbyid(post._id)
         console.log("post deleted");
         this.toastr.success("<h3>We will miss this post</h3>")
-        this.ngOnInit()
+        this.readblogdata()
       }
       else{
         this.toastr.error("you are not author of this post");
@@ -114,18 +119,12 @@ export class ReadComponent implements OnInit{
   {
     this.selectedTag = this.selectedTag === usersselectedtag ? null : usersselectedtag
     console.log(this.selectedTag);
+    this.ngOnInit()
+  }
+  seemore()
+  {
+    this.start+=this.limit;
     this.readblogdata();
-  }
-
-  nextpage()
-  {
-    this.page+=1;
-    this.ngOnInit()
-  }
-  prevpage()
-  {
-    this.page-=1;
-    this.ngOnInit()
   }
 
 

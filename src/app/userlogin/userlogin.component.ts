@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { account, ID } from '../../lib/appwrite';
+import { account, ID,storage } from '../../lib/appwrite';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
@@ -15,7 +15,8 @@ export class UserloginComponent {
   email: string = '';
   password: string = '';
   name: string = '';
-
+  profileImage:File | null =null
+  
 
 constructor(private router:Router,private toastr: ToastrService){}
 
@@ -24,7 +25,11 @@ async login(email: string, password: string) {
   try {
     await account.createEmailPasswordSession(email, password);
     this.loggedInUser = await account.get();
+    
     console.log(this.loggedInUser.name);
+    console.log(this.loggedInUser.avatar);
+
+
     this.router.navigate(['/write'])
 
   } catch (error:any) {
@@ -42,9 +47,15 @@ async login(email: string, password: string) {
 
 async register(email: string, password: string, name: string) {
   try {
-    await account.create(ID.unique(), email, password, name);
-    this.login(email, password);
+    const userID=ID.unique()
+    await account.create(userID, email, password, name);
 
+    
+    if (this.profileImage) {
+      await this.uploadAvatar(userID, this.profileImage);
+    }    
+    
+    this.login(email, password);
   } catch (error:any) {
     if(error?.message)
     {
@@ -56,11 +67,31 @@ async register(email: string, password: string, name: string) {
   }
   }
 
+  async uploadAvatar(userID:string,profile:File)
+  {
+    try {
+ 
+      const response = await storage.createFile('670260000014a43cd53f', userID, profile);
+      console.log('Avatar uploaded:', response);
+
+    } catch (error: any) {
+      console.error('Error uploading avatar:', error);
+      this.toastr.error('Failed to upload avatar');
+    }
+  
+  }
+
 async logout() {
     await account.deleteSession('current');
     this.loggedInUser = null;
     this.router.navigate(['/'])
   }
 
-
+  onFileChange(event:Event)
+  {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.profileImage = input.files[0];
+    }  
+  }
 }

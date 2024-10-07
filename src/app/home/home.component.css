@@ -1,32 +1,66 @@
 @import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
-*{
+
+* {
   font-family: "Julius Sans One", sans-serif;
   font-weight: 400;
   font-style: normal;
 }
-.bodyelement{
-    width: 100vw;
-    height: 70vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+.bodyelement {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.centerelements{
-    text-align: center;
-    line-height: 4px;
+.centerelements {
+  margin-top: 15vh;
+  text-align: center;
+  line-height: 1;
 }
+
 .footer {
-    width: 400px;
-    height: auto;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-top: -12%;
-    margin-left: 86%;
-    overflow: hidden;
-  }
+  width: 100vw; 
+  height: auto;
+  display: flex;
+  justify-content: end;
+  overflow: hidden;
+  bottom: 0;
+  position: fixed;
+}
+
+.footer img {
+  max-width: 100%;
+  width: 290px;
+  height: auto; 
   
-  .footer img {
-    width: 400px;
+}
+
+@media (max-width: 600px) {
+  .bodyelement {
+    height: auto; 
   }
+
+  .centerelements {
+    line-height: 1.2;
+  }
+
+  .footer {
+    justify-content: center;
+  }
+
+  .footer img {
+    width: 100%; 
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .bodyelement {
+    height: 60vh; 
+  }
+
+  .footer {
+    width: 100vw; 
+    justify-content: center; 
+  }
+}
