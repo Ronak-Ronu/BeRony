@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-*
-{
+::selection {
+    background-color: #6e7af9;
+    color: #FFFFFF; 
+  }
+
+*{
         font-family: "PT Sans", sans-serif;
         font-weight: 400;
         font-style: normal;

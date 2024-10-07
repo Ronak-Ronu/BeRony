@@ -22,6 +22,7 @@
     "appwrite": "^14.0.1",
     "axios": "^1.7.7",
     "ng-navigator-share": "^1.0.4",
+    "ngx-infinite-scroll": "^18.0.0",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.6.3",

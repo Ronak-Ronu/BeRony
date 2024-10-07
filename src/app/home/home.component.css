@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
-
+::selection {
+  background-color: #6e7af9;
+  color: #FFFFFF; 
+}
 * {
   font-family: "Julius Sans One", sans-serif;
   font-weight: 400;

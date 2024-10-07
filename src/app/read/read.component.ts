@@ -58,8 +58,12 @@ export class ReadComponent implements OnInit{
           this.isloadingblogs=false
       } 
   }
+
+
+
   onSearch()
   {
+    this.blogs=[]
     this.readblogdata(); 
 
   }
@@ -117,9 +121,10 @@ export class ReadComponent implements OnInit{
 
   filterByTag(usersselectedtag:string)
   {
+    this.blogs=[]
     this.selectedTag = this.selectedTag === usersselectedtag ? null : usersselectedtag
     console.log(this.selectedTag);
-    this.ngOnInit()
+    this.readblogdata()
   }
   seemore()
   {

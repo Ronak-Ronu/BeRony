@@ -18,6 +18,8 @@ import { WrongpageComponent } from './wrongpage/wrongpage.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserloginComponent } from './userlogin/userlogin.component';
 import { routeauthguardGuard } from './routeauthguard.guard';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+
 
 const routes  = [
 
@@ -54,6 +56,7 @@ const routes  = [
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    InfiniteScrollModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot(routes)
   ],

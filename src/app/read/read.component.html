@@ -38,7 +38,10 @@
 
 <div class="readcontainer">
 
-<div class="blogscontainer">
+<div class="blogscontainer" infiniteScroll 
+[infiniteScrollDistance]="2"
+[infiniteScrollThrottle]="30"
+(scrolled)="seemore()" >
     <div *ngIf="isloadingblogs" class="loader"> 
         Loading beautiful blogs for {{username}} ♥️ 
     </div>

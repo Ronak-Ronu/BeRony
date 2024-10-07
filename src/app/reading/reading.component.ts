@@ -182,6 +182,7 @@ async addComment()
           {
             postId: this.postid,
             userId: this.loggedInUserAccount.$id,
+            commentusername:this.username,
             commentText: this.newCommentText,
             createdAt: new Date().toISOString(),
             username: this.loggedInUserAccount.name
