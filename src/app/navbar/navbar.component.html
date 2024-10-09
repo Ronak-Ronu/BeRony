@@ -15,14 +15,21 @@
     </div>
   
 </div>
-    <div class="rightcontent">
-      <p><a routerLink="/read">READ</a></p>
 
-      <p><a routerLink="/write">WRITE</a></p>
-      <p><a routerLink="/whosrony">WHO'S RONY</a></p>
+<div class="hamburger" (click)="toggleMenu()" [ngClass]="{ 'hamburgerActive': menuOpen }">
+  <div class="bar"></div>
+  <div class="bar"></div>
+  <div class="bar"></div>
+</div>
+    <div class="rightcontent" [class.show-menu]="menuOpen">
+      
+      <p><a routerLink="/read" (click)="toggleMenu()">READ</a></p>
 
-      <p *ngIf="loggedInUser" (click)="logout()" id="logoutbutton">LOG OUT</p>
-      <p *ngIf="!loggedInUser" (click)="login()" id="loginbutton">LOG IN</p>
+      <p><a routerLink="/write" (click)="toggleMenu()">WRITE</a></p>
+      <p><a routerLink="/whosrony" (click)="toggleMenu()">WHO'S RONY</a></p>
+
+      <p *ngIf="loggedInUser" (click)="logout()" id="logoutbutton" (click)="toggleMenu()">LOG OUT</p>
+      <p *ngIf="!loggedInUser" (click)="login()" id="loginbutton" (click)="toggleMenu()">LOG IN</p>
 
     </div>
   </nav>

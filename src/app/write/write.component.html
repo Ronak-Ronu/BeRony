@@ -26,9 +26,9 @@
             <button style="cursor: pointer;" class="toolbarbutton">LINK</button>
             <button style="cursor: pointer;" class="toolbarbutton" (click)="toggleImageUploadPopup()" >IMAGE</button>
 
-            <div class="popup-backdrop" *ngIf="showImageUploadPopup">
-                <div class="popup-modal">
-                    <h3>Select an Image to Upload</h3>
+            <div class="popup-backdrop" *ngIf="showImageUploadPopup" (click)="closePopup()">
+                <div class="popup-modal" (click)="$event.stopPropagation()">
+                    <h3>Select Thumbnail</h3>
                     <!-- <form (submit)="uploadBlogImage()"> -->
                         <input type="file" (change)="handleImageUpload($event)" name="imageUrl">
                         <!-- <button type="submit">Upload</button> -->
@@ -52,7 +52,7 @@
         
                 <textarea cols="83" 
                   rows="2"
-                 placeholder="TITLE GOES HERE"
+                 placeholder="Title Goes Here"
                  name="title" 
                  #title="ngModel"
                  maxlength="300"
@@ -66,7 +66,7 @@
              <textarea cols="83"
                rows="17"
                maxlength="3000"
-               placeholder="Write whatever you like!"
+               placeholder="Write whatever you like! TRY: <h1>Hello World</h1>"
                name="bodyofcontent" 
                #bodyofcontent="ngModel"
                [(ngModel)]="editbodycontent"
