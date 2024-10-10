@@ -7,16 +7,20 @@ import { environment } from '../environments/environment'
 @Injectable()
 export class WriteserviceService {
   url:string;
+  findposturl:string;
   drafturl:string;
   postid:any;
   
   constructor(private http:HttpClient) {
 
-    // this.url=`${environment.beronyAPI}/api/posts`
-    // this.drafturl=`${environment.beronyAPI}/api/drafts`
+    this.url=`${environment.beronyAPI}/api/posts`
+    this.drafturl=`${environment.beronyAPI}/api/drafts`
+    this.findposturl=`${environment.beronyAPI}/api/findpost`
     
-    this.url='http://localhost:3000/api/posts'
-    this.drafturl='http://localhost:3000/api/drafts'
+    // this.url='http://localhost:3000/api/posts'
+    // this.findposturl='http://localhost:3000/api/findpost'
+
+    // this.drafturl='http://localhost:3000/api/drafts'
    }
    
 
@@ -55,14 +59,14 @@ export class WriteserviceService {
     // {
     //   return this.http.get<WriteModel[]>(this.url)
     // }
-    getpublishpostdata(searchQuery: string = '',tag: string | null =null,start:number,limit:number): Observable<WriteModel[]> {
+    getpublishpostdata(start:number,limit:number): Observable<WriteModel[]> {
       const params: any = {};
-      if (searchQuery) {
-        params.q = encodeURIComponent(searchQuery);
-      }
-      if (tag) {
-        params.tags = tag;
-      }
+      // if (searchQuery) {
+      //   params.q = encodeURIComponent(searchQuery);
+      // }
+      // if (tag) {
+      //   params.tags = tag;
+      // }
       if(start)
       {
         params.start=start
@@ -75,6 +79,22 @@ export class WriteserviceService {
       console.log("Fetching posts with params:", params);
       return this.http.get<WriteModel[]>(this.url,{params});
     }
+
+    getsearchpostdata(tag: string | null=null,query:string='')
+    {
+      const params: any = {};
+      if(tag)
+      {
+        params.tags=tag;
+      }
+      if (query) {
+        params.q = query;
+      }
+      console.log("querying",params);
+      return this.http.get<WriteModel[]>(this.findposturl,{params})
+
+    }
+
     
     getpublishpostdatabyid(id:string):Observable<WriteModel>
     {

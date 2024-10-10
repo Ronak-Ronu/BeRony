@@ -7,7 +7,7 @@
 
     <div class="searchitems">
         <div class="searchbar">
-            <input type="text" placeholder="microsoft BSOD" [(ngModel)]="searchQuery"  (keydown.enter)="onSearch()">
+            <input type="text" placeholder="ronak" [(ngModel)]="searchQuery"  (keydown.enter)="onSearch()">
         </div>
         <button class="searchbutton" (click)="onSearch()">YUP <span style="font-size: 40px;">↵</span></button>
     </div>
@@ -19,16 +19,16 @@
 <div class="filters">
     <button class="filterbutton" (click)="toggleFilters()" style="width: 200px ;">
         <div *ngIf="!showFilters" >
-                Filter <span style="font-size: 35px;">👉</span>
+                Filter <span class="filteremoji">👉</span>
         </div>
         <div *ngIf="showFilters">
-            Filter <span style="font-size: 35px;">👈</span>
+            Filter <span class="filteremoji">👈</span>
     </div>
     </button>
-    <button class="filterbutton1" *ngIf="showFilters" [ngClass]="{'enter': showFilters, 'exit': !showFilters}" style="width: 200px ;" (click)="filterByTag('Gadgets')">Gadgets</button>
+    <button class="filterbutton1" *ngIf="showFilters" [ngClass]="{'enter': showFilters, 'exit': !showFilters}"  (click)="filterByTag('Gadgets')">Gadgets</button>
     <button class="filterbutton1" *ngIf="showFilters" (click)="filterByTag('DBMS')">DBMS</button>
     
-    <button class="filterbutton1" *ngIf="showFilters"style="min-width:20vw; font-size: 25px;"  (click)="filterByTag('Self Improvement')" >Self Improvement</button>
+    <button class="filterbutton1" *ngIf="showFilters"  (click)="filterByTag('Self Improvement')" >Self Improvement</button>
     <button class="filterbutton1" *ngIf="showFilters" (click)="filterByTag('Games')">Games</button>
 
 </div>
@@ -92,7 +92,7 @@
     <div class="recommendations">
        <div>
 
-           <span style="font-size: 30px;">Recommeded Topics</span>
+           <span class="recommendationtitle">Recommeded Topics</span>
         </div>
 
         <br>
@@ -113,7 +113,7 @@
     <hr>
     <div class="toppicks">
         <div>
-            <span style="font-size: 30px;">Top Picks</span>
+            <span class="toppicktitle">Top Picks</span>
          </div>
             <div class="pick1">
                 <div class="pickinfo">

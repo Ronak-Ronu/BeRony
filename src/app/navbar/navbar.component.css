@@ -147,12 +147,12 @@
   }
 
   .rightcontent {
-    position: fixed;
-    gap: 0.5rem;
+    position: absolute;
+    gap: 1rem;
     top: 10px;
     right: 100%;
     flex-direction: column;
-    width: 90%;
+    width: 94%;
     height: 97vh;
     background-color: rgba(132, 158, 194, 0.6); 
     backdrop-filter: blur(10px);
@@ -165,7 +165,7 @@
   }
 
   .rightcontent.show-menu {
-    right: 0;
+    right: -18px;
 
   }
 
@@ -199,7 +199,6 @@
     font-size: 40px;
     color: white;
     cursor: pointer;
-    padding: 50px 20px;
     font-weight: bolder;
     display: block; 
     border-bottom: 2px solid black;
@@ -275,8 +274,6 @@
     padding: 50px 20px; 
     display: block; 
     border-bottom: 2px solid black;
- 
-
   }
 
   #logoutbutton, #loginbutton {

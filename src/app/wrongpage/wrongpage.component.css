@@ -7,7 +7,7 @@
 .character{
     height: 200px;
     margin-left: 80vw;
-    margin-top: 13%;
+    margin-top: 8%;
 }
 .wrongpagemessage{
    
@@ -22,10 +22,71 @@
     margin-top: -5%;
     text-decoration: none;
     color: black;
+    text-decoration: underline;
 }
 .whicherror{
     position: absolute;
     font-size: 96px;
     margin-left: 95%;
     margin-top: 5%;
+}
+
+@media (max-width: 600px) {
+    .character{
+        height: 100px;
+        margin-left: 40%;
+        margin-top: 13%;
+    }
+    .wrongpagemessage{
+       
+        font-size: 58px;
+        width: 80%;
+        font-weight: 500;
+        margin-left: 10%;
+        margin-top: 10%;
+    }
+    .gohome{
+        font-size: 40px;
+        margin-left: 13%;
+        margin-top: -5%;
+        text-decoration: none;
+        color: black;
+        text-decoration: underline;
+    }
+    .whicherror{
+        position: absolute;
+        font-size: 40px;
+        margin-left: 90%;
+        margin-top: 10%;
+    }
+    
+}
+
+@media (min-width: 601px) and (max-width: 1100px) {
+    .character{
+        height: 200px;
+        margin-left: 70%;
+        margin-top: 100%;
+    }
+    .wrongpagemessage{
+        font-size: 70px;
+        width: 80%;
+        font-weight: 500;
+        margin-left: 10%;
+        margin-top: 10%;
+    }
+    .gohome{
+        font-size: 40px;
+        margin-left: 63%;
+        margin-top: 8%;
+        text-decoration: none;
+        color: black;
+        text-decoration: underline;
+    }
+    .whicherror{
+        position: absolute;
+        font-size: 40px;
+        margin-left: 90%;
+        margin-top: 10%;
+    }
 }

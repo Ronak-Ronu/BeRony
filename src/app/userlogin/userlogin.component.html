@@ -6,13 +6,25 @@
     
     <div class="inputarea">
       <div>
-        <input type="file" (change)="onFileChange($event)" />
+
+          <input type="file"  (change)="onFileChange($event)" />
 <br>
         <input type="email" name="useremail" placeholder="Email" [(ngModel)]="email" />
         <br>
         
-        <input type="password"name="userpass" placeholder="Password" [(ngModel)]="password" />
-        
+        <input type="password" [type]="passwordVisible?'text':'password'" name="userpass" placeholder="Password"   [(ngModel)]="password" />
+        <button type="button" class="hideunhide"
+        (click)="togglePassword()">
+        <div *ngIf="passwordVisible">
+
+          🙊
+        </div>
+        <div *ngIf="!passwordVisible">
+          🙈
+        </div>
+         
+        </button>
+      
         <br>
         <input type="text" id="username" placeholder="Name" [(ngModel)]="name" />
         <br>
@@ -30,7 +42,6 @@
           </button>
         </div>
           <div class="button2">
-
             <button (click)="register(email, password, name)">
               <img src="assets/img/signupbutton.png" alt="signInButton"/>  
             </button>
@@ -42,6 +53,6 @@
 
 
 
-  <div class="footerheadinglogin">please signin / signup</div>
+  <div class="footerheadinglogin"> signin / signup to write</div>
   
 </div>

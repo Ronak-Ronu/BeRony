@@ -54,3 +54,165 @@ input:focus
     gap: 2%;
     margin-top: 5vh;
 }
+
+.hideunhide
+{
+    position: absolute;
+    right: 49%; 
+    top: 55.5%;
+    transform: translateY(-50%);
+    border: none;
+    background: none; 
+    cursor: pointer;
+     font-size: 40px;
+}
+
+@media (max-width: 600px) {
+
+    .headinglogin{
+        font-family: "Julius Sans One", sans-serif;
+        font-size: 35px;
+        font-weight: 400;
+        font-style: normal;
+        margin-left: 5%;
+        padding: 30px;
+      
+    
+    }
+    button
+    {
+        margin: 0;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+    }
+
+
+    .footerheadinglogin{
+        font-family: "Julius Sans One", sans-serif;
+        font-size: 20px;
+        font-weight: bold;
+        font-style: normal;
+        display: flex;    
+        align-items: center;
+        justify-content: center;
+        margin-top: 1rem;
+        padding: 20px;
+    }
+    
+    input{
+        margin: 0;   
+        width: 80%;
+        font-size: 27px;
+        border: none;
+        border-radius: 2px;
+        border-bottom: 1px solid black;
+        margin-bottom: 1.5rem;
+        margin-left: 10%;
+    }
+   
+    .inputarea{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1%;
+        margin-top: 1rem;
+
+        
+    }
+    .buttons{
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        padding: 20px;
+    }
+    .buttons img{
+        width: 11rem;
+    }
+    .hideunhide
+    {
+        position: absolute;
+        right:9%; 
+        top: 47%;
+        transform: translateY(-50%);
+        border: none;
+        background: none; 
+        cursor: pointer;
+         font-size: 42px;
+    }
+
+}
+
+@media (min-width: 601px) and (max-width: 1000px) {
+
+    .headinglogin{
+        font-family: "Julius Sans One", sans-serif;
+        font-size: 70px;
+        font-weight: 400;
+        font-style: normal;
+        margin-left: 5%;
+        padding: 50px;
+        margin-top: 5rem;
+      
+    
+    }
+   
+
+    .footerheadinglogin{
+        font-family: "Julius Sans One", sans-serif;
+        font-size: 50px;
+        font-weight: bold;
+        font-style: normal;
+        display: flex;    
+        align-items: center;
+        justify-content: center;
+        margin-top: 5rem;
+    }
+    
+    input{
+        margin: 0;   
+        width: 80%;
+        height: 100px;
+        font-size: 50px;
+        border: none;
+        border-radius: 2px;
+        border-bottom: 1px solid black;
+        margin-bottom: 4rem;
+        margin-left: 10%;
+        padding: 20px;
+    }
+   
+    .inputarea{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1%;
+        margin-top: 6rem;
+
+        
+    }
+    .buttons{
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        padding: 20px;
+        padding: 30px;
+    }
+    .buttons img{
+        width: 27rem;
+    }
+    .hideunhide
+{
+    position: absolute;
+    right: 7%; 
+    top: 53%;
+    transform: translateY(-50%);
+    border: none;
+    background: none; 
+    cursor: pointer;
+     font-size: 90px;
+}
+
+}

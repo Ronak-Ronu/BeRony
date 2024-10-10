@@ -45,7 +45,7 @@ export class ReadComponent implements OnInit{
   readblogdata(){
     try {
     this.isloadingblogs = true;
-    this.readsevice.getpublishpostdata(this.searchQuery,this.selectedTag,this.start,this.limit).subscribe(
+    this.readsevice.getpublishpostdata(this.start,this.limit).subscribe(
       (data:WriteModel[])=>{
           this.blogs=this.blogs.concat(data);
           this.isloadingblogs=false
@@ -59,12 +59,28 @@ export class ReadComponent implements OnInit{
       } 
   }
 
-
+  readqueryblogdata()
+  {
+    try {
+      this.isloadingblogs = true;
+      this.readsevice.getsearchpostdata(this.selectedTag,this.searchQuery).subscribe(
+        (data:WriteModel[])=>{
+            this.blogs=data;
+            this.isloadingblogs=false
+            console.log(this.blogs);
+            
+        }
+      )
+        } catch (error) {
+            console.log(error);
+            this.isloadingblogs=false
+        } 
+  }
 
   onSearch()
   {
     this.blogs=[]
-    this.readblogdata(); 
+    this.readqueryblogdata(); 
 
   }
   
@@ -124,7 +140,7 @@ export class ReadComponent implements OnInit{
     this.blogs=[]
     this.selectedTag = this.selectedTag === usersselectedtag ? null : usersselectedtag
     console.log(this.selectedTag);
-    this.readblogdata()
+    this.readqueryblogdata()
   }
   seemore()
   {

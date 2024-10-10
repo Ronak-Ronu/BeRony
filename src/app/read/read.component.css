@@ -54,10 +54,9 @@ input:focus{
 }
 .filterbutton {
     background-color: #d9dcf8;
-    min-width: 9vw;
-    max-width: 9vw;
-    width: 7vw;
-    height: 7vh;
+    min-width: auto;
+    min-height: 7vh;
+    max-height: 7vh;
     font-size: 27px;
     border: 1px solid black;
     border-radius: 50px;
@@ -73,13 +72,14 @@ input:focus{
       opacity: 1;
     }
   }
-  
+  .filteremoji
+  {
+    font-size: 35px;
+  }
 
   .filterbutton1 {
     background-color: #d5d8f9;
-    min-width: 9vw;
-    max-width: 9vw;
-    width: 7vw;
+    min-width: auto;
     min-height: 7vh;
     max-height: 7vh;
     height: 7vh;
@@ -89,28 +89,22 @@ input:focus{
     margin-left: 2%;
     cursor: pointer;
     overflow: visible;
-    padding: 10px;
+    padding: 20px;
     animation: fadeIn 0.5s forwards;
 }
 
 
 .recommendationsbutton{
     background-color: #d5d8f9;
-    min-height: 4vh;
-    max-height: 4vh;
-    height: 4vh;
-    font-size: 20px;
+    font-size: 25px;
     border: 1px solid black;
     border-radius: 50px;
     margin-left: 2%;
     margin-top: 2%;
     margin-bottom: 5%;
     cursor: pointer;
-    padding: 10px;
+    padding: 15px;
     animation: fadeIn 0.5s forwards;
- 
-
-
 }
 .filters{
     display: flex;
@@ -151,7 +145,6 @@ input:focus{
     gap: 8%;
     margin-top: 7%;
     margin-bottom: 5%;
-    
 }
 
 .thumbnailname{
@@ -189,8 +182,6 @@ input:focus{
     padding: 10px;
     margin-top: 2%;
 }
- /* .recommendations{
-} */
 
 .toppicks{
     padding: 10px;
@@ -208,6 +199,10 @@ input:focus{
     background-color: rgb(151, 76, 227);
     margin-right: 3%;
 
+}
+.toppicktitle
+{
+    font-size: 30px;
 }
 .pickprofileblog{
     height: 35px;
@@ -243,7 +238,10 @@ input:focus{
     color: rgb(78, 161, 164);
 }
 
-
+.recommendationtitle
+{
+    font-size: 30px;
+}
 .loader{
    margin-top: 10%;
     font-size: 40px;
@@ -272,3 +270,368 @@ input:focus{
     color: blue;
 }
 
+@media (max-width: 600px) {
+    .readmainbody{
+        width: 100%;
+        
+    }
+    .headingread{
+        font-size: 30px;
+        padding: 10px ;
+        font-family: "Julius Sans One", sans-serif;
+        font-weight: 400;
+        font-style: normal;      
+    }
+
+
+    .searchbar,.searchbar input{
+        width:100%;
+        height: 5vh;
+        background-color: rgba(255, 255, 255,0.7);
+        border-radius: 10px;
+        font-size: 25px;
+
+    }
+    .searchbutton{
+        
+        background-color: #C6CAF9;
+        height: 40%;
+        width: 55%;
+        font-size: 20px;
+        border: 2px solid black;
+        border-radius: 10px;
+        cursor: pointer;
+
+    
+    }
+    .searchitems{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        
+    }
+    .filterbutton {
+        background-color: transparent;
+        min-width: 25%;
+        max-width: 20%;
+        width: 25%;
+        font-size: 20px;
+        margin-left: 5px;
+        cursor: pointer;
+        border: none;
+        border-radius: 0px;
+        border-bottom: 0.5px solid rgb(77, 77, 77);
+      }
+      .filteremoji{
+        font-size: 20px;
+      }
+  
+      .filterbutton1
+      {
+        background-color: transparent;
+        font-size: 20px;
+        margin-left: 5px;
+        cursor: pointer;
+        border: none;
+        border-radius: 0px;
+        padding: 10px;
+        border-bottom: 0.5px solid rgb(77, 77, 77);
+
+      }
+
+    .recommendationsbutton{
+        background-color: #d5d8f9;
+        font-size: 17px;
+        border: 1px solid rgb(76, 76, 76);
+        border-radius: 30px;
+        margin-left: 5px;
+        margin-top: 2%;
+        margin-bottom: 5%;
+        cursor: pointer;
+        padding: 13px;
+        animation: fadeIn 0.5s forwards;
+        }   
+        .readcontainer{
+            display: flex;
+            flex-direction: column-reverse;
+            padding-left: 10px;
+
+        }
+        .leftshowcontainer{
+            border-left: 0.5px solid rgb(118, 117, 117);
+            width:100%;
+            padding: 10px;
+            margin-top: 2%;
+            border-bottom: 0.5px solid rgb(118, 117, 117);
+            padding-bottom: 30px;
+        }
+        .contentdivs{
+
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start; 
+            gap: 20px;
+            margin-top: 40px;
+            width: 100%;
+            height: auto; 
+        }
+        .thumbnail{
+            height: 150px;
+            width: 150px;
+            border-radius: 10px;
+            object-fit: cover; 
+            background-size: cover; 
+            background-position: center; 
+        }
+        .thumbnailname{
+            font-size: 25px;
+            height: 70%;
+            width: 100%;
+            text-wrap: pretty;
+            margin-bottom: 20%;
+        }
+        .footerbuttons
+        {
+            display: flex;
+            justify-content: space-between; 
+            margin-top: 10px;
+        
+        }
+        .footerbuttoncls{
+            background-color: transparent;
+            width: 70px;
+            padding: 10px;
+            font-size: 20px;
+            font-weight: 400;
+            border: none;
+            border-radius: 0px;
+            transition: all 0.3s ease-in; 
+            text-decoration: underline;
+        }
+        
+        .invisiblediv
+        {
+            width: 0px;
+        }
+
+        .rightcontentthumbnail {
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; 
+            padding: 10px; 
+        }
+        
+}
+@media (min-width: 601px) and (max-width: 1000px) {
+    .readmainbody {
+        width: 97%;
+        margin: auto; 
+        margin-top: 5%;
+    }
+    
+    .headingread {
+
+        font-size: 36px; 
+        padding: 15px; 
+    }
+
+    .searchbar, .searchbar input {
+        width: 100%;
+        height: 4vh; 
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        font-size: 30px; 
+    }
+    
+    .searchbutton {
+        background-color: #C6CAF9;
+        height: 4vh; 
+        width: 40%; 
+        font-size: 22px; 
+        border: 2px solid black;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .searchitems {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 20px; 
+    }
+
+    .filterbutton {
+        background-color: transparent;
+        min-width: 30%; 
+        max-width: 25%; 
+        font-size: 40px;
+        margin-left: 10px; 
+        cursor: pointer;
+        border: none;
+        border-radius: 0px;
+        border-bottom: 0.5px solid rgb(77, 77, 77);
+    }
+    .recommendationtitle
+    {
+        font-size: 45px;
+    }
+    .filteremoji {
+        font-size: 40px; 
+    }
+
+    .filterbutton1 {
+        background-color: transparent;
+        font-size: 40px; 
+        margin-left: 10px; 
+        cursor: pointer;
+        border: none;
+        border-radius: 0px;
+        padding: 12px;
+        border-bottom: 0.5px solid rgb(77, 77, 77);
+    }
+    .recommendations{
+        font-size: 30px;
+    }
+
+    .recommendationsbutton {
+        background-color: #d5d8f9;
+        font-size: 40px; 
+        border: 1px solid rgb(76, 76, 76);
+        border-radius: 30px;
+        margin-left: 5px;
+        margin-top: 3%;
+        margin-bottom: 5%;
+        cursor: pointer;
+        padding: 15px; 
+        animation: fadeIn 0.5s forwards;
+    }
+    .toppicktitle
+    {
+        font-size: 40px;
+    }
+    .readcontainer {
+        display: flex;
+        flex-direction: column-reverse;
+        padding-left: 15px;
+    }
+
+    .leftshowcontainer {
+        border-left: 0.5px solid rgb(118, 117, 117);
+        width: 100%;
+        padding: 15px;
+        margin-top: 3%; 
+        border-bottom: 0.5px solid rgb(118, 117, 117);
+    }
+
+    .contentdivs {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start; 
+        gap: 25px; 
+        margin-top: 50px; 
+        width: 100%;
+        height: auto; 
+    }
+
+    .thumbnail {
+        height: 180px;
+        width: 180px; 
+        border-radius: 10px;
+        object-fit: cover; 
+        background-size: cover; 
+        background-position: center; 
+    }
+
+    .thumbnailname {
+        font-size: 28px; /* Increase font size */
+        height: auto; /* Allow height to auto adjust */
+        width: 100%;
+        margin-bottom: 20%;
+    }
+
+    .footerbuttons {
+        display: flex;
+        justify-content: space-between; 
+        margin-top: 15px; /* Increase margin for spacing */
+    }
+
+    .toppicks{
+        padding: 10px;
+        font-size: 40px;
+
+    }
+    .pick1 .pickinfo{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        font-size: 40px;
+    }
+    .pick1 .pickinfo .pickprofile{
+        height: 40px;
+        width: 40px;
+        border-radius: 100px;
+        background-color: rgb(151, 76, 227);
+        margin-right: 3%;
+    
+    }
+    .pickprofileblog{
+        height: 35px;
+        width: 35px;
+        border-radius: 100px;
+        background-color: rgb(151, 76, 227);
+        margin-right: 3%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+    }
+    
+    .pickprofileblog img {
+        width: 100%; 
+        height: auto; 
+        object-fit: cover; 
+    }
+    
+    .pick1 .pickbrief
+    {
+        font-size: 35px;
+    }
+    .pick1 .readtime{
+        margin-top: 20px;
+    }
+    .seeall
+    {
+        text-decoration: underline;
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: 10%;
+        color: rgb(78, 161, 164);
+    }
+    
+    .footerbuttoncls {
+        background-color: transparent;
+        width: 80px; /* Increase width */
+        padding: 12px; /* Increase padding */
+        font-size: 22px; /* Increase font size */
+        font-weight: 400;
+        border: none;
+        border-radius: 0px;
+        transition: all 0.3s ease-in; 
+        text-decoration: underline;
+    }
+
+    .invisiblediv {
+        width: 0px;
+    }
+
+    .rightcontentthumbnail {
+        flex: 1; 
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; 
+        padding: 15px; 
+    }
+}
