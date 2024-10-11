@@ -47,22 +47,40 @@
     width: 70vw;
 }
 .buttonsection{
+    display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
     width: 50vw;
     height: 7vh;
     display: flex;
     align-items: center;
-    gap: 2%;    
+    gap: 0%;    
     margin-left: 20%;
     margin-top: 2%;
 }
-
+.footerbuttonsgrey{
+    display: flex;
+    gap: 5%;
+    /* background-color: red; */
+    margin-left: 5%;
+    width: 20vw;
+    justify-content: space-evenly;
+}
+.likebuttons{
+    display:flex;
+    gap: 1%;
+    justify-content: space-evenly;
+    width: 20vw;
+    /* background-color: rebeccapurple; */
+}
 .footerbutton{
-    width: 200px;
-    height: 60px;
+    width: auto;
+    height: 100%;
     background-color: rgb(223, 223, 223);
     font-size: 22px;
-    border-radius: 10px;
+    border-radius: 6px;
     font-weight: lighter;
+    padding: 10px;
 }
 
 .bodycontentsection{
@@ -78,6 +96,12 @@
     margin-left: 20%;
     font-size: 30px;
 }
+.tagslist
+{
+    margin-left: 13%;
+    margin-bottom: 5%;
+    margin-top: -5%;
+}
 .rightcommentsection{
     height: 90vh;
     width: 480px;
@@ -88,10 +112,10 @@
     border-radius: 10px;
 
 }
+
 .containerforeading{
     display: flex;
-
-    
+    flex-direction: row;
 }
 .discussionheader{
     height: 7%;
@@ -102,7 +126,9 @@
     justify-content: center;
     align-items: center;
 }
-
+.bodyofcontenthighlighted{
+    display: flex;
+}
 .userandcomments{
     padding: 10px;
 }
@@ -177,13 +203,14 @@
 
 
 .postadmindetails{
-    width: auto;
+    width: 70%;
     margin-top: 5%;
-    margin-left: 20%;
+    margin-left: 15%;
     margin-bottom: 10%;
     font-size: 30px;
     border-radius: 20px;
     background-color: rgb(255, 228, 255);
+    padding: 10px;
 
 }
 
@@ -218,23 +245,6 @@
     font-size: 40px;
     cursor: pointer;
 }
-/* 
-.submitComment
-{
-    border: none;
-    border-radius: 2px;
-    font-size: 20px;
-    padding: 10px;
-    margin: 5px;
-    cursor: pointer;
-    background-color: rgb(161, 161, 255);
-}
-.inputbox
-{
-    display: flex;
-    justify-content: space-between;
-} */
-
 
 .inputbox {
     display: flex;
@@ -259,7 +269,13 @@
    
 }
 
-
+   .inputgifstyle
+    {
+        width: 90%;
+        font-size: 25px;
+        margin-left: 2%;
+        height: 35px;
+    }
 .submitComment {
     border: none;
     border-radius: 10px;
@@ -292,4 +308,332 @@
     width: 200px; 
     height: auto;
   }
+
+  .showhighlightTextInCommentStyle{
+    font-size: 30px;
+    background-color: #b3b8e8;
+    border-radius: 5px;
+    padding: 10px;
+    margin-left: 10px;
+  }
+  @media (max-width: 600px) {
+
+    .headingwrite{
+        font-size: 2rem;
+        padding: 20px;
+        margin-left: 2%;
+    }  
+    .imagesection{
+        width: 100%;
+        left: 0%;
+        overflow: hidden;
+        position: relative; 
+        padding: 10px;
+    }
+    
+    .imagesection img{
+        width: 95%; 
+        height: 100%; 
+        margin-left: 0%;   
+    }
+    .rightcommentsection{
+        height: auto;
+        width: 93%;
+        background-color: rgb(255, 255, 255);
+        margin-top: 5%;
+        margin-left: 1%;
+        overflow: auto;
+        border: 1px solid rgb(53, 53, 53);
+        border-radius: 10px;
+        padding: 10px;
+    }
+    .addcommentsection{
+        font-size: 9px;
+    }
+    .inputbox{
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 20px;
+        padding: 10px;
+        gap: 10px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e0e0e0;
+    }
+    .gif-container
+    {
+        display: flex;
+        flex-wrap: wrap;
+        height: 400px;
+        overflow-y: auto;
+
+    }
+    .leftreadingsection{
+        width: 100vw;
+    }
+    .buttonsection{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 100vw;
+        height: 7vh;
+        display: flex;
+        gap: 2%;    
+        margin-left: 2%;
+        margin-top: 5%;
+    }
+    .footerbuttonsgrey{
+        display: flex;
+        gap: 5%;
+        width: 100vw;
+        justify-content: space-evenly;
+    }
+    .likebuttons{
+        display:flex;
+        gap: 1%;
+        padding: 20px;
+        justify-content: space-evenly;
+        width: 100vw;
+    }
+    .footerbutton{
+        width: auto;
+        background-color: rgb(223, 223, 223);
+        font-size: 20px;
+        border-radius: 6px;
+        font-weight: lighter;
+        padding: 15px;
+    }
+    .bodycontentsection{
+        width: 90%;
+        margin-top: 30%;
+        padding-top: 25px;
+        margin-left: 5%;
+        font-size: 25px;
+    }
+    .containerforeading{
+        display: flex;
+        flex-direction: column;
+        gap: 10%;
+    }
+    .endofnotesection{
+        width: 100%;
+        margin-top: 5%;
+        margin-left: 5%;
+        font-size: 24px;
+    }
+    
+    .discussionheader{
+        height: 7%;
+        width: 100%;
+        background-color: rgb(223, 223, 223);
+        font-weight: lighter;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 10px;
+    }
+    
+    .userandcomments{
+        padding: 10px;
+    }
+    
+    .funnybutton{
+        height: auto;
+        width: auto;
+        font-size: 35px;
+        cursor: pointer;
+        padding: 5px;
+    }
+    .sadbutton{
+        height: auto;
+        width: auto;
+        font-size: 35px;
+        cursor: pointer;
+        padding: 5px;
+    }
+    .loveitbutton{
+        height: auto;
+        width: auto;
+        font-size: 35px;
+        cursor: pointer;
+        padding: 5px;
+    }
+    .tagslist
+    {    margin-left: 5%;
+        margin-bottom:0%;
+        margin-top: 0%;
+
+        }
+        .gif img {
+            width: 150px; 
+            height: auto;
+          }
+    .tag {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #a8aee9; 
+            color: #333333;
+            font-size:20px;
+            border-radius: 50px;
+            border:1px solid white;
+            padding:15px;
+        
+          }
+        
+     .postadmindetails{
+            width: auto;
+            margin-top: 5%;
+            margin-left: 5%;
+            margin-bottom: 10%;
+            font-size: 25px;
+            border-radius: 20px;
+            background-color: rgb(255, 228, 255);
+            padding: 10px;
+        }
+
+  }
   
+  @media (min-width: 601px) and (max-width: 1000px) {
+    .headingwrite{
+        font-size: 4rem;
+        padding: 60px;
+        margin-left: 5%;
+    }  
+    .imagesection{
+        width: 100%;
+        left: 5%;
+        overflow: hidden;
+        position: relative; 
+    }
+    
+    .imagesection img{
+        width: 90%; 
+        height: 100%; 
+        object-fit: cover; 
+        object-position: center;     
+        margin-left: 5%;
+    }
+    .rightcommentsection{
+        height: auto;
+        width: 99vw;
+        background-color: rgb(255, 255, 255);
+        margin-top: 5%;
+        margin-left: 2%;
+        overflow: auto;
+        border: 1px solid rgb(53, 53, 53);
+        border-radius: 10px;
+        padding: 15px;
+    }
+    
+
+    .leftreadingsection{
+        width: 100vw;
+    }
+    .buttonsection{
+        width: 100vw;
+        height: 7vh;
+        display: flex;
+        align-items: flex-start;
+        gap: 3%;    
+        margin-left: 8%;
+        margin-top: 5%;
+    }
+    
+    .footerbutton{
+        background-color: rgb(223, 223, 223);
+        font-size: 35px;
+        border-radius: 6px;
+        font-weight: lighter;
+        padding: 15px;
+        margin: 10px;
+
+    }
+    .bodycontentsection{
+        width: 90%;
+        margin-top: 5%;
+        margin-left: 5%;
+        font-size: 50px;
+    }
+    .containerforeading{
+        display: flex;
+        flex-direction: column;
+        gap: 10%;
+    }
+    .endofnotesection{
+        width: 100%;
+        margin-top: 5%;
+        margin-left: 5%;
+        font-size: 45px;
+    }
+    
+    .discussionheader{
+        height: 7%;
+        width: 100%;
+        background-color: rgb(223, 223, 223);
+        font-weight: lighter;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 25px;
+    }
+    
+    .userandcomments{
+        padding: 10px;
+    }
+    
+    .funnybutton{
+        height: auto;
+        width: auto;
+        font-size: 60px;
+        cursor: pointer;
+        padding: 5px;
+    }
+    .sadbutton{
+        height: auto;
+        width: auto;
+        font-size: 60px;
+        cursor: pointer;
+        padding: 5px;
+    }
+    .loveitbutton{
+        height: auto;
+        width: auto;
+        font-size: 60px;
+        cursor: pointer;
+        padding: 5px;
+    }
+    .tagslist
+    {    margin-left: 5%;
+        margin-bottom:0%;
+        margin-top: 0%;
+
+        }
+    .tag {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #a8aee9; 
+            color: #333333;
+            border-radius: 3px;
+            font-size:35px;
+            border-radius: 50px;
+            border:1px solid white;
+            padding: 20px;
+        
+          }
+        
+        .postadmindetails{
+            width: auto;
+            margin-top: 5%;
+            margin-left: 5%;
+            margin-bottom: 10%;
+            font-size: 35px;
+            border-radius: 20px;
+            background-color: rgb(255, 228, 255);
+            padding: 10px;
+        }
+    
+}

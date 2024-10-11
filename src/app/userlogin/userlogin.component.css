@@ -32,6 +32,7 @@ button
     margin-top: 6vh;
 }
 
+
 input{
     margin: 0;   
     height: 53px;
@@ -181,6 +182,9 @@ input:focus
         margin-bottom: 4rem;
         margin-left: 10%;
         padding: 20px;
+    }
+    .fileinput{
+        border: 10px dotted rgb(189, 196, 246);
     }
    
     .inputarea{

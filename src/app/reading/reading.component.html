@@ -2,7 +2,7 @@
   <!-- <p>{{}}</p> -->
 </div>
 
-<div class="containerforeading">
+<div class="containerforeading"  >
   <div class="leftreadingsection">
     <div class="imagesection">
       <div
@@ -22,13 +22,26 @@
 
 
     <div class="buttonsection">
-      <button class="footerbutton">
-        <img src="../../assets/img/readaloud.png" alt="" />READ ALOUD
-      </button>
-      <button class="footerbutton">
-        <img src="../../assets/img/bookmark.png" alt="" /> SAVE
-      </button>
-      <button class="footerbutton" (click)="share()">SHARE</button>
+      <div class="footerbuttonsgrey">
+        <div>
+
+          <button class="footerbutton">
+            <img src="../../assets/img/readaloud.png" alt="" />READ
+          </button>
+        </div>
+        <div>
+
+          <button class="footerbutton">
+            <img src="../../assets/img/bookmark.png" alt="" /> 
+          </button>
+        </div>
+        <div>
+
+          <button class="footerbutton" (click)="share()">SHARE</button>
+        </div>
+      </div>
+      <div class="likebuttons">
+
       <div>
         <button
           class="funnybutton"
@@ -67,29 +80,35 @@
       </div>
     </div>
 
-    <div class="bodycontentsection" [innerHTML]="post.bodyofcontent">
-      <!-- <p>{{post.bodyofcontent}}</p> -->
-      <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque labore ea doloribus, perferendis, quae corrupti corporis cumque quod iure optio dolores a possimus incidunt natus molestias nulla quibusdam ex amet.
-            Ab minus placeat modi provident eum error voluptatibus vero praesentium numquam magni <br><br> ipsa nulla quis voluptas maxime, distinctio dolor alias qui maiores pariatur et tempora. Earum iusto quidem tempore quam.
-            Unde natus quibusdam aut! Quod distinctio totam iure sed eligendi iste. Eaque explicabo quibusdam veniam, sint quae doloribus id sequi qui natus quis, consectetur ad facilis. Illum consequatur maiores inventore?
-            Iure in animi culpa vero qui reprehenderit nisi vel nesciunt soluta fugiat modi, nam sint, sequi dolorum voluptates,<br><br> provident natus eum alias porro? Adipisci ea voluptatibus quis excepturi, sint provident.
-            Hic inventore magni deleniti non illo <br><br> reprehenderit tempore natus minus temporibus quis, ipsum soluta officiis odio enim, aspernatur necessitatibus, perferendis harum error similique amet nulla ratione delectus. Aliquam, sed numquam?</p> -->
     </div>
 
+
+      <div class="bodycontentsection" (mouseup)="highlightText()" [innerHTML]="post.bodyofcontent">
+        <!-- <p>{{post.bodyofcontent}}</p> -->
+        <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque labore ea doloribus, perferendis, quae corrupti corporis cumque quod iure optio dolores a possimus incidunt natus molestias nulla quibusdam ex amet.
+          Ab minus placeat modi provident eum error voluptatibus vero praesentium numquam magni <br><br> ipsa nulla quis voluptas maxime, distinctio dolor alias qui maiores pariatur et tempora. Earum iusto quidem tempore quam.
+          Unde natus quibusdam aut! Quod distinctio totam iure sed eligendi iste. Eaque explicabo quibusdam veniam, sint quae doloribus id sequi qui natus quis, consectetur ad facilis. Illum consequatur maiores inventore?
+          Iure in animi culpa vero qui reprehenderit nisi vel nesciunt soluta fugiat modi, nam sint, sequi dolorum voluptates,<br><br> provident natus eum alias porro? Adipisci ea voluptatibus quis excepturi, sint provident.
+          Hic inventore magni deleniti non illo <br><br> reprehenderit tempore natus minus temporibus quis, ipsum soluta officiis odio enim, aspernatur necessitatibus, perferendis harum error similique amet nulla ratione delectus. Aliquam, sed numquam?</p> -->
+        </div>
+    
+        
     <div class="endofnotesection" [innerHTML]="post.endnotecontent">
       <!-- <p>{{post.endnotecontent}}</p> -->
       <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi quasi aliquam aliquid voluptatum, possimus aspernatur facilis omnis eum dolorum alias, totam unde adipisci repudiandae rerum</p> -->
     </div>
     <div style="height: 1px; background-color: grey;width: 70%;margin-left: 17%;margin-top: 2%;margin-bottom: 2%;"></div>
     <div class="postadmindetails">Written with ♥️ by - {{ post.username }}
-
-      
+    </div>
+    <div *ngIf="tagsarray.length" class="tagslist">
+      <div class="tags">
+        <span *ngFor="let tag of tagsarray" class="tag">{{ tag }}</span>
+      </div>
     </div>
   
-  
-  
-  
   </div>
+
+
   <div class="rightcommentsection">
     <div class="discussionheader">
       <h1>DISCUSSION</h1><div (click)="refreshcomponent()" class="refreshbtn">⟳</div>
@@ -97,8 +116,15 @@
     <div class="addcommentsection">
       <div *ngIf="loggedInUserAccount">
         <h2>Leave a Comment</h2>
+        <div *ngIf="isCommentBoxOpen" >
+          <span class="showhighlightTextInCommentStyle">
+            {{showhighlightTextInComment}}
+          </span>
+      </div> 
         <div class="inputbox">
+       
           <div class="textarea-container">
+            
               <textarea
                   [(ngModel)]="newCommentText"
                   name="newCommentText"
@@ -111,8 +137,9 @@
               <button class="submitComment" (click)="addComment()">Post</button>
           </div>
       </div>
+  
       <div>
-        <input style="width: 90%;font-size: 25px;margin-left: 2%;height: 35px;"
+        <input class="inputgifstyle"
           type="text" 
           [(ngModel)]="gifSearchQuery" 
           (input)="searchGifs()" 
@@ -133,12 +160,14 @@
       
       
       </div>
-      <div *ngIf="!loggedInUserAccount">
-        <p>Please log in to leave a comment</p>
-      </div>
+     
     </div>
+
+    <div *ngIf="!loggedInUserAccount">
+      <p>Please log in to leave a comment</p>
+    </div>
+    
     <div *ngFor="let comment of comments" class="userandcomments">
-      
       <div class="user1">
         <div class="userdata">
           <div class="userprofile"></div>
@@ -151,7 +180,7 @@
           
         </div>
         <div class="usercomment">
-          <p [innerHTML]="comment.commentText">
+          <p [innerHTML]="getSanitizedHtml(comment.commentText)">
             <!-- {{comment.commentText}} -->
           </p>
         </div>
@@ -163,8 +192,4 @@
   
 </div>
 
-<div *ngIf="tagsarray.length" style="margin-left: 13%;margin-bottom: 5%;margin-top: -5%;">
-  <div class="tags">
-    <span *ngFor="let tag of tagsarray" class="tag">{{ tag }}</span>
-  </div>
-</div>
+

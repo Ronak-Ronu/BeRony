@@ -106,6 +106,10 @@ input:focus{
     padding: 15px;
     animation: fadeIn 0.5s forwards;
 }
+.recommendationsbutton:hover{
+    background-color: #c2c7fe;
+
+}
 .filters{
     display: flex;
     justify-content: flex-start;
@@ -144,7 +148,8 @@ input:focus{
     justify-content: center;
     gap: 8%;
     margin-top: 7%;
-    margin-bottom: 5%;
+    padding-bottom: 4%;
+    border-bottom: 0.5px solid grey;
 }
 
 .thumbnailname{
@@ -336,8 +341,8 @@ input:focus{
         border-radius: 0px;
         padding: 10px;
         border-bottom: 0.5px solid rgb(77, 77, 77);
-
       }
+
 
     .recommendationsbutton{
         background-color: #d5d8f9;
@@ -360,10 +365,11 @@ input:focus{
         .leftshowcontainer{
             border-left: 0.5px solid rgb(118, 117, 117);
             width:100%;
+            height: 61vh;
             padding: 10px;
             margin-top: 2%;
             border-bottom: 0.5px solid rgb(118, 117, 117);
-            padding-bottom: 30px;
+            padding-bottom: 20px;
         }
         .contentdivs{
 
@@ -375,6 +381,8 @@ input:focus{
             margin-top: 40px;
             width: 100%;
             height: auto; 
+            padding-bottom: 4%;
+            border-bottom: 0.5px solid grey;
         }
         .thumbnail{
             height: 150px;
@@ -433,7 +441,7 @@ input:focus{
     
     .headingread {
 
-        font-size: 36px; 
+        font-size: 65px; 
         padding: 15px; 
     }
 
@@ -491,6 +499,8 @@ input:focus{
         padding: 12px;
         border-bottom: 0.5px solid rgb(77, 77, 77);
     }
+
+
     .recommendations{
         font-size: 30px;
     }
@@ -500,7 +510,7 @@ input:focus{
         font-size: 40px; 
         border: 1px solid rgb(76, 76, 76);
         border-radius: 30px;
-        margin-left: 5px;
+        margin-left: 15px;
         margin-top: 3%;
         margin-bottom: 5%;
         cursor: pointer;
@@ -515,6 +525,7 @@ input:focus{
         display: flex;
         flex-direction: column-reverse;
         padding-left: 15px;
+        
     }
 
     .leftshowcontainer {
@@ -522,23 +533,28 @@ input:focus{
         width: 100%;
         padding: 15px;
         margin-top: 3%; 
+        padding-bottom: 0px;
+        height: 45vh;
         border-bottom: 0.5px solid rgb(118, 117, 117);
     }
+
 
     .contentdivs {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: flex-start; 
-        gap: 25px; 
+        gap: 60px; 
         margin-top: 50px; 
         width: 100%;
         height: auto; 
+        padding-bottom: 5%;
+        border-bottom: 0.5px solid grey;
     }
 
     .thumbnail {
-        height: 180px;
-        width: 180px; 
+        height: 300px;
+        width: 300px; 
         border-radius: 10px;
         object-fit: cover; 
         background-size: cover; 
@@ -546,22 +562,22 @@ input:focus{
     }
 
     .thumbnailname {
-        font-size: 28px; /* Increase font size */
-        height: auto; /* Allow height to auto adjust */
+        font-size: 40px;
+        height: auto;
         width: 100%;
-        margin-bottom: 20%;
+        margin-bottom: 10%;
     }
 
     .footerbuttons {
         display: flex;
         justify-content: space-between; 
-        margin-top: 15px; /* Increase margin for spacing */
+        margin-top: 10px; 
+        font-size: 50px;
     }
 
     .toppicks{
         padding: 10px;
         font-size: 40px;
-
     }
     .pick1 .pickinfo{
         display: flex;
@@ -606,16 +622,15 @@ input:focus{
     {
         text-decoration: underline;
         font-weight: bold;
-        font-size: 16px;
-        margin-top: 10%;
+        font-size: 30px;
         color: rgb(78, 161, 164);
     }
     
     .footerbuttoncls {
         background-color: transparent;
-        width: 80px; /* Increase width */
-        padding: 12px; /* Increase padding */
-        font-size: 22px; /* Increase font size */
+        width: 80px; 
+        padding: 12px; 
+        font-size: 45px; 
         font-weight: 400;
         border: none;
         border-radius: 0px;
