@@ -64,7 +64,7 @@ const routes  = [
     ToastrModule.forRoot(),
     RouterModule.forRoot(routes)
   ],
-  providers: [WriteserviceService, provideFirebaseApp(() => initializeApp({"projectId":"berony","appId":"1:22705870795:web:bc71bf725b8c7d663f484e","storageBucket":"berony.appspot.com","apiKey":"AIzaSyBVC32qXUSqHrSCxvn14WHx3cAV1Va83P4","authDomain":"berony.firebaseapp.com","messagingSenderId":"22705870795"})), provideAnalytics(() => getAnalytics()), ScreenTrackingService, provideFirestore(() => getFirestore())],
+  providers: [WriteserviceService]
   bootstrap: [AppComponent]
 })
 
