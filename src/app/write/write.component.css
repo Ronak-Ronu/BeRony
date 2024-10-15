@@ -18,6 +18,7 @@
     position: relative;
   
 }
+
 .headingwrite{
     font-family: "Julius Sans One", sans-serif;
   font-weight: 400;
@@ -54,10 +55,12 @@
 }
 
 .toolbarbutton{
-    width: 140px;
-    height: 60px;
+    width: auto;
+    height: auto;
     font-size:27px;
     border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
 }
 
 
@@ -111,8 +114,7 @@ textarea:focus {
 .draftcontainer{
     font-family: "Julius Sans One", sans-serif;
     font-weight: 400;
-    font-style: normal;
-  
+    font-style: normal; 
     height: 60vh;
     width: 450px;
     background-color: rgb(238, 238, 238);
@@ -254,9 +256,9 @@ textarea:focus {
     background-color: rgba(255, 255, 255, 0.9);
   }
   .popup-modal h3 {
-    margin-top: 0; /* Remove margin for a cleaner look */
-    font-size: 24px; /* Heading font size */
-    color: #333; /* Darker text for readability */
+    margin-top: 0; 
+    font-size: 24px;
+    color: #333; 
 }
 
   .previewcontentbody {
@@ -326,4 +328,146 @@ textarea:focus {
     border: 1px solid white;
 
   }
- 
+.generateimagepopup {
+    position: fixed;
+    height: 70%;
+    width: 50%;
+    left: 20%;
+    top: 20%;
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    overflow: auto;
+}
+
+.generateimagepopup input{
+    font-size: 25px;
+}
+.closeimagesign {
+    cursor: pointer;
+    font-size: 30px;
+    color: #ff4d4d; /* Red color for close button */
+    float: right;
+}
+
+input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center; /* Center the gallery items */
+    margin-top: 20px; /* Space between input area and gallery */
+}
+
+.image-item {
+    flex: 1 1 calc(25% - 15px); /* Four images per row with spacing */
+    max-width: 200px; /* Limit width for larger screens */
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.image-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.image-item img:hover {
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+
+
+  @media (max-width: 600px) {
+
+      
+
+  }
+
+
+  @media (min-width: 601px) and (max-width: 1000px) {
+    .writemainbody{
+        height: 1vh;    
+    }
+    .writecontentarea{
+        padding: 5px;
+        background-color: black;
+    }
+    .container {
+        background-color: #4a90e2;
+        border-radius: 10px;
+        width: 100vw;
+        margin-left: 0%;
+        padding: 10px;
+    }
+    .toolbar {
+        height: 20%;
+    }
+    .bodyofwriting{
+        background-color: red;
+        flex-direction: column;
+        flex-wrap: wrap;
+        width: 100vw;
+    }
+    textarea {
+        font-size: 30px;
+        margin-bottom: 20px; 
+        border-radius: 3px; 
+    }
+    .footerbutton{
+        width: auto;
+        height: auto;
+        font-size: 40px;
+        padding: 20px;
+    }
+    
+    .draftcontainer{
+        padding: 10px;
+        height: 50vh;
+        width: 100%;
+        background-color: rgb(238, 238, 238);
+        margin-top: 10%;
+    }
+    
+    .draft1 p{
+        font-size: 30px;
+        line-height: 2rem;
+        width: 100%;
+    }
+    .continuewritingbutton{
+        height: auto;
+        width: auto;
+        padding: 10px;
+        font-size: 25px;
+    }
+    
+
+  .previewWindow{
+    width: 90%;
+    height: 98%;
+    border-radius: 20px;
+    margin-left: 1%;
+    margin-top: 6%;
+    padding: 50px;
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  .popup-modal h3 {
+    font-size: 30px;
+        }
+
+        
+  }

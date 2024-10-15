@@ -5,7 +5,9 @@ import { account } from '../../lib/appwrite';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { ToastrService } from 'ngx-toastr';
 
-
+interface PromptRequest {
+  prompt: string;
+}
 @Component({
   selector: 'app-write',
   templateUrl: './write.component.html',
@@ -40,13 +42,14 @@ export class WriteComponent implements OnInit {
   previewEndNote:String=""
   tagInput: string = ''
   tags:string[]=[]
-
-
-  constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef,private toastr: ToastrService){  }
+  openimagegeneratepopup:boolean=false;
   loggedInUserAccount:any=null
   username!:string
   userId!:string
+  prompt!:string
+  photos: any[] = [];
 
+  constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef,private toastr: ToastrService){  }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
@@ -224,6 +227,48 @@ addTag(tag: string) {
   {
     this.tags = this.tags.filter(t => t !== tag);
   }
+  generateImage()
+  {
+   console.log(this.prompt);
+    this.writeservice.searchPhotos(this.prompt).subscribe(
 
+      (res)=>{
+        this.photos=res.results.map((image: any) => image.urls.small);
+        
+      }
+    )
+   
+  }
+  generateimagewindow()
+  {
+    this.openimagegeneratepopup=!this.openimagegeneratepopup;
+    
+  }
+  closeImagePopup() {
+    this.openimagegeneratepopup = false;
+  }
+  selectThisImage(selectedImageUrl:string)
+  {
+    console.log(selectedImageUrl);
+    
+    fetch(selectedImageUrl)
+    .then(response => response.blob())
+    .then(blob => {
+        // Create a File object from the Blob
+        const file = new File([blob], 'selected-image.jpg', { type: blob.type });
+
+
+        this.selectedimagefile = file;
+        this.imageUrl = URL.createObjectURL(file); 
+        console.log(this.imageUrl);
+        
+    })
+    .catch(error => {
+        console.error('Error fetching the image:', error);
+        this.toastr.error('Failed to fetch image.');
+    });
+
+    
+  }
 }
 

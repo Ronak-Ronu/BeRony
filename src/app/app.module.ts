@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'
 import { ToastrModule } from 'ngx-toastr';
@@ -19,6 +19,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserloginComponent } from './userlogin/userlogin.component';
 import { routeauthguardGuard } from './routeauthguard.guard';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAnalytics, provideAnalytics, ScreenTrackingService } from '@angular/fire/analytics';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { UserdashboardComponent } from './userdashboard/userdashboard.component';
 
 
 const routes  = [
@@ -30,9 +34,8 @@ const routes  = [
   // {path: 'reading', component: ReadingComponent},
   { path: 'reading/:postid', component: ReadingComponent },
   { path: 'userlogin', component: UserloginComponent },
-  {path: '**', component: WrongpageComponent}
-
-
+  { path: 'userdashboard', component: UserdashboardComponent,canActivate:[routeauthguardGuard] },
+    {path: '**', component: WrongpageComponent}
 ];
 ``
 
@@ -48,6 +51,7 @@ const routes  = [
     ReadingComponent,
     WrongpageComponent,
     UserloginComponent,
+    UserdashboardComponent,
 
   ],
   imports: [
@@ -60,7 +64,7 @@ const routes  = [
     ToastrModule.forRoot(),
     RouterModule.forRoot(routes)
   ],
-  providers: [WriteserviceService],
+  providers: [WriteserviceService, provideFirebaseApp(() => initializeApp({"projectId":"berony","appId":"1:22705870795:web:bc71bf725b8c7d663f484e","storageBucket":"berony.appspot.com","apiKey":"AIzaSyBVC32qXUSqHrSCxvn14WHx3cAV1Va83P4","authDomain":"berony.firebaseapp.com","messagingSenderId":"22705870795"})), provideAnalytics(() => getAnalytics()), ScreenTrackingService, provideFirestore(() => getFirestore())],
   bootstrap: [AppComponent]
 })
 

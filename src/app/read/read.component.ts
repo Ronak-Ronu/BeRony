@@ -25,15 +25,13 @@ export class ReadComponent implements OnInit{
   project:string | null = null;
   mode:string | null = null;
   start = 0;
-  limit = 5; 
+  limit = 10; 
 
 
   ngOnInit(): void {
     this.bucketName=environment.bucketName;
     this.project=environment.project;
     this.mode=environment.mode;
-
-
     this.readblogdata()
     this.getloggedinuserdata()
 
@@ -114,8 +112,8 @@ export class ReadComponent implements OnInit{
       if (post.userId===this.userId && this.loggedInUserAccount) {
        await this.readsevice.deletepostbyid(post._id)
         console.log("post deleted");
-        this.toastr.success("<h3>We will miss this post</h3>")
-        this.readblogdata()
+        this.toastr.success("We will miss this post")
+        // this.blogs = this.blogs.filter(b => b._id !== post._id);
       }
       else{
         this.toastr.error("you are not author of this post");

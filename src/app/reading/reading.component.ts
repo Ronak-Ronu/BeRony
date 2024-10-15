@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { WriteModel } from '../Models/writemodel';
 import { WriteserviceService } from '../writeservice.service';
 // import { WriteserviceService } from '../writeservice.service';
-import {NgNavigatorShareService} from 'ng-navigator-share'
+// import {NgNavigatorShareService} from 'ng-navigator-share'
 import { account } from '../../lib/appwrite';
 import { ToastrService } from 'ngx-toastr';
 import { Client, Databases, ID, Query } from 'appwrite';
@@ -46,7 +46,9 @@ export class ReadingComponent implements OnInit {
 
 
 
-  constructor(private service:WriteserviceService,private cdr: ChangeDetectorRef,private router:ActivatedRoute,private ngnavigateservice:NgNavigatorShareService,private toastr: ToastrService,private sanitizer: DomSanitizer)
+  constructor(private service:WriteserviceService,private cdr: ChangeDetectorRef,private router:ActivatedRoute,
+    // private ngnavigateservice:NgNavigatorShareService,
+    private toastr: ToastrService,private sanitizer: DomSanitizer)
    {
     const client = new Client().
     setEndpoint(environment.appwriteEndpoint)
@@ -113,13 +115,13 @@ export class ReadingComponent implements OnInit {
 
 
   share(){
-    this.ngnavigateservice.share({
-      title:this.post.title,
-      text:this.post.endnotecontent,
-      url:`http://localhost:4200/reading/${this.postid}`
-    }).then((res)=>{
-      console.log(res);
-    })
+    // this.ngnavigateservice.share({
+    //   title:this.post.title,
+    //   text:this.post.endnotecontent,
+    //   url:`http://localhost:4200/reading/${this.postid}`
+    // }).then((res)=>{
+    //   console.log(res);
+    // })
   }
   
   updateReactionCount(emoji: string, likecount: number) {

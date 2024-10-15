@@ -1,8 +1,12 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { WriteModel } from './Models/writemodel';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment'
+
+ interface PromptRequest {
+  prompt: string;
+}
 
 @Injectable()
 export class WriteserviceService {
@@ -10,17 +14,18 @@ export class WriteserviceService {
   findposturl:string;
   drafturl:string;
   postid:any;
+  accessKey:string
   
   constructor(private http:HttpClient) {
 
     this.url=`${environment.beronyAPI}/api/posts`
     this.drafturl=`${environment.beronyAPI}/api/drafts`
     this.findposturl=`${environment.beronyAPI}/api/findpost`
+    this.accessKey=environment.Unsplash_ACCESSKEY
     
     // this.url='http://localhost:3000/api/posts'
-    // this.findposturl='http://localhost:3000/api/findpost'
-
     // this.drafturl='http://localhost:3000/api/drafts'
+    // this.findposturl='http://localhost:3000/api/findpost'
    }
    
 
@@ -39,7 +44,7 @@ export class WriteserviceService {
       })
       console.log(formData);
     }
-
+    
     draftblog(draftdata:WriteModel)
     {
       console.log("this is publish blog service");
@@ -118,4 +123,12 @@ export class WriteserviceService {
       return this.http.patch(`${this.url}/like/${postId}`, { emoji, increment });
     }
   
+
+    searchPhotos(query: string, page: number = 1, perPage: number = 10): Observable<any> {
+      const headers = new HttpHeaders().set('Authorization', `Client-ID ${this.accessKey}`);
+      console.log(query);
+      return this.http.get(`https://api.unsplash.com/search/photos?query=${query}&page=${page}&per_page=${perPage}`, { headers });
+    }
+  
+
 }

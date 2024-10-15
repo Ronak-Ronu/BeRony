@@ -1,4 +1,22 @@
 <div class="writemainbody">
+    <div class="generateimagepopup" *ngIf="openimagegeneratepopup" >
+        <div class="closeimagesign" style="cursor: pointer;" (click)="closeImagePopup()">
+            X
+        </div>
+        <input [(ngModel)]="prompt"  placeholder="Enter your prompt" />
+        <button (click)="generateImage()" class="toolbarbutton">Generate Image</button>
+    
+
+        <div>
+            <div class="image-gallery">
+                <div *ngFor="let imageUrl of photos" class="image-item">
+                  <img [src]="imageUrl"(click)="selectThisImage(imageUrl)" alt="Unsplash Image" />
+                </div>
+              </div>
+        </div>
+    </div>
+
+
     <div class="previewWindow" *ngIf="ispreview">
         <div style="cursor: pointer;font-size: 25px;color: blueviolet;" (click)="closepreview()"><u>Close</u> </div>
         
@@ -38,7 +56,7 @@
                 </div>
               </div>
               
-            <button style="cursor: pointer;" class="toolbarbutton">FORMAT</button>
+            <button style="cursor: pointer;" class="toolbarbutton" (click)="generateimagewindow()">UnSplash</button>
             <button style="cursor: pointer;" class="toolbarbutton" (click)="preview()" >PREVIEW</button>
         </div>
         <div *ngIf="selectedimagefile">

@@ -47,3 +47,7 @@ Thumbs.db
 
 /src/lib
 /lib
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json
