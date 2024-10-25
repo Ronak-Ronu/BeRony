@@ -5,14 +5,7 @@
 <div class="containerforeading"  >
   <div class="leftreadingsection">
     <div class="imagesection">
-      <div
-        *ngIf="
-          filetype === 'png' ||
-          filetype === 'jpg' ||
-          filetype === 'jpeg' ||
-          filetype === 'svg'
-        "
-      >
+      <div>
         <img [src]="post.imageUrl" [alt]="post.imageUrl" />
       </div>
       <div *ngIf="filetype === 'mp4'">
@@ -83,7 +76,7 @@
     </div>
 
 
-      <div class="bodycontentsection" (mouseup)="highlightText()" [innerHTML]="post.bodyofcontent">
+      <div class="bodycontentsection" (mouseup)="highlightText()" [innerHTML]="getSanitizedHtml(post.bodyofcontent)">
         <!-- <p>{{post.bodyofcontent}}</p> -->
         <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque labore ea doloribus, perferendis, quae corrupti corporis cumque quod iure optio dolores a possimus incidunt natus molestias nulla quibusdam ex amet.
           Ab minus placeat modi provident eum error voluptatibus vero praesentium numquam magni <br><br> ipsa nulla quis voluptas maxime, distinctio dolor alias qui maiores pariatur et tempora. Earum iusto quidem tempore quam.
@@ -124,7 +117,6 @@
         <div class="inputbox">
        
           <div class="textarea-container">
-            
               <textarea
                   [(ngModel)]="newCommentText"
                   name="newCommentText"
@@ -157,8 +149,6 @@
           </div>
         </div>
       </div>
-      
-      
       </div>
      
     </div>

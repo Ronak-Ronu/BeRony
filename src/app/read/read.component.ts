@@ -6,11 +6,13 @@ import { account } from '../../lib/appwrite';
 // import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
+
 @Component({
   selector: 'app-read',
   templateUrl: './read.component.html',
   styleUrls: ['./read.component.css']
 })
+
 export class ReadComponent implements OnInit{
   blogs: WriteModel[] = [];
   loggedInUserAccount:any=null
@@ -25,7 +27,7 @@ export class ReadComponent implements OnInit{
   project:string | null = null;
   mode:string | null = null;
   start = 0;
-  limit = 10; 
+  limit = 5; 
 
 
   ngOnInit(): void {
@@ -121,10 +123,8 @@ export class ReadComponent implements OnInit{
       }
       
     } catch (error) {
-      console.log("cannot delete post",error);
-      
+      console.log("cannot delete post",error); 
     }
-  
   }
 
 

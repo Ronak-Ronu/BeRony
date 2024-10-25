@@ -55,18 +55,31 @@ input:focus
     gap: 2%;
     margin-top: 5vh;
 }
-
-.hideunhide
-{
-    position: absolute;
-    right: 49%; 
-    top: 55.5%;
-    transform: translateY(-50%);
-    border: none;
-    background: none; 
-    cursor: pointer;
-     font-size: 40px;
+.password-container {
+    position: relative; 
 }
+
+
+.hideunhide {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+   
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+    font-size: 30px; 
+    color: inherit; 
+}
+
+
+
+.hideunhide:hover {
+    opacity: 0.9; 
+}
+
+
+
 
 @media (max-width: 600px) {
 

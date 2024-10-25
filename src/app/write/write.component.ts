@@ -5,9 +5,6 @@ import { account } from '../../lib/appwrite';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { ToastrService } from 'ngx-toastr';
 
-interface PromptRequest {
-  prompt: string;
-}
 @Component({
   selector: 'app-write',
   templateUrl: './write.component.html',

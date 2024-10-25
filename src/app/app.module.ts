@@ -23,6 +23,11 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAnalytics, provideAnalytics, ScreenTrackingService } from '@angular/fire/analytics';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { UserdashboardComponent } from './userdashboard/userdashboard.component';
+import { environment } from '../environments/environment';
+import { OverviewComponent } from './overview/overview.component';
+import { MyBlogsComponent } from './my-blogs/my-blogs.component';
+import { AnalyticsComponent } from './analytics/analytics.component';
+import { SettingsComponent } from './settings/settings.component';
 
 
 const routes  = [
@@ -52,6 +57,10 @@ const routes  = [
     WrongpageComponent,
     UserloginComponent,
     UserdashboardComponent,
+    OverviewComponent,
+    MyBlogsComponent,
+    AnalyticsComponent,
+    SettingsComponent,
 
   ],
   imports: [
@@ -62,9 +71,13 @@ const routes  = [
     BrowserAnimationsModule,
     InfiniteScrollModule,
     ToastrModule.forRoot(),
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+  
+    
   ],
-  providers: [WriteserviceService, provideFirebaseApp(() => initializeApp({"projectId":"berony","appId":"1:22705870795:web:bc71bf725b8c7d663f484e","storageBucket":"berony.appspot.com","apiKey":"AIzaSyBVC32qXUSqHrSCxvn14WHx3cAV1Va83P4","authDomain":"berony.firebaseapp.com","messagingSenderId":"22705870795"})), provideAnalytics(() => getAnalytics()), ScreenTrackingService, provideFirestore(() => getFirestore())],
+  providers: [WriteserviceService,  provideFirebaseApp(() => initializeApp(environment.firebaseConfig)), 
+    provideAnalytics(() => getAnalytics()),
+    provideFirestore(() => getFirestore()),ScreenTrackingService],
   bootstrap: [AppComponent]
 })
 

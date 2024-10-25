@@ -194,16 +194,7 @@ async addComment()
           {
             postId: this.postid,
             userId: this.loggedInUserAccount.$id,
-            commentText:`
-    <div style="  font-size: 25px;
-    background-color: #b3b8e8;
-    border-radius: 5px;
-    padding: 10px;
-    margin-left: 5px;
-    margin-bottom:5px;
-    ">
-      ${this.showhighlightTextInComment}
-    </div>`+this.newCommentText,
+            commentText:this.newCommentText,
             createdAt: new Date().toISOString(),
             username: this.loggedInUserAccount.name
           }
@@ -266,7 +257,7 @@ selectGif(gif: any) {
   // const gifUrl = gif.images.original.url
   const gifUrl=gif.images.fixed_height.url
   console.log('Click to send gif:', gif);
-  this.newCommentText+=`<img style="width:40% !important; height: auto;" src="${gifUrl}" />`
+  this.newCommentText+=`<img style="width:95% !important; height: auto;" src="${gifUrl}" />`
   console.log(this.newCommentText);
   this.addComment()
 
@@ -310,7 +301,16 @@ showTooltip(rect: DOMRect, selectedText: string) {
 }
 
 openCommentBox(selectedText: string) {
-  this.showhighlightTextInComment=selectedText;
+  this.showhighlightTextInComment=`
+    <div style="
+    background-color: #b3b8e8;
+    border-radius: 5px;
+    padding: 10px;
+    margin-left: 5px;
+    margin-bottom:5px;
+    ">
+      ${this.selectedText}
+    </div>`;
   console.log('Selected Text for Comment:', selectedText);
 }
 

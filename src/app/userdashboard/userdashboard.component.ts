@@ -11,10 +11,9 @@ export class UserdashboardComponent implements OnInit{
   username!:string
   loggedInUserAccount:any=null
   userId!:string
-
+  activeSection: string = 'overview';
   ngOnInit(): void {
     this.getloggedinuserdata()
-
   }
   async getloggedinuserdata (){
     this.loggedInUserAccount = await account.get();
@@ -24,4 +23,9 @@ export class UserdashboardComponent implements OnInit{
      
     }
   }
+  setActiveSection(section: string)
+  {
+    this.activeSection = section;
+  }
+  
 }

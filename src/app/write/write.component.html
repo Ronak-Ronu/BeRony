@@ -59,9 +59,9 @@
             <button style="cursor: pointer;" class="toolbarbutton" (click)="generateimagewindow()">UnSplash</button>
             <button style="cursor: pointer;" class="toolbarbutton" (click)="preview()" >PREVIEW</button>
         </div>
-        <div *ngIf="selectedimagefile">
-            <img [src]="imageUrl" width="30%" height="30%" alt="">
-            <b>{{selectedimagefile.name}}</b>
+        <div *ngIf="selectedimagefile" class="selectedimagefilecss">
+            <img [src]="imageUrl" width="35%" height="35%" alt="">
+            <!-- <b>{{selectedimagefile.name}}</b> -->
         </div>
         
 
@@ -119,7 +119,7 @@
 
         <div class="footerbuttons">
             <button class="footerbutton" (click)="publishblog(writecontentform.value)">PUBLISH</button>
-            <button class="footerbutton" (click)="saveasdraft(writecontentform.value)" >SAVE AS DRAFT</button>
+            <button class="footerbutton" (click)="saveasdraft(writecontentform.value)" >DRAFT IT</button>
         </div>
 
     </form>

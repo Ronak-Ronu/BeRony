@@ -11,7 +11,6 @@
         </div>
         <button class="searchbutton" (click)="onSearch()">YUP <span style="font-size: 40px;">↵</span></button>
     </div>
-    
 </div>
 
 <!-- endoftopitems -->
@@ -23,7 +22,7 @@
         </div>
         <div *ngIf="showFilters">
             Filter <span class="filteremoji">👈</span>
-    </div>
+        </div>
     </button>
     <button class="filterbutton1" *ngIf="showFilters" [ngClass]="{'enter': showFilters, 'exit': !showFilters}"  (click)="filterByTag('Gadgets')">Gadgets</button>
     <button class="filterbutton1" *ngIf="showFilters" (click)="filterByTag('DBMS')">DBMS</button>
@@ -32,14 +31,12 @@
     <button class="filterbutton1" *ngIf="showFilters" (click)="filterByTag('Games')">Games</button>
 
 </div>
-
-
 <!-- endoffilteritems -->
 
 <div class="readcontainer">
 
 <div class="blogscontainer" infiniteScroll 
-[infiniteScrollDistance]="2"
+[infiniteScrollDistance]="1"
 [infiniteScrollThrottle]="30"
 (scrolled)="seemore()" >
     <div *ngIf="isloadingblogs" class="loader"> 
@@ -68,7 +65,6 @@
                         <img [src]="'https://cloud.appwrite.io/v1/storage/buckets/'+bucketName+'/files/' + item.userId + '/view?project='+project+'&mode='+mode+''" alt="">
                     </div>
                     <div>
-
                         <u style="cursor: pointer;">{{item.username}}</u>
                     </div>
                 </div>
@@ -78,10 +74,11 @@
                 <button style="cursor: pointer;" class="footerbuttoncls" [routerLink]="'/reading/' + item._id" (click)="getid(item)">READ</button>
                 <div class="invisiblediv"></div>
                 <button class="footerbuttoncls">SAVE</button>
-                <button class="footerbuttoncls" style="cursor: pointer;" (click)="deletepost(item)">DEL</button>
+                <div *ngIf="item.userId===this.userId && this.loggedInUserAccount">
+                    <button class="footerbuttoncls" style="cursor: pointer;" (click)="deletepost(item)">DEL</button>
+                </div>
 
             </div>
-
         </div>
         </div>
     </div>
@@ -91,13 +88,10 @@
 <div class="leftshowcontainer"> 
     <div class="recommendations">
        <div>
-
            <span class="recommendationtitle">Recommeded Topics</span>
         </div>
-
         <br>
        <div>
-
            <button class="recommendationsbutton" (click)="filterByTag('Anime')">Anime</button>
            <button class="recommendationsbutton" (click)="filterByTag('Self Improvement')">Self Improvement</button>
            <button class="recommendationsbutton" (click)="filterByTag('Music')">Music</button>
@@ -108,7 +102,6 @@
            <button class="recommendationsbutton" (click)="filterByTag('Toppers')">Toppers</button>
            <button class="recommendationsbutton" (click)="filterByTag('CSBS')">CSBS</button>
         </div>
-    
     </div>
     <hr>
     <div class="toppicks">
@@ -133,11 +126,7 @@
             </div>
 
     </div>
-
-
 </div>
-
-
 </div>
 <div class="seemorebutton">
     <button (click)="seemore()">Whats Next?</button>

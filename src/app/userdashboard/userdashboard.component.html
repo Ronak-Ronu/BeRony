@@ -1,3 +1,22 @@
-<p>userdashboard works!</p>
 
 <h5>welcome {{username}}</h5>
+
+
+<!-- dashboard.component.html -->
+<div class="dashboard-container">
+    <div class="sidebar">
+      <ul>
+        <li (click)="setActiveSection('overview')">Overview</li>
+        <li (click)="setActiveSection('my-blogs')">My Blogs</li>
+        <li (click)="setActiveSection('analytics')">Analytics</li>
+        <li (click)="setActiveSection('settings')">Settings</li>
+      </ul>
+    </div>
+    <div class="main-content">
+      <app-overview *ngIf="activeSection === 'overview'"></app-overview>
+      <app-my-blogs *ngIf="activeSection === 'my-blogs'"></app-my-blogs>
+      <app-analytics *ngIf="activeSection === 'analytics'"></app-analytics>
+      <app-settings *ngIf="activeSection === 'settings'"></app-settings>
+    </div>
+  </div>
+  

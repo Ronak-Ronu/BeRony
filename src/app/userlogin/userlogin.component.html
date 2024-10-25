@@ -11,29 +11,22 @@
 <br>
         <input type="email" name="useremail" placeholder="Email" [(ngModel)]="email" />
         <br>
-        
-        <input type="password" [type]="passwordVisible?'text':'password'" name="userpass" placeholder="Password"   [(ngModel)]="password" />
-        <button type="button" class="hideunhide"
-        (click)="togglePassword()">
-        <div *ngIf="passwordVisible">
+        <div class="password-container">
 
-          🙊
-        </div>
-        <div *ngIf="!passwordVisible">
-          🙈
-        </div>
-         
+          <input type="password" [type]="passwordVisible?'text':'password'" name="userpass" placeholder="Password"   [(ngModel)]="password" />
+          <button type="button" class="hideunhide"
+          (click)="togglePassword()">
+          <div *ngIf="passwordVisible">🙊</div>
+          <div *ngIf="!passwordVisible">🙈</div>
+          
         </button>
+      </div>
       
-        <br>
         <input type="text" id="username" placeholder="Name" [(ngModel)]="name" />
         <br>
         
       </div>
-<!--  
-      <button (click)="logout()">
-        Logout
-      </button>  -->
+      
       <div class="buttons">
         <div class="button1">
 
