@@ -2,8 +2,6 @@ import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WriteModel } from '../Models/writemodel';
 import { WriteserviceService } from '../writeservice.service';
-// import { WriteserviceService } from '../writeservice.service';
-// import {NgNavigatorShareService} from 'ng-navigator-share'
 import { account } from '../../lib/appwrite';
 import { ToastrService } from 'ngx-toastr';
 import { Client, Databases, ID, Query } from 'appwrite';
@@ -43,12 +41,13 @@ export class ReadingComponent implements OnInit {
     loveit: false
   };
   databases: Databases;
-
+  sanitizedBodyContent!: SafeHtml;
 
 
   constructor(private service:WriteserviceService,private cdr: ChangeDetectorRef,private router:ActivatedRoute,
     // private ngnavigateservice:NgNavigatorShareService,
-    private toastr: ToastrService,private sanitizer: DomSanitizer)
+    private toastr: ToastrService,
+    private sanitizer: DomSanitizer)
    {
     const client = new Client().
     setEndpoint(environment.appwriteEndpoint)
@@ -65,7 +64,6 @@ export class ReadingComponent implements OnInit {
     this.checkUserReactions();
     this.fetchComments();
 
-    
   //   this._id=this.router.snapshot.paramMap.get("postid")
     
   //   this.service.getpublishpostdatabyid(this._id).subscribe((data:WriteModel)=>{
@@ -74,11 +72,15 @@ export class ReadingComponent implements OnInit {
   //   console.log(this._id);
     
   // })
-
-
+    
   }
-  getSanitizedHtml(commentText: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(commentText);
+  getSanitizedHtml(text: string): SafeHtml {
+    const sanitized=this.sanitizer.bypassSecurityTrustHtml(text);
+    console.log('Sanitized HTML:', sanitized);
+    return sanitized
+  }
+  sanitizeBodyContent() {
+    this.sanitizedBodyContent = this.sanitizer.bypassSecurityTrustHtml(this.post.bodyofcontent);
   }
 
   async getloggedinuserdata (){
@@ -104,7 +106,7 @@ export class ReadingComponent implements OnInit {
                 this.tagsarray = this.post.tags;
                 console.log(this.filetype);
                 console.log(this.tagsarray);
-                
+                this.sanitizeBodyContent()
             },
             error: (error) => {
                 console.error('Error fetching post data:', error);
@@ -114,15 +116,29 @@ export class ReadingComponent implements OnInit {
   }
 
 
-  share(){
-    // this.ngnavigateservice.share({
-    //   title:this.post.title,
-    //   text:this.post.endnotecontent,
-    //   url:`http://localhost:4200/reading/${this.postid}`
-    // }).then((res)=>{
-    //   console.log(res);
-    // })
-  }
+  share() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Check this out!',
+            text: '👋 I found this amazing content you might like. 👉',
+            url: window.location.href,
+        })
+        .then(() => console.log('Share successful'))
+        .catch((error) => console.error('Error sharing:', error));
+    } else {
+        // If sharing is not supported, copy the URL to the clipboard
+        const url = window.location.href;
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                alert('URL copied to clipboard! 📋');
+            })
+            .catch((error) => {
+                console.error('Error copying to clipboard:', error);
+                alert('Failed to copy the URL.');
+            });
+    }
+}
+
   
   updateReactionCount(emoji: string, likecount: number) {
     if (this.username) {
@@ -185,7 +201,8 @@ checkUserReactions() {
 
 async addComment()
 {
-    if (this.newCommentText.trim() && this.postid && this.loggedInUserAccount) {
+  
+    if (this.showhighlightTextInComment.trim() && this.postid && this.loggedInUserAccount) {
       try {
         const response = await this.databases.createDocument(
           environment.databaseId, 
@@ -194,16 +211,24 @@ async addComment()
           {
             postId: this.postid,
             userId: this.loggedInUserAccount.$id,
-            commentText:this.newCommentText,
+            commentText:`
+    <div style="  font-size: 25px;
+    background-color: #b3b8e8;
+    border-radius: 5px;
+    padding: 10px;
+    margin-left: 5px;
+    margin-bottom:5px;
+    ">
+      ${this.showhighlightTextInComment}
+    </div>`+this.newCommentText,
             createdAt: new Date().toISOString(),
             username: this.loggedInUserAccount.name
           }
         );
         // console.log('Comment added:', response);
-        
+        this.comments.push(this.newCommentText);
         this.newCommentText = ''; 
         this.showhighlightTextInComment=''
-        this.comments.push(this.newCommentText);
         this.ngOnInit()
       } catch (error) {
         console.error('Error adding comment:', error);
@@ -213,6 +238,8 @@ async addComment()
     }
 
 }
+
+
 async fetchComments()
 {
   if (this.postid) {
@@ -223,15 +250,16 @@ async fetchComments()
         [Query.equal('postId', this.postid)]
       );
       this.comments = response.documents;
+      
     } catch (error) {
       console.error('Error fetching comments:', error);
     }
   }
 
 }
-
-refreshcomponent(){
-  this.fetchComments()
+refreshcomponent() {
+  console.log("Refresh component called");
+  this.fetchComments();
   this.cdr.detectChanges();
 }
 
@@ -264,7 +292,6 @@ selectGif(gif: any) {
 }
 highlightText() {
   const selection: Selection | null = window.getSelection();
-
   if (selection && selection.rangeCount > 0) {
     const selectedText = selection.toString();
     
@@ -276,42 +303,34 @@ highlightText() {
   } else {
     console.log("No text is selected.");
   }
-}
 
+
+}
 showTooltip(rect: DOMRect, selectedText: string) {
-  // Create the tooltip (you can customize the style)
   const tooltip = document.createElement('div');
-  tooltip.innerHTML = '💬 Comment';
+  tooltip.innerHTML = '💬 Comment'; 
   tooltip.style.position = 'absolute';
-  tooltip.style.fontSize='25px'
-  tooltip.style.top = `${rect.top + window.scrollY - 50}px`;
+  tooltip.style.fontSize = '16px';
+  tooltip.style.top = `${rect.top + window.scrollY - 40}px`; 
   tooltip.style.left = `${rect.left + window.scrollX}px`;
   tooltip.style.backgroundColor = '#bdc2fb';
   tooltip.style.padding = '10px';
   tooltip.style.borderRadius = '4px';
   tooltip.style.cursor = 'pointer';
+  tooltip.style.zIndex = '1000'; 
 
   tooltip.addEventListener('click', () => {
-    this.isCommentBoxOpen=!this.isCommentBoxOpen;
-    this.openCommentBox(selectedText);
-    document.body.removeChild(tooltip); 
+    this.isCommentBoxOpen = !this.isCommentBoxOpen;
+    this.showhighlightTextInComment = selectedText;
+    document.body.removeChild(tooltip);
   });
 
+  const existingTooltip = document.querySelector('.custom-tooltip');
+  if (existingTooltip) {
+    document.body.removeChild(existingTooltip);
+  }
+  tooltip.classList.add('custom-tooltip'); 
   document.body.appendChild(tooltip);
-}
-
-openCommentBox(selectedText: string) {
-  this.showhighlightTextInComment=`
-    <div style="
-    background-color: #b3b8e8;
-    border-radius: 5px;
-    padding: 10px;
-    margin-left: 5px;
-    margin-bottom:5px;
-    ">
-      ${this.selectedText}
-    </div>`;
-  console.log('Selected Text for Comment:', selectedText);
 }
 
 }

@@ -131,10 +131,9 @@ input:focus{
     border-radius: 5px;
 }
 .thumbnail{
-    
     width: 399px;
     height:300px ;
-    border-radius: 10px ;
+    border-radius: 10px;
     object-fit: contain; 
     background-size: cover; 
     background-position: center; 
@@ -364,8 +363,8 @@ input:focus{
             border-bottom: 0.5px solid grey;
         }
         .thumbnail{
-            height: 150px;
-            width: 150px;
+            height: 30vh;
+            width: 30vw;
             border-radius: 10px;
             object-fit: cover; 
             background-size: cover; 
@@ -385,13 +384,14 @@ input:focus{
             display: flex;
             justify-content: space-between; 
             margin-top: 10px;
+
         
         }
         .footerbuttoncls{
             background-color: transparent;
-            width: 70px;
-            padding: 10px;
-            font-size: 20px;
+            width: auto;
+            padding: 5px;
+            font-size: 18px;
             font-weight: 400;
             border: none;
             border-radius: 0px;

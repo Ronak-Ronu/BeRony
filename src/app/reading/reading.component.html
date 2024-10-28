@@ -19,7 +19,7 @@
         <div>
 
           <button class="footerbutton">
-            <img src="../../assets/img/readaloud.png" alt="" />READ
+            READ
           </button>
         </div>
         <div>
@@ -29,7 +29,6 @@
           </button>
         </div>
         <div>
-
           <button class="footerbutton" (click)="share()">SHARE</button>
         </div>
       </div>
@@ -76,7 +75,8 @@
     </div>
 
 
-      <div class="bodycontentsection" (mouseup)="highlightText()" [innerHTML]="getSanitizedHtml(post.bodyofcontent)">
+      <div class="bodycontentsection" (mouseup)="highlightText()" >
+        <div [innerHTML]="sanitizedBodyContent"></div>
         <!-- <p>{{post.bodyofcontent}}</p> -->
         <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque labore ea doloribus, perferendis, quae corrupti corporis cumque quod iure optio dolores a possimus incidunt natus molestias nulla quibusdam ex amet.
           Ab minus placeat modi provident eum error voluptatibus vero praesentium numquam magni <br><br> ipsa nulla quis voluptas maxime, distinctio dolor alias qui maiores pariatur et tempora. Earum iusto quidem tempore quam.

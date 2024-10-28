@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { WriteserviceService } from '../writeservice.service';
 import { WriteModel } from '../Models/writemodel';
 import { account } from '../../lib/appwrite';
@@ -39,7 +39,7 @@ export class ReadComponent implements OnInit{
 
   }
 
-  constructor(private readsevice:WriteserviceService,private toastr: ToastrService){}
+  constructor(private readsevice:WriteserviceService,private toastr: ToastrService,private cdr: ChangeDetectorRef){}
 
   
   readblogdata(){
@@ -115,6 +115,8 @@ export class ReadComponent implements OnInit{
        await this.readsevice.deletepostbyid(post._id)
         console.log("post deleted");
         this.toastr.success("We will miss this post")
+        this.ngOnInit()
+        this.cdr.detectChanges(); 
         // this.blogs = this.blogs.filter(b => b._id !== post._id);
       }
       else{

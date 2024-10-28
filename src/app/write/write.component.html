@@ -10,7 +10,7 @@
         <div>
             <div class="image-gallery">
                 <div *ngFor="let imageUrl of photos" class="image-item">
-                  <img [src]="imageUrl"(click)="selectThisImage(imageUrl)" alt="Unsplash Image" />
+                  <img [src]="imageUrl"(click)="selectThisImage(imageUrl)" alt="Unsplash Image" (click)="closeImagePopup()" />
                 </div>
               </div>
         </div>
