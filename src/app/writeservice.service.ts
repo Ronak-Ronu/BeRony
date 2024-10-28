@@ -15,17 +15,19 @@ export class WriteserviceService {
   drafturl:string;
   postid:any;
   accessKey:string
+  bookmarkurl:string
   
   constructor(private http:HttpClient) {
 
-    this.url=`${environment.beronyAPI}/api/posts`
-    this.drafturl=`${environment.beronyAPI}/api/drafts`
-    this.findposturl=`${environment.beronyAPI}/api/findpost`
+    // this.url=`${environment.beronyAPI}/api/posts`
+    // this.drafturl=`${environment.beronyAPI}/api/drafts`
+    // this.findposturl=`${environment.beronyAPI}/api/findpost`
     this.accessKey=environment.Unsplash_ACCESSKEY
     
-    // this.url='http://localhost:3000/api/posts'
-    // this.drafturl='http://localhost:3000/api/drafts'
-    // this.findposturl='http://localhost:3000/api/findpost'
+    this.url='http://localhost:3000/api/posts'
+    this.drafturl='http://localhost:3000/api/drafts'
+    this.findposturl='http://localhost:3000/api/findpost'
+    this.bookmarkurl='http://localhost:3000/api'
    }
    
 
@@ -128,6 +130,22 @@ export class WriteserviceService {
       const headers = new HttpHeaders().set('Authorization', `Client-ID ${this.accessKey}`);
       console.log(query);
       return this.http.get(`https://api.unsplash.com/search/photos?query=${query}&page=${page}&per_page=${perPage}`, { headers });
+    }
+
+    // addPostBookmark(userId: string, postId: string) {
+    //   return this.http.post(`${this.bookmarkurl}/users/${userId}/bookmarks`, { postId });
+    // }
+    addPostBookmark(userId:string,postId: string): Observable<any> {
+      const body = { postId };
+      const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  
+      return this.http.post(`${this.bookmarkurl}/users/${userId}/bookmarks`, body, { headers });
+    }
+    getBookmark(userId: string): Observable<any> {
+      return this.http.get(`${this.bookmarkurl}/users/${userId}/bookmarks`);
+    }
+    removeBookmark(userId: string, postId: string): Observable<any> {
+      return this.http.delete(`${this.bookmarkurl}/users/${userId}/bookmarks/${postId}`);
     }
   
 

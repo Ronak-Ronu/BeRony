@@ -42,7 +42,7 @@ export class ReadingComponent implements OnInit {
   };
   databases: Databases;
   sanitizedBodyContent!: SafeHtml;
-
+  loggedinuserid!:string
 
   constructor(private service:WriteserviceService,private cdr: ChangeDetectorRef,private router:ActivatedRoute,
     // private ngnavigateservice:NgNavigatorShareService,
@@ -63,6 +63,7 @@ export class ReadingComponent implements OnInit {
     this.getloggedinuserdata()
     this.checkUserReactions();
     this.fetchComments();
+
 
   //   this._id=this.router.snapshot.paramMap.get("postid")
     
@@ -87,9 +88,10 @@ export class ReadingComponent implements OnInit {
     this.loggedInUserAccount = await account.get();
     if (this.loggedInUserAccount) {
       this.username=this.loggedInUserAccount.name;
+      this.loggedinuserid=this.loggedInUserAccount.$id
       console.log(this.username);
-      
-    }
+      console.log(this.loggedinuserid);
+      }
   }
   
 
@@ -184,7 +186,7 @@ export class ReadingComponent implements OnInit {
   }
   else{
     console.log("login to like posts");
-    
+    this.toastr.error("login to like posts")
   }
 }
 
@@ -198,47 +200,51 @@ checkUserReactions() {
   });
 }
 
+async addComment() {
+  if (this.postid && this.loggedInUserAccount) {
+    let commentText = '';
 
-async addComment()
-{
-  
-    if (this.showhighlightTextInComment.trim() && this.postid && this.loggedInUserAccount) {
+    if (this.showhighlightTextInComment.trim()) {
+      commentText += `
+        <div style="font-size: 25px; background-color: #b3b8e8; border-radius: 5px; padding: 10px; margin-left: 5px; margin-bottom: 5px;">
+          ${this.showhighlightTextInComment}
+        </div>`;
+    }
+
+    if (this.newCommentText.trim()) {
+      commentText += this.newCommentText;
+    }
+
+    if (commentText.trim()) { 
+      
       try {
         const response = await this.databases.createDocument(
-          environment.databaseId, 
-          environment.collectionId, 
-          ID.unique(), 
+          environment.databaseId,
+          environment.collectionId,
+          ID.unique(),
           {
             postId: this.postid,
             userId: this.loggedInUserAccount.$id,
-            commentText:`
-    <div style="  font-size: 25px;
-    background-color: #b3b8e8;
-    border-radius: 5px;
-    padding: 10px;
-    margin-left: 5px;
-    margin-bottom:5px;
-    ">
-      ${this.showhighlightTextInComment}
-    </div>`+this.newCommentText,
+            commentText: commentText,
             createdAt: new Date().toISOString(),
             username: this.loggedInUserAccount.name
           }
         );
-        // console.log('Comment added:', response);
-        this.comments.push(this.newCommentText);
+
+        this.comments.push(response);
         this.newCommentText = ''; 
-        this.showhighlightTextInComment=''
-        this.ngOnInit()
+        this.showhighlightTextInComment = '';
+        this.ngOnInit();
       } catch (error) {
         console.error('Error adding comment:', error);
       }
     } else {
-      console.error('Please log in to add comment');
+      console.error('Comment is empty. Nothing to submit.');
     }
-
+  } else {
+    console.error('Please log in to add a comment');
+  }
 }
-
 
 async fetchComments()
 {
@@ -333,4 +339,17 @@ showTooltip(rect: DOMRect, selectedText: string) {
   document.body.appendChild(tooltip);
 }
 
+
+bookmarkthispost() {
+  this.service.addPostBookmark(this.loggedinuserid, this.postid).subscribe(
+      () => {
+          console.log("Bookmark added successfully");
+          this.toastr.success("Bookmarked")
+      },
+      (error) => { 
+          console.error("Error adding bookmark:", error.error.message);
+          this.toastr.error(error.error.message)
+      }
+  );
+}
 }

@@ -81,6 +81,7 @@
     border-radius: 6px;
     font-weight: lighter;
     padding: 10px;
+    cursor: pointer;
 }
 
 .bodycontentsection{
@@ -404,6 +405,7 @@
         border-radius: 6px;
         font-weight: lighter;
         padding: 15px;
+
     }
     .bodycontentsection{
         width: 90%;
