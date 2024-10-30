@@ -1,8 +1,7 @@
-import { Component, NgModule } from '@angular/core';
+import { Component, NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'
 import { ToastrModule } from 'ngx-toastr';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -28,6 +27,7 @@ import { OverviewComponent } from './overview/overview.component';
 import { MyBlogsComponent } from './my-blogs/my-blogs.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
 import { SettingsComponent } from './settings/settings.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 
 const routes  = [
@@ -72,6 +72,12 @@ const routes  = [
     InfiniteScrollModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot(routes),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   
     
   ],

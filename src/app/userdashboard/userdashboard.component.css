@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
+
+.profileheadingwrite {
+    font-size: 64px;
+    margin-left: 7%;
+    font-family: "Julius Sans One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    padding: 1rem;
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 50vw;
+    gap: 3%;
+}
+.profilecomponent{
+    display: flex;
+    flex-direction: row;
+    gap: 10rem;
+}
+
+.dashboard-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.sidebar{
+    width: 55vw;
+    margin-left: 7%;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
+
+}
+.sidebar ul{
+    display: flex;
+    justify-content: flex-start;
+
+    gap: 3rem;
+    list-style: none;
+    font-size: 27px;
+    color: rgba(0, 0, 0, 0.8);
+}
+.sidebar ul li{
+    cursor: pointer;
+}
+.sidebar ul li:hover{
+    color: black;
+}
+
+.main-content{
+    width: 55vw;
+    margin-left: 7%;
+}
+
+.userprofiledetails{ 
+    padding-left: 20px;
+    width: 35vw;
+    display: flex;
+    flex-direction: column;
+    border-left: 0.2px solid rgba(0, 0, 0, 0.1);
+    gap: 1rem;
+}
+.userprofileimage{
+    width: 10rem;
+    height: 10rem;
+    background-color: grey;
+}
+.usercurrentemotion{
+    font-size: 3rem;
+    cursor: pointer;
+}
+.usernamedetail{
+    font-size: 30px;
+    font-weight: 500;
+}
+.userfollowers, .userpostsdetail{
+    font-size: 20px;
+}
+.userbiodetail{
+    margin-top: 10px;
+    width: 65%;
+    font-size: 25px;
+}
+.followuserbutton button{
+    font-size: 23px;
+    background-color: rgb(143, 159, 233);
+    padding: 10px;
+    border-radius: 50px;
+    color:  white;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.sidebar li.active {
+    color: rgb(81, 91, 194); 
+  }
+  

@@ -22,6 +22,7 @@ export class WriteserviceService {
     // this.url=`${environment.beronyAPI}/api/posts`
     // this.drafturl=`${environment.beronyAPI}/api/drafts`
     // this.findposturl=`${environment.beronyAPI}/api/findpost`
+    // this.bookmarkurl=`${environment.beronyAPI}/api`
     this.accessKey=environment.Unsplash_ACCESSKEY
     
     this.url='http://localhost:3000/api/posts'
@@ -137,9 +138,9 @@ export class WriteserviceService {
     // }
     addPostBookmark(userId:string,postId: string): Observable<any> {
       const body = { postId };
-      const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+      // const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   
-      return this.http.post(`${this.bookmarkurl}/users/${userId}/bookmarks`, body, { headers });
+      return this.http.post(`${this.bookmarkurl}/users/${userId}/bookmarks`, body);
     }
     getBookmark(userId: string): Observable<any> {
       return this.http.get(`${this.bookmarkurl}/users/${userId}/bookmarks`);
@@ -148,5 +149,8 @@ export class WriteserviceService {
       return this.http.delete(`${this.bookmarkurl}/users/${userId}/bookmarks/${postId}`);
     }
   
+    getPostsByUsername(username:string): Observable<any>{
+      return this.http.get(`${this.bookmarkurl}/user/${username}/posts`);
+    }
 
 }

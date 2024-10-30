@@ -1,0 +1,95 @@
+.post-cards-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 3rem;
+  margin-top: 2rem;
+  }
+
+  .post-card {
+    background-color: rgb(143, 159, 233,0.3);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    width: 350px; 
+    transition: transform 0.2s;
+    cursor: pointer;
+  }
+  
+  .post-card:hover {
+    transform: scale(1.02); 
+  }
+  .post-admin-name{
+    color: black;
+  }
+  .post-date {
+    color: #6d6d6d;
+    font-size: 17px;
+    margin: 8px 0;
+  }
+  
+  .post-image {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+  
+  .likes {
+    margin-top: 12px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+
+.myblogsidebar{
+    width: 50%;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
+}
+.myblogsidebar ul{
+    display: flex;
+    justify-content: flex-start;
+    gap: 3rem;
+    list-style: none;
+    font-size: 27px;
+    color: rgba(43, 53, 102, 0.8);
+}
+.myblogsidebar ul li{
+    cursor: pointer;
+}
+.myblogsidebar ul li:hover{
+    color: black;
+}
+.myblogsidebar li.active {
+    color: rgb(81, 91, 194); 
+  }
+.deletebookmark{
+  display: flex;
+  gap: 1rem;
+}
+.deletebookmark button
+{
+  cursor: pointer;
+  font-size: 20px;
+  padding: 10px;
+  color: black;
+  background-color: rgb(250, 94, 66,0.3);
+  margin-top: 10px;
+}
+.postnowbutton button{
+  cursor: pointer;
+  font-size: 20px;
+  padding: 10px;
+  color: black;
+  background-color: rgb(143, 159, 233,0.3);
+  margin-top: 10px;
+}
+.readbookmark button{
+  cursor: pointer;
+  font-size: 20px;
+  padding: 10px;
+  color: black;
+  background-color: rgba(89, 105, 175, 0.3);
+  margin-top: 10px;
+}

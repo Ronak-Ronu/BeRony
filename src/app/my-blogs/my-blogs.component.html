@@ -1,1 +1,64 @@
-<p>my-blogs works!</p>
+
+<div class="myblogsidebar">
+    <ul>
+      <div>
+        <li (click)="setActiveSection('My-Posts')"  [ngClass]="{'active': activeSection === 'My-Posts'}">My Posts</li>
+      </div>
+      <div>
+        <li (click)="setActiveSection('Bookmarks')"  [ngClass]="{'active': activeSection === 'Bookmarks'}">Saved Posts</li>
+      </div>
+    </ul>
+</div>
+
+<div *ngIf="activeSection==='My-Posts' ">
+
+<div *ngIf="posts.length === 0">
+<div class="noposttext">
+  <h3>No posts available.</h3>
+</div>
+<div class="postnowbutton">
+  <button (click)="navigateToWrite()">Post Now</button>
+</div>
+</div>
+
+<div class="post-cards-container" *ngFor="let post of posts">
+  <div class="post-card">
+    <h2>{{ post.title }}</h2>
+    <p class="post-date">{{ post.createdAt | date:'mediumDate' }}</p>
+    <img [src]="post.imageUrl" alt="Post Image" class="post-image" *ngIf="post.imageUrl" />
+    <div class="likes">
+      <div>{{ post.funnycount + post.sadcount + post.loveitcount }} Likes</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div *ngIf="activeSection==='Bookmarks'">
+    <!-- <p>My Saved Posts</p> -->
+    <div  class="post-cards-container" >
+    <div *ngFor="let post of bookmarkposts">
+  <div class="post-card">
+    <h2>{{ post.title }}</h2>
+    <p class="post-admin-name">{{ post.username }}</p>
+
+    <p class="post-date">{{ post.createdAt | date:'mediumDate' }}</p>
+    <img [src]="post.imageUrl" alt="Post Image" class="post-image" *ngIf="post.imageUrl" />
+    <div class="likes">
+      <div>{{ post.funnycount + post.sadcount + post.loveitcount }} Likes</div>
+    </div>
+    <div class="deletebookmark">
+      <div>
+        <button (click)="deletebookmark(post._id)">Remove</button>
+      </div>
+      <div class="readbookmark">
+        <button style="cursor: pointer;"  [routerLink]="'/reading/' + post._id" >READ</button>
+      </div>
+    </div>
+    
+  </div>
+  
+</div>
+
+</div>
+</div>

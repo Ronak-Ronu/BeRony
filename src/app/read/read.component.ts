@@ -147,6 +147,20 @@ export class ReadComponent implements OnInit{
     this.start+=this.limit;
     this.readblogdata();
   }
-
+  addPostBookmark(savepostid:string)
+  {
+    this.readsevice.addPostBookmark(this.userId, savepostid).subscribe(
+      () => {
+        console.log(savepostid);
+        
+          console.log("Bookmark added successfully");
+          this.toastr.success("Bookmarked")
+      },
+      (error) => { 
+          console.error("Error adding bookmark:", error.error.message);
+          this.toastr.error(error.error.message)
+      }
+  );
+  }
 
 }

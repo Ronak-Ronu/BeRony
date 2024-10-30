@@ -73,7 +73,7 @@
             <div class="footerbuttons">
                 <button style="cursor: pointer;" class="footerbuttoncls" [routerLink]="'/reading/' + item._id" (click)="getid(item)">READ</button>
                 <div class="invisiblediv"></div>
-                <button class="footerbuttoncls">SAVE</button>
+                <button style="cursor: pointer;" class="footerbuttoncls" (click)="addPostBookmark(item._id)">SAVE</button>
                 <div *ngIf="item.userId===this.userId && this.loggedInUserAccount">
                     <button class="footerbuttoncls" style="cursor: pointer;" (click)="deletepost(item)">DEL</button>
                 </div>
