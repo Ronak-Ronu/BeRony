@@ -27,7 +27,6 @@ import { OverviewComponent } from './overview/overview.component';
 import { MyBlogsComponent } from './my-blogs/my-blogs.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
 import { SettingsComponent } from './settings/settings.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
 
 
 const routes  = [
@@ -40,7 +39,7 @@ const routes  = [
   { path: 'reading/:postid', component: ReadingComponent },
   { path: 'userlogin', component: UserloginComponent },
   { path: 'userdashboard', component: UserdashboardComponent,canActivate:[routeauthguardGuard] },
-    {path: '**', component: WrongpageComponent}
+  {path: '**', component: WrongpageComponent}
 ];
 ``
 
@@ -72,14 +71,6 @@ const routes  = [
     InfiniteScrollModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot(routes),
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    }),
-  
-    
   ],
   providers: [WriteserviceService,  provideFirebaseApp(() => initializeApp(environment.firebaseConfig)), 
     provideAnalytics(() => getAnalytics()),

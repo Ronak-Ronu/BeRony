@@ -9,5 +9,7 @@ export class WriteModel{
     loveitcount:number=0
     userId:string=""
     username:string=""
+    userBio:string=""
+    userEmotion:string=""
     tags:string[]=[]
 }

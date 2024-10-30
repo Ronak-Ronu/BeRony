@@ -1,0 +1,121 @@
+.updatebio, .updateemotion {
+    background-color: #f9f9f9; 
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 20px; 
+    margin: 20px; 
+    font-family: 'Arial', sans-serif; 
+}
+
+b {
+    font-size: 1.5em; 
+    color: #333;
+}
+
+textarea {
+    width: 100%; 
+    height: 150px; 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    resize: none; 
+    font-size: 1em; 
+    margin-bottom: 10px; 
+    transition: border-color 0.3s;
+}
+
+textarea:focus {
+    border-color: rgb(143, 159, 233,0.3); 
+    outline: none; 
+}
+
+button {
+    background-color: rgb(143, 159, 233,0.8);
+    color: white; 
+    border: none; 
+    border-radius: 4px; 
+    padding: 10px 15px; 
+    cursor: pointer; 
+    font-size: 1em; 
+    transition: background-color 0.3s; 
+}
+
+button:hover {
+    background-color: rgb(143, 159, 233,0.5);
+}
+
+.updateemotion {
+    display: flex; 
+    flex-direction: row; 
+    gap: 10px;
+}
+.selected{
+    font-size: 40px;
+}
+
+span{
+    font-size: 30px;
+}
+
+@media (max-width: 600px) {
+    .updatebio, .updateemotion {
+        background-color: #f9f9f9; 
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        padding: 10px; 
+        margin: 10px; 
+        font-family: 'Arial', sans-serif; 
+    }
+    
+    b {
+        font-size: 17px; 
+        color: #333;
+    }
+    
+    textarea {
+        width: 100%; 
+        height: auto; 
+        padding: 10px; 
+        border: 1px solid #ccc; 
+        border-radius: 4px; 
+        resize: none; 
+        font-size: 1em; 
+        margin-bottom: 10px; 
+        transition: border-color 0.3s;
+    }
+    
+    textarea:focus {
+        border-color: rgb(143, 159, 233,0.3); 
+        outline: none; 
+    }
+    
+    button {
+        background-color: rgb(143, 159, 233,0.8);
+        color: white; 
+        border: none; 
+        border-radius: 4px; 
+        padding: 10px 15px; 
+        cursor: pointer; 
+        font-size: 1em; 
+        transition: background-color 0.3s; 
+        margin-top: 10px;
+    }
+    
+    button:hover {
+        background-color: rgb(143, 159, 233,0.5);
+    }
+    
+    .updateemotion {
+        display: flex; 
+        flex-direction: column; 
+        gap: 10px;
+    }
+    .selected{
+        font-size: 30px;
+    }
+    
+    span{
+        font-size: 20px;
+    }
+
+}

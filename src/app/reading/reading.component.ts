@@ -261,7 +261,6 @@ async fetchComments()
       console.error('Error fetching comments:', error);
     }
   }
-
 }
 refreshcomponent() {
   console.log("Refresh component called");

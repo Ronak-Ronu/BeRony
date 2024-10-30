@@ -91,7 +91,7 @@
       <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi quasi aliquam aliquid voluptatum, possimus aspernatur facilis omnis eum dolorum alias, totam unde adipisci repudiandae rerum</p> -->
     </div>
     <div style="height: 1px; background-color: grey;width: 70%;margin-left: 17%;margin-top: 2%;margin-bottom: 2%;"></div>
-    <div class="postadmindetails">Written with ♥️ by - {{ post.username }}
+    <div class="postadmindetails">Written with ♥️ by - {{ post.username }} {{post.userEmotion}}
     </div>
     <div *ngIf="tagsarray.length" class="tagslist">
       <div class="tags">

@@ -4,8 +4,8 @@
       {{username}} 
     </div>
     <div class="usercurrentemotion">
-      😉
-    </div>
+      {{userEmotion}} 
+      </div>
 </div>
 
 <div class="profilecomponent">
@@ -30,33 +30,41 @@
       </ul>
     </div>
     <div class="main-content">
-      <app-overview *ngIf="activeSection === 'overview'"></app-overview>
+      <app-overview *ngIf="activeSection === 'overview'" [userBio]="userBio" [username]="username"></app-overview>
       <app-my-blogs *ngIf="activeSection === 'my-blogs'" [posts]="posts" [bookmarkposts]="bookmarkposts" [loggedinuserid]="userId"></app-my-blogs>
       <app-analytics *ngIf="activeSection === 'analytics'"></app-analytics>
-      <app-settings *ngIf="activeSection === 'settings'"></app-settings>
+      <app-settings *ngIf="activeSection === 'settings'" [userId]="userId"></app-settings>
     </div>
   </div>
 
   <div class="userprofiledetails">
- 
-      <div class="userprofileimage">
-            
-      </div>
-      <div class="usernamedetail">
-          {{username}}
-      </div>
-      <div class="userpostsdetail">
-        16 Posts
+      <div class="bottomuserbiodetails">
+
+          <div class="userprofileimage">
+          </div>
+          <div class="usernamedetail">
+              {{username}}
+          </div>
+          <div class="userfollowanalytics">
+
+            <div class="userpostsdetail">
+              16 Posts
+            </div>
+            <div class="userfollowers">
+              12k Followers
+            </div>
+          </div>
     </div>
-      <div class="userfollowers">
-            12k Followers
-      </div>
+    <div >
+
       <div class="userbiodetail">
-        Every Sunday I send one lesson to 15,000 part-time creators to help them build their business alongside their 9-to-5. Join free →
+        {{userBio}}
       </div>
       <div class="followuserbutton">
         <button>Share Profile</button>
       </div>
+</div>
+
   </div>
 
 </div>

@@ -152,5 +152,15 @@ export class WriteserviceService {
     getPostsByUsername(username:string): Observable<any>{
       return this.http.get(`${this.bookmarkurl}/user/${username}/posts`);
     }
+    updateuserBio(userId:string,userBio:string):Observable<any>
+    {
+      return this.http.patch(`${this.bookmarkurl}/user/${userId}/bio`, { userBio: userBio })
+     
+    }
 
+    updateuserEmotion(userId:string,userEmotion:string):Observable<any>
+    {
+      return this.http.patch(`${this.bookmarkurl}/user/${userId}/emotion`, { userEmotion: userEmotion })
+     
+    }
 }

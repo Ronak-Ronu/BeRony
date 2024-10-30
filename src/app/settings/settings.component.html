@@ -1,1 +1,31 @@
-<p>settings works!</p>
+
+<div class="updatebio">
+    <b>Update Bio</b> <br>
+     
+    <textarea cols="83"
+    rows="17"
+    maxlength="3000"
+    placeholder="Write Your Bio Beautifully !"
+    name="userBio"
+    #uesrBio="ngModel"
+    [(ngModel)]="userBio"
+    ></textarea>  
+    
+    <button (click)="updateBio()">Update</button>
+</div>
+
+<div class="updateemotion">
+    <div>
+        <b>How are you feeling?</b> 
+    </div>
+    <div>
+        <span *ngFor="let emoji of emojis" 
+        
+        (click)="selectEmoji(emoji)" 
+        [class.selected]="selectedEmoji === emoji">
+        {{ emoji }}
+            </span>
+            <button (click)="updateEmotion()">Update</button>
+        </div>
+        
+    </div>

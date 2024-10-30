@@ -43,3 +43,50 @@
 .connecttext{
     font-size: 26px;
 }
+@media (max-width: 600px) {
+    .useraboutoverview{
+        width: auto;
+        padding: 1rem;
+        background-color: rgb(0, 0, 0,0.2);
+    }
+    .overviewprofileiamge{
+        width: 10rem;
+        height: 11rem;
+        background-color: grey;
+    }
+    .overviewfollowdetails{
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+        font-size: 17px;
+        padding: 2px;
+    }
+    .insta{
+        width: 20px;
+        height: 20px;
+        border-radius: 100px;
+        background-color: grey;
+    }
+    .overviewconnectwithuser{
+        display: flex;
+        flex-direction: row;
+        gap: 2%;
+        font-size: 20px;
+        margin-top: 1rem;
+    }
+    .connectsocialproof{
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        cursor: pointer;
+    }
+    .overviewuserbio{
+        width: 100%;
+        font-size: 21px;
+        margin-top: 1rem;
+    }
+    .connecttext{
+        font-size: 18px;
+    }
+}
