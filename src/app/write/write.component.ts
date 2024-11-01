@@ -86,6 +86,9 @@ async getloggedinuserdata (){
     this.userId=this.loggedInUserAccount.$id;
     console.log(this.username);
     console.log(this.userId);
+    const response = await this.writeservice.addUserToDB(this.userId, this.username).toPromise();
+    console.log('User added to DB:', response);
+
   }
 }
 

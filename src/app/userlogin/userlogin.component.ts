@@ -3,6 +3,7 @@ import { account, ID,storage } from '../../lib/appwrite';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
+import { WriteserviceService } from '../writeservice.service';
 
 
 @Component({
@@ -20,7 +21,7 @@ export class UserloginComponent {
   
   passwordVisible: boolean = false;
 
-constructor(private router:Router,private toastr: ToastrService){}
+constructor(private router:Router,private toastr: ToastrService,private service:WriteserviceService){}
 
 
 async login(email: string, password: string) {
@@ -30,8 +31,8 @@ async login(email: string, password: string) {
     this.loggedInUser = await account.get();
     
     console.log(this.loggedInUser.name);
+    console.log(this.loggedInUser.id);
     console.log(this.loggedInUser.avatar);
-
 
     this.router.navigate(['/write'])
 
@@ -58,18 +59,16 @@ async register(email: string, password: string, name: string) {
     const userID=ID.unique()
     await account.create(userID, email, password, name);
 
-    
     if (this.profileImage) {
       await this.uploadAvatar(userID, this.profileImage);
     }    
-    
+    this.service.addUserToDB(userID,name)
     this.login(email, password);
   } catch (error:any) {
     if(error?.message)
     {
       console.log(error.message);
       this.toastr.error(error.message)
-
     }    
   }
   finally{

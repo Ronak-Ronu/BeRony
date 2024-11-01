@@ -18,6 +18,7 @@ export class UserdashboardComponent implements OnInit{
   bookmarkposts:any[]=[]
   userEmotion:string=""
   userBio:string=""
+  userData: any;
 
   constructor(private service:WriteserviceService)
   {}
@@ -31,6 +32,16 @@ export class UserdashboardComponent implements OnInit{
       this.username=this.loggedInUserAccount.name;
       this.userId=this.loggedInUserAccount.$id;
       console.log(this.username);
+      console.log(this.userId);
+      this.service.getUserData(this.userId).subscribe(
+        (data)=>{
+          console.log(data);
+          this.userData = data.user
+        },
+        (error)=>{
+          console.log(error);
+        }
+      )
       this.fetchUserPosts();
 
       this.fetchbookmarks();

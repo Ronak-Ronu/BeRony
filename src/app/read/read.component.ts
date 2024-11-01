@@ -50,7 +50,6 @@ export class ReadComponent implements OnInit{
           this.blogs=this.blogs.concat(data);
           this.isloadingblogs=false
           console.log(this.blogs);
-          
       }
     )
       } catch (error) {

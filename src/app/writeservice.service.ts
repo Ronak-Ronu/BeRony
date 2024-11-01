@@ -15,7 +15,7 @@ export class WriteserviceService {
   drafturl:string;
   postid:any;
   accessKey:string
-  bookmarkurl:string
+  baseurl:string
   
   constructor(private http:HttpClient) {
 
@@ -28,7 +28,7 @@ export class WriteserviceService {
     this.url='http://localhost:3000/api/posts'
     this.drafturl='http://localhost:3000/api/drafts'
     this.findposturl='http://localhost:3000/api/findpost'
-    this.bookmarkurl='http://localhost:3000/api'
+    this.baseurl='http://localhost:3000/api'
    }
    
 
@@ -134,33 +134,42 @@ export class WriteserviceService {
     }
 
     // addPostBookmark(userId: string, postId: string) {
-    //   return this.http.post(`${this.bookmarkurl}/users/${userId}/bookmarks`, { postId });
+    //   return this.http.post(`${this.baseurl}/users/${userId}/bookmarks`, { postId });
     // }
     addPostBookmark(userId:string,postId: string): Observable<any> {
-      const body = { postId };
-      // const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-  
-      return this.http.post(`${this.bookmarkurl}/users/${userId}/bookmarks`, body);
+      const body = { postId };  
+      return this.http.post(`${this.baseurl}/users/${userId}/bookmarks`, body);
     }
+
+    addUserToDB(userId: string, username: string): Observable<any> {
+      const body = { userId,username }; 
+      console.log('Request Body:', body);
+      return this.http.post(`${this.baseurl}/user/register`, body);
+    }
+
     getBookmark(userId: string): Observable<any> {
-      return this.http.get(`${this.bookmarkurl}/users/${userId}/bookmarks`);
+      return this.http.get(`${this.baseurl}/users/${userId}/bookmarks`);
     }
     removeBookmark(userId: string, postId: string): Observable<any> {
-      return this.http.delete(`${this.bookmarkurl}/users/${userId}/bookmarks/${postId}`);
+      return this.http.delete(`${this.baseurl}/users/${userId}/bookmarks/${postId}`);
     }
   
     getPostsByUsername(username:string): Observable<any>{
-      return this.http.get(`${this.bookmarkurl}/user/${username}/posts`);
+      return this.http.get(`${this.baseurl}/user/${username}/posts`);
     }
     updateuserBio(userId:string,userBio:string):Observable<any>
     {
-      return this.http.patch(`${this.bookmarkurl}/user/${userId}/bio`, { userBio: userBio })
+      return this.http.patch(`${this.baseurl}/user/${userId}/bio`, { userBio: userBio })
      
+    }
+    getUserData(userId:string): Observable<any>
+    {
+        return this.http.get(`${this.baseurl}/user/${userId}`)
     }
 
     updateuserEmotion(userId:string,userEmotion:string):Observable<any>
     {
-      return this.http.patch(`${this.bookmarkurl}/user/${userId}/emotion`, { userEmotion: userEmotion })
+      return this.http.patch(`${this.baseurl}/user/${userId}/emotion`, { userEmotion: userEmotion })
      
     }
 }
