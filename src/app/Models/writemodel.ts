@@ -12,4 +12,5 @@ export class WriteModel{
     userBio:string=""
     userEmotion:string=""
     tags:string[]=[]
+    pageviews:number=0
 }

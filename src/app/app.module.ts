@@ -27,7 +27,7 @@ import { OverviewComponent } from './overview/overview.component';
 import { MyBlogsComponent } from './my-blogs/my-blogs.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
 import { SettingsComponent } from './settings/settings.component';
-
+import { NgxChartsModule } from '@swimlane/ngx-charts'; 
 
 const routes  = [
 
@@ -69,6 +69,7 @@ const routes  = [
     HttpClientModule,
     BrowserAnimationsModule,
     InfiniteScrollModule,
+    NgxChartsModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot(routes),
   ],

@@ -57,11 +57,6 @@ export class UserdashboardComponent implements OnInit{
       {
         next: (data)=>{
           this.posts = data;
-          this.userEmotion = this.posts[0].userEmotion
-          this.userBio = this.posts[0].userBio
-
-          console.log(this.userEmotion);
-          
         },
         error: (err) => {
           this.error = 'Error fetching posts.';

@@ -16,7 +16,7 @@ export class SettingsComponent {
 
   constructor(
     private toastr:ToastrService,
-    private service:WriteserviceService
+    private service:WriteserviceService,
 
   ){
   }

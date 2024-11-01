@@ -1,1 +1,24 @@
-<p>analytics works!</p>
+<div>
+    <h2>Posts Reaction Analytics</h2>
+    <div *ngFor="let post of posts">
+    Post: <h3>{{post.title}}</h3> <br>
+    <ngx-charts-bar-vertical
+      [results]="reactionCountsData"
+      [scheme]="colorScheme"
+      [xAxis]="true"
+      [yAxis]="true"
+      [legend]="true"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      xAxisLabel="Reaction Type"
+      yAxisLabel="Count"
+>
+    </ngx-charts-bar-vertical>
+    <br>
+
+  
+
+</div>
+
+
+  </div>

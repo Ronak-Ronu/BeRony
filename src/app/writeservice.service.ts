@@ -22,7 +22,7 @@ export class WriteserviceService {
     // this.url=`${environment.beronyAPI}/api/posts`
     // this.drafturl=`${environment.beronyAPI}/api/drafts`
     // this.findposturl=`${environment.beronyAPI}/api/findpost`
-    // this.bookmarkurl=`${environment.beronyAPI}/api`
+    // this.baseurl=`${environment.beronyAPI}/api`
     this.accessKey=environment.Unsplash_ACCESSKEY
     
     this.url='http://localhost:3000/api/posts'
@@ -30,9 +30,6 @@ export class WriteserviceService {
     this.findposturl='http://localhost:3000/api/findpost'
     this.baseurl='http://localhost:3000/api'
    }
-   
-
-      
     publishblog(formData:FormData)
     {
       console.log("this is publish blog service");

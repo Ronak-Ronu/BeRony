@@ -2,6 +2,7 @@
   <!-- <p>{{}}</p> -->
 </div>
 
+
 <div class="containerforeading"  >
   <div class="leftreadingsection">
     <div class="imagesection">
@@ -70,12 +71,14 @@
           {{ loveitcount }}
         </span>
       </div>
+  
     </div>
 
     </div>
-
 
       <div class="bodycontentsection" (mouseup)="highlightText()" >
+
+  
         <div [innerHTML]="sanitizedBodyContent"></div>
         <!-- <p>{{post.bodyofcontent}}</p> -->
         <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque labore ea doloribus, perferendis, quae corrupti corporis cumque quod iure optio dolores a possimus incidunt natus molestias nulla quibusdam ex amet.
@@ -91,8 +94,9 @@
       <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi quasi aliquam aliquid voluptatum, possimus aspernatur facilis omnis eum dolorum alias, totam unde adipisci repudiandae rerum</p> -->
     </div>
     <div style="height: 1px; background-color: grey;width: 70%;margin-left: 17%;margin-top: 2%;margin-bottom: 2%;"></div>
-    <div class="postadmindetails">Written with ♥️ by - {{ post.username }} {{post.userEmotion}}
+    <div class="postadmindetails">Written with ♥️ by - {{ post.username }} 
     </div>
+    
     <div *ngIf="tagsarray.length" class="tagslist">
       <div class="tags">
         <span *ngFor="let tag of tagsarray" class="tag">{{ tag }}</span>

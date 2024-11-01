@@ -12,6 +12,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.1.0",
+    "@angular/cdk": "^18.2.11",
     "@angular/common": "^18.1.0",
     "@angular/compiler": "^18.1.0",
     "@angular/core": "^18.1.0",
@@ -20,6 +21,7 @@
     "@angular/platform-browser": "^18.1.0",
     "@angular/platform-browser-dynamic": "^18.1.0",
     "@angular/router": "^18.1.0",
+    "@swimlane/ngx-charts": "^20.5.0",
     "appwrite": "^16.0.2",
     "axios": "^1.7.7",
     "ngx-infinite-scroll": "^18.0.0",
