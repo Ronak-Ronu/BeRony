@@ -3,25 +3,18 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-analytics',
   templateUrl: './analytics.component.html',
-  styleUrls:['./analytics.component.css']
+  styleUrls: ['./analytics.component.css']
 })
 export class AnalyticsComponent {
-  @Input() posts:any[]=[];
+  @Input() posts: any[] = [];
 
   reactionCountsData: any[] = [];
-
   colorScheme: any = {
-    domain: ['#FFABAB', '#FFC3A0', '#D5AAFF'] 
+    domain: ['#FFABAB', '#FFC3A0', '#D5AAFF']
   };
 
   ngOnInit() {
     this.updateReactionCounts();
-
-    console.log(this.reactionCountsData);
-    console.log(this.posts);
-    
-    
-    
   }
 
   updateReactionCounts() {
@@ -38,12 +31,15 @@ export class AnalyticsComponent {
       reactionCounts.LoveIt += post.loveitcount || 0;
     });
 
-    
     this.reactionCountsData = [
       { name: 'Funny', value: reactionCounts.Funny },
       { name: 'Sad', value: reactionCounts.Sad },
       { name: 'Love it', value: reactionCounts.LoveIt }
     ];
+  }
+
+  formatYAxisTicks(value: number): string {
+    return Math.floor(value).toString(); 
   }
 
 

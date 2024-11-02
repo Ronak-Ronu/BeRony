@@ -18,10 +18,10 @@
     <div class="buttonsection">
       <div class="footerbuttonsgrey">
         <div>
-
-          <button class="footerbutton" > 
-            READ
+          <button class="footerbutton" (click)="readingblog ? stop() : start(post.bodyofcontent)">
+            {{ readingblog ? 'STOP' : 'READ' }}
           </button>
+    
         </div>
         <div>
 

@@ -6,12 +6,13 @@
       [results]="reactionCountsData"
       [scheme]="colorScheme"
       [xAxis]="true"
-      [yAxis]="true"
+      [yAxis]="false"
       [legend]="true"
       [showXAxisLabel]="true"
       [showYAxisLabel]="true"
       xAxisLabel="Reaction Type"
       yAxisLabel="Count"
+      [yAxisTickFormatting]="formatYAxisTicks"
 >
     </ngx-charts-bar-vertical>
     <br>

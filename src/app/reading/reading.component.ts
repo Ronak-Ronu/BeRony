@@ -43,6 +43,11 @@ export class ReadingComponent implements OnInit {
   databases: Databases;
   sanitizedBodyContent!: SafeHtml;
   loggedinuserid!:string
+  readingblog:boolean=false
+
+  private synth = window.speechSynthesis;
+  private utterance = new SpeechSynthesisUtterance();
+
 
   constructor(private service:WriteserviceService,private cdr: ChangeDetectorRef,private router:ActivatedRoute,
     // private ngnavigateservice:NgNavigatorShareService,
@@ -52,9 +57,10 @@ export class ReadingComponent implements OnInit {
     const client = new Client().
     setEndpoint(environment.appwriteEndpoint)
     .setProject(environment.appwriteProjectId);
-
-
     this.databases = new Databases(client);
+    this.utterance.lang = 'en-US'; 
+    this.utterance.rate = 1;       
+    this.utterance.pitch = 1;      
   }
 
 
@@ -63,6 +69,7 @@ export class ReadingComponent implements OnInit {
     this.getloggedinuserdata()
     this.checkUserReactions();
     this.fetchComments();
+    window.speechSynthesis.onvoiceschanged = () => this.setVoice();
 
 
   //   this._id=this.router.snapshot.paramMap.get("postid")
@@ -75,6 +82,14 @@ export class ReadingComponent implements OnInit {
   // })
     
   }
+  private setVoice(): void {
+    const voices = this.synth.getVoices();
+    if (voices.length > 0) {
+        this.utterance.voice = voices.find(voice => voice.lang === 'en-US') || voices[0];
+    } else {
+        console.warn('No voices available. Check browser support for Speech Synthesis API.');
+    }
+}
   getSanitizedHtml(text: string): SafeHtml {
     const sanitized=this.sanitizer.bypassSecurityTrustHtml(text);
     console.log('Sanitized HTML:', sanitized);
@@ -350,5 +365,24 @@ bookmarkthispost() {
           this.toastr.error(error.error.message)
       }
   );
+}
+stripHTML(html:string) {
+  return html.replace(/<\/?[^>]+(>|$)/g, "");
+}
+start(text: string): void {
+  if (!this.synth) {
+    console.error('Speech Synthesis is not supported in this browser.');
+    return;
+  }
+  this.utterance.text = this.stripHTML(text);
+  this.synth.cancel();
+  this.synth.speak(this.utterance); 
+  this.readingblog=true
+  // console.log(this.utterance.text);
+  
+}
+stop(): void {
+  this.synth.cancel();
+  this.readingblog=false
 }
 }
