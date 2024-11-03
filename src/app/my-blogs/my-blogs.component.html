@@ -21,13 +21,15 @@
 </div>
 </div>
 
-<div class="post-cards-container" *ngFor="let post of posts">
-  <div class="post-card">
-    <h2>{{ post.title }}</h2>
-    <p class="post-date">{{ post.createdAt | date:'mediumDate' }}</p>
-    <img [src]="post.imageUrl" alt="Post Image" class="post-image" *ngIf="post.imageUrl" />
-    <div class="likes">
-      <div>{{ post.funnycount + post.sadcount + post.loveitcount }} Likes</div>
+<div class="post-cards-container" >
+  <div *ngFor="let post of posts">
+    <div class="post-card">
+      <h2>{{ post.title }}</h2>
+      <p class="post-date">{{ post.createdAt | date:'mediumDate' }}</p>
+      <img [src]="post.imageUrl" alt="Post Image" class="post-image" *ngIf="post.imageUrl" />
+      <div class="likes">
+        <div>{{ post.funnycount + post.sadcount + post.loveitcount }} Likes</div>
+      </div>
     </div>
   </div>
 </div>

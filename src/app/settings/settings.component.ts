@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core';
 import { Input } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { WriteserviceService } from '../writeservice.service';
+import { account } from '../../lib/appwrite';
 
 @Component({
   selector: 'app-settings',
@@ -10,8 +11,10 @@ import { WriteserviceService } from '../writeservice.service';
 })
 export class SettingsComponent {
   @Input() userId:string=""
+  @Input() isEmailVerified:boolean=false;
   selectedEmoji:string=""
   userBio: string = '';
+  verificationMessage:string=""
   emojis: string[] = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇']; // Add more emojis as needed
 
   constructor(
@@ -22,7 +25,7 @@ export class SettingsComponent {
   }
 
   ngOnInit() {
-    console.log('Initial userBio:', this.userBio); // Check initial value
+    // console.log('Initial userBio:', this.userBio); // Check initial value
   }
   selectEmoji(emoji:string)
   {
@@ -70,6 +73,18 @@ export class SettingsComponent {
           
         }
       )
+    }
+  }
+  async sendVerificationEmail() {
+    try {
+      await account.createVerification(`${window.location.origin}/userdashboard`);
+      this.verificationMessage = 'Verification email sent! Please check your inbox.';
+      this.toastr.success(this.verificationMessage)
+
+    } catch (error) {
+      console.error('Error sending verification email:', error);
+      this.verificationMessage = 'Failed to send verification email. Please try again.';
+      this.toastr.error(this.verificationMessage)
     }
   }
 }

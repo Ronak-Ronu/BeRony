@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { account } from '../../lib/appwrite';
 import { WriteserviceService } from '../writeservice.service';
+import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-userdashboard',
   templateUrl: './userdashboard.component.html',
-  styleUrl: './userdashboard.component.css'
+  styleUrls: ['./userdashboard.component.css']
 })
 export class UserdashboardComponent implements OnInit{
 
@@ -19,11 +21,30 @@ export class UserdashboardComponent implements OnInit{
   userEmotion:string=""
   userBio:string=""
   userData: any;
+  isEmailVerified:boolean=false
 
-  constructor(private service:WriteserviceService)
+
+  constructor(private service:WriteserviceService,
+    private route: ActivatedRoute,
+    private toastr: ToastrService
+
+  )
   {}
-  ngOnInit(): void {
+  async ngOnInit() {
     this.getloggedinuserdata()
+
+    const userId = this.route.snapshot.queryParamMap.get('userId');
+    const secret = this.route.snapshot.queryParamMap.get('secret');
+    if (userId && secret) {
+      try {
+        await account.updateVerification(userId, secret);
+        this.toastr.success('Email verified successfully!');
+        // this.router.navigate(['/userdashboard']);
+      } catch (error: any) {
+        this.toastr.error('Email verification failed.');
+        console.error('Verification error:', error);
+      }
+    } 
 
   }
   async getloggedinuserdata (){
@@ -31,12 +52,15 @@ export class UserdashboardComponent implements OnInit{
     if (this.loggedInUserAccount) {
       this.username=this.loggedInUserAccount.name;
       this.userId=this.loggedInUserAccount.$id;
+      this.isEmailVerified = this.loggedInUserAccount.emailVerification; 
+
       console.log(this.username);
       console.log(this.userId);
       this.service.getUserData(this.userId).subscribe(
         (data)=>{
           console.log(data);
           this.userData = data.user
+          this.fetchUserPosts();
         },
         (error)=>{
           console.log(error);
@@ -82,5 +106,6 @@ export class UserdashboardComponent implements OnInit{
       }
     )
   }
-  
+
+
 }

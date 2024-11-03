@@ -2,7 +2,7 @@ import { Component, OnInit ,ChangeDetectorRef} from '@angular/core';
 import { WriteModel } from '../Models/writemodel';
 import { WriteserviceService } from '../writeservice.service';
 import { account } from '../../lib/appwrite'; 
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { trigger, style, animate, transition } from '@angular/animations';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -76,9 +76,24 @@ publishblog(publishdata: WriteModel) {
 
   });
 
-  this.writeservice.publishblog(formData)
+  this.writeservice.publishblog(formData).then(
+    res=>{
+      console.log(res);
+      
+      if (res){
+        console.log("blog published");
+        
+          this.toastr.success("blog published")
+        }
+      else{
+        this.toastr.error("failed to publish blog")
+      }
+    }
+  );
+
 
 }
+
 async getloggedinuserdata (){
   this.loggedInUserAccount = await account.get();
   if (this.loggedInUserAccount) {
@@ -105,7 +120,17 @@ async getloggedinuserdata (){
       formData.append('imageUrl', this.selectedimagefile); 
     }
 
-    this.writeservice.publishblog(formData);
+    this.writeservice.publishblog(formData).then(
+      res=>{
+        if (res.success){
+            this.toastr.success("blog published")
+
+        }
+        else{
+          this.toastr.error("failed to publish blog")
+        }
+      }
+    );
 
     this.writeservice.deletedraft(draftdata._id);
   }

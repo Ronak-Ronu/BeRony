@@ -1,14 +1,14 @@
 .post-cards-container {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-around;
   flex-wrap: wrap;
-  gap: 3rem;
+  gap: 1rem;
   margin-top: 2rem;
   }
 
   .post-card {
-    background-color: rgb(143, 159, 233,0.3);
+    background-color: rgba(147, 163, 234, 0.3);
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);

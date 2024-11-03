@@ -1,13 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-analytics',
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.css']
 })
-export class AnalyticsComponent {
+export class AnalyticsComponent implements OnInit {
   @Input() posts: any[] = [];
-
   reactionCountsData: any[] = [];
   colorScheme: any = {
     domain: ['#FFABAB', '#FFC3A0', '#D5AAFF']
@@ -18,29 +17,18 @@ export class AnalyticsComponent {
   }
 
   updateReactionCounts() {
-    const reactionCounts = {
-      Funny: 0,
-      Sad: 0,
-      LoveIt: 0
-    };
-
-    // Calculate reaction counts from all posts
-    this.posts.forEach(post => {
-      reactionCounts.Funny += post.funnycount || 0;
-      reactionCounts.Sad += post.sadcount || 0;
-      reactionCounts.LoveIt += post.loveitcount || 0;
-    });
-
-    this.reactionCountsData = [
-      { name: 'Funny', value: reactionCounts.Funny },
-      { name: 'Sad', value: reactionCounts.Sad },
-      { name: 'Love it', value: reactionCounts.LoveIt }
-    ];
+    this.reactionCountsData = this.posts.map(post => ({
+      title: post.title,
+      counts: {
+        Funny: post.funnycount || 0,
+        Sad: post.sadcount || 0,
+        LoveIt: post.loveitcount || 0
+      }
+    }));
   }
 
-  formatYAxisTicks(value: number): string {
-    return Math.floor(value).toString(); 
+  getMaxYAxisValue() {
+    const maxCounts = this.posts.map(post => Math.max(post.funnycount || 0, post.sadcount || 0, post.loveitcount || 0));
+    return Math.max(...maxCounts, 100); // Returns maximum value or defaults to 100
   }
-
-
 }

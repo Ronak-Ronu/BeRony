@@ -29,3 +29,13 @@
         </div>
         
     </div>
+
+    <div class="followuserbutton">
+        <button 
+          (click)="sendVerificationEmail()" 
+          [disabled]="isEmailVerified"  
+        >
+          {{ isEmailVerified ? 'Email Verified' : 'Verify Email' }}
+        </button>
+        <p *ngIf="verificationMessage">{{ verificationMessage }}</p>
+      </div>

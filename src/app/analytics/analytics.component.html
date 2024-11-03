@@ -1,9 +1,13 @@
-<div>
-    <h2>Posts Reaction Analytics</h2>
-    <div *ngFor="let post of posts">
-    Post: <h3>{{post.title}}</h3> <br>
+<div class="container">
+  <h2>Posts Reaction Analytics</h2>
+  <div *ngFor="let postData of reactionCountsData" class="chart-container">
+    <div>Post: <p style="font-size: 1.5rem;">{{ postData.title }}</p></div>
     <ngx-charts-bar-vertical
-      [results]="reactionCountsData"
+      [results]="[
+        { name: 'Funny', value: postData.counts.Funny },
+        { name: 'Sad', value: postData.counts.Sad },
+        { name: 'Love it', value: postData.counts.LoveIt }
+      ]"
       [scheme]="colorScheme"
       [xAxis]="true"
       [yAxis]="false"
@@ -12,14 +16,8 @@
       [showYAxisLabel]="true"
       xAxisLabel="Reaction Type"
       yAxisLabel="Count"
-      [yAxisTickFormatting]="formatYAxisTicks"
->
+    >
     </ngx-charts-bar-vertical>
     <br>
-
-  
-
-</div>
-
-
   </div>
+</div>

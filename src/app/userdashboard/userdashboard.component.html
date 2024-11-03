@@ -33,7 +33,7 @@
       <app-overview *ngIf="activeSection === 'overview'" [userBio]="userBio" [username]="username"></app-overview>
       <app-my-blogs *ngIf="activeSection === 'my-blogs'" [posts]="posts" [bookmarkposts]="bookmarkposts" [loggedinuserid]="userId"></app-my-blogs>
       <app-analytics *ngIf="activeSection === 'analytics'" [posts]="posts" ></app-analytics>
-      <app-settings *ngIf="activeSection === 'settings'" [userId]="userId"></app-settings>
+      <app-settings *ngIf="activeSection === 'settings'" [userId]="userId" [isEmailVerified]="isEmailVerified"></app-settings>
     </div>
   </div>
 

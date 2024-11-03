@@ -30,19 +30,26 @@ export class WriteserviceService {
     // this.findposturl='http://localhost:3000/api/findpost'
     // this.baseurl='http://localhost:3000/api'
    }
-    publishblog(formData:FormData)
+    publishblog(formData:FormData):Promise<any>
     {
       console.log("this is publish blog service");
       formData.forEach((value, key) => {
         console.log(`FormData Key: ${key}, Value: ${value}`);
       });
-    
-      this.http.post<WriteModel>(this.url,formData).subscribe((res:any)=>{
-          console.log(res);
+      return new Promise((resolve,reject)=>{
+        this.http.post<WriteModel>(this.url,formData).subscribe(
+          (res:any)=>{
+          // console.log(res);
           this.postid=res._id
-          
+          resolve(res);
+          // console.log(formData);
+        },
+        (error)=>{
+          console.error('Error publishing blog:', error);
+          reject(error)
+        }
+      )
       })
-      console.log(formData);
     }
     
     draftblog(draftdata:WriteModel)
