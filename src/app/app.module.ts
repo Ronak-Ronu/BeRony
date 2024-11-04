@@ -27,7 +27,10 @@ import { OverviewComponent } from './overview/overview.component';
 import { MyBlogsComponent } from './my-blogs/my-blogs.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
 import { SettingsComponent } from './settings/settings.component';
-import { NgxChartsModule } from '@swimlane/ngx-charts'; 
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { BlogReelComponent } from './blog-reel/blog-reel.component'; 
+import { HammerModule } from '@angular/platform-browser';
+
 
 const routes  = [
 
@@ -38,6 +41,7 @@ const routes  = [
   // {path: 'reading', component: ReadingComponent},
   { path: 'reading/:postid', component: ReadingComponent },
   { path: 'userlogin', component: UserloginComponent },
+  { path: 'blogreel', component: BlogReelComponent },
   { path: 'userdashboard', component: UserdashboardComponent,canActivate:[routeauthguardGuard] },
   {path: '**', component: WrongpageComponent}
 ];
@@ -60,6 +64,7 @@ const routes  = [
     MyBlogsComponent,
     AnalyticsComponent,
     SettingsComponent,
+    BlogReelComponent,
 
   ],
   imports: [
@@ -70,6 +75,7 @@ const routes  = [
     BrowserAnimationsModule,
     InfiniteScrollModule,
     NgxChartsModule,
+    HammerModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot(routes),
   ],

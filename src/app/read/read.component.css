@@ -92,6 +92,20 @@ input:focus{
     animation: fadeIn 0.5s forwards;
 }
 
+.reelitbtn{
+    background-color: #d5d8f9;
+    min-width: auto;
+    min-height: 3vh;
+    max-height: 7vh;
+    height: 7vh;
+    font-size: 23px;
+    border: 1px solid black;
+    border-radius: 50px;
+    margin-left: 4%;
+    margin-top: 1%;
+    cursor: pointer;
+    padding: 17px;
+}
 
 .recommendationsbutton{
     background-color: #d5d8f9;
@@ -320,6 +334,18 @@ input:focus{
         padding: 10px;
         border-bottom: 0.5px solid rgb(77, 77, 77);
       }
+      .reelitbtn{
+        background-color: #d5d8f9;
+        width: auto;
+        font-size: 17px;
+        border: 1px solid black;
+        border-radius: 50px;
+        margin-left: 4%;
+        margin-top: 1%;
+        cursor: pointer;
+        padding: 12px;
+    }
+    
     .recommendationsbutton{
         background-color: #d5d8f9;
         font-size: 15px;
