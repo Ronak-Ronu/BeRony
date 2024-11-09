@@ -1,7 +1,7 @@
 <div class="profileheadingwrite">
     <div class="username">
 
-      {{username}} 
+      {{userData.username}} 
     </div>
     <div class="usercurrentemotion">
       {{userData.userEmotion}} 
@@ -30,10 +30,11 @@
       </ul>
     </div>
     <div class="main-content">
+      
       <app-overview *ngIf="activeSection === 'overview'" [userBio]="userBio" [username]="username"></app-overview>
       <app-my-blogs *ngIf="activeSection === 'my-blogs'" [posts]="posts" [bookmarkposts]="bookmarkposts" [loggedinuserid]="userId"></app-my-blogs>
-      <app-analytics *ngIf="activeSection === 'analytics'" [posts]="posts" ></app-analytics>
-      <app-settings *ngIf="activeSection === 'settings'" [userId]="userId" [isEmailVerified]="isEmailVerified"></app-settings>
+      <app-analytics *ngIf="isViewingOwnProfile && activeSection === 'analytics'" [posts]="posts" ></app-analytics>
+      <app-settings *ngIf="isViewingOwnProfile && activeSection === 'settings'" [userId]="userId" [isEmailVerified]="isEmailVerified"></app-settings>
     </div>
   </div>
 
@@ -47,7 +48,7 @@
           </div>
           <div class="userfollowanalytics">
 
-            <div class="userpostsdetail">
+            <div class="usebrpostsdetail">
               16 Posts
             </div>
             <div class="userfollowers">
@@ -61,7 +62,7 @@
         {{userData.userBio}}
       </div>
       <div class="followuserbutton">
-        <button>Share Profile</button>
+        <button (click)="shareProfile()">Share Profile</button>
       </div>
 </div>
 

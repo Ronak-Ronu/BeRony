@@ -6,13 +6,14 @@ import { WriteModel } from '../Models/writemodel';
   selector: 'app-blog-reel',
   templateUrl: './blog-reel.component.html',
   styleUrls: ['./blog-reel.component.css'],
-  
 })
 export class BlogReelComponent implements OnInit {
-  blogs: any[] = [];      
-  currentBlogView: any[] = [];  
-  startIndex: number = 0;         
-  blogsPerPage: number = 1;      
+  blogs: any[] = [];
+  currentBlogView: any[] = [];
+  startIndex: number = 0;
+  blogsPerPage: number = 1;
+  startX: number = 0;
+  threshold: number = 100; // Minimum distance to detect a swipe
 
   constructor(private readService: WriteserviceService, private cdr: ChangeDetectorRef) {}
 
@@ -21,12 +22,10 @@ export class BlogReelComponent implements OnInit {
   }
 
   loadBlogs() {
-    // Fetch a specific page of blogs based on startIndex and blogsPerPage
     this.readService.getpublishpostdata(this.startIndex, this.blogsPerPage).subscribe(
       (data: any[]) => {
         if (data.length > 0) {
           this.blogs = [...this.blogs, ...data];
-          
           this.updateCurrentBlogView();
         } else {
           console.log("No more blogs to load.");
@@ -40,7 +39,27 @@ export class BlogReelComponent implements OnInit {
 
   updateCurrentBlogView() {
     this.currentBlogView = this.blogs.slice(this.startIndex, this.startIndex + this.blogsPerPage);
-    this.cdr.detectChanges();  // Force change detection to update the view
+    this.cdr.detectChanges();
+  }
+
+  onTouchStart(event: TouchEvent) {
+    this.startX = event.touches[0].clientX;
+  }
+
+  onTouchMove(event: TouchEvent) {
+    const moveX = event.touches[0].clientX;
+    const diffX = this.startX - moveX;
+
+    // Check if the swipe distance exceeds the threshold
+    if (Math.abs(diffX) > this.threshold) {
+      // Prevent scrolling if we are swiping
+      event.preventDefault();
+      if (diffX > 0) {
+        this.onSwipeLeft();
+      } else {
+        this.onSwipeRight();
+      }
+    }
   }
 
   onSwipeLeft() {
@@ -48,8 +67,7 @@ export class BlogReelComponent implements OnInit {
       this.startIndex += this.blogsPerPage;
       this.updateCurrentBlogView();
     } else {
-      this.startIndex += this.blogsPerPage;
-      this.loadBlogs(); // Fetch more blogs if we reach the end of loaded blogs
+      this.loadBlogs(); // Fetch more blogs if we reach the end
     }
   }
 

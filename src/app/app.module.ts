@@ -43,6 +43,7 @@ const routes  = [
   { path: 'userlogin', component: UserloginComponent },
   { path: 'blogreel', component: BlogReelComponent },
   { path: 'userdashboard', component: UserdashboardComponent,canActivate:[routeauthguardGuard] },
+  { path: 'profile/:userId', component: UserdashboardComponent },
   {path: '**', component: WrongpageComponent}
 ];
 ``

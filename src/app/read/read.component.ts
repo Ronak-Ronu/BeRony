@@ -3,7 +3,7 @@ import { WriteserviceService } from '../writeservice.service';
 import { WriteModel } from '../Models/writemodel';
 import { account } from '../../lib/appwrite';
 // import { ActivatedRoute } from '@angular/router';
-// import { Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
 
@@ -41,7 +41,11 @@ export class ReadComponent implements OnInit{
 
   }
 
-  constructor(private readsevice:WriteserviceService,private toastr: ToastrService,private cdr: ChangeDetectorRef){}
+  constructor(private readsevice:WriteserviceService,
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef,
+    private router: Router
+  ){}
 
   
   readblogdata(){
@@ -180,6 +184,10 @@ export class ReadComponent implements OnInit{
     });
   }
 
-
-
+  goToAuthorProfile(authorUserId:string)
+  {
+    this.router.navigate(['/profile/',authorUserId])
+    console.log(authorUserId);
+    
+  }
 }

@@ -2,8 +2,10 @@
     height: 82vh;
     width: 100vw;
     display: flex;
+    overflow: hidden;
     justify-content: center;
     align-items: center;
+    
 
 }
 .readcontainer{
@@ -12,8 +14,9 @@
     width: 50%;
     font-size: 22px;
     background-color: rgb(213, 218, 241);
-    overflow-y: scroll;
+    overflow-y: auto;
     border-radius: 10px;
+
 }
 .aboutauthor{
     border-top: 0.1px solid black;
@@ -23,8 +26,14 @@
     justify-content: flex-start;
     gap: 2%;
 }
+.readingreel {
+    pointer-events: none; /* Disable events to allow child to capture them */
+}
+.readcontainer {
+    pointer-events: auto; /* Enable events for scrolling */
+}
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
     .readingreel{
    margin-top: 4%;
    border-radius: 20px;
@@ -34,7 +43,6 @@
         padding: 10px;
         width: 100%;
         background-color: rgb(213, 218, 241);
-        overflow-y: scroll;
     }
     .aboutauthor{
         padding: 5px;

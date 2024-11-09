@@ -1,18 +1,19 @@
-<div class="readingreel">
-    <div class="readcontainer" (swipeleft)="onSwipeLeft()" (swiperight)="onSwipeRight()">
-        <div class="blogscontainer" [@slideAnimation]="currentBlogView.length">
-            <!-- Blog cards loop -->
+<div class="readingreel" 
+     (touchstart)="onTouchStart($event)" 
+     (touchmove)="onTouchMove($event)">
+    <div class="readcontainer">
+        <div class="blogscontainer">
             <div *ngFor="let item of currentBlogView" class="contentdivs">
                 <h3>{{ item.title }} - <span style="color: rgb(98, 98, 98);">{{item.username}}</span></h3>
-              <hr>  <div [innerHTML]="item.bodyofcontent"></div>
+                <hr>
+                <div [innerHTML]="item.bodyofcontent"></div>
                 <div class="aboutauthor">
-                    <div> <b>{{item.username}}</b> | </div>
+                    <div><b>{{item.username}}</b> | </div>
                     <div>{{item.sadcount + item.loveitcount + item.funnycount}} Likes | </div>
                     <div>Author feels: {{item.userEmotion}} | </div>
                     <div class="date">Publish Date: {{item.createdAt | date:'mediumDate'}}</div>
                 </div>
             </div>
-            
         </div>
     </div>
 </div>
