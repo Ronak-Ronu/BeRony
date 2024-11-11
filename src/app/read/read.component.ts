@@ -33,9 +33,9 @@ export class ReadComponent implements OnInit{
 
 
   ngOnInit(): void {
-    this.bucketName=environment.bucketName;
-    this.project=environment.project;
-    this.mode=environment.mode;
+    this.bucketName=encodeURIComponent(environment.bucketName);
+    this.project=encodeURIComponent(environment.project);
+    this.mode=encodeURIComponent(environment.mode);    
     this.readblogdata()
     this.getloggedinuserdata()
 

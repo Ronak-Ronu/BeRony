@@ -22,10 +22,10 @@
         </div>
         <div>
 
-          <li (click)="setActiveSection('analytics')" [ngClass]="{'active': activeSection === 'analytics'}">Analytics</li>
+          <li *ngIf="isViewingOwnProfile" (click)="setActiveSection('analytics')" [ngClass]="{'active': activeSection === 'analytics'}">Analytics</li>
         </div>
         <div>
-          <li (click)="setActiveSection('settings')" [ngClass]="{'active': activeSection === 'settings'}">Settings</li>
+          <li *ngIf="isViewingOwnProfile" (click)="setActiveSection('settings')" [ngClass]="{'active': activeSection === 'settings'}">Settings</li>
         </div>
       </ul>
     </div>
@@ -42,6 +42,7 @@
       <div class="bottomuserbiodetails">
 
           <div class="userprofileimage">
+              <img draggable="false" [src]="imageurl" alt="">
           </div>
           <div class="usernamedetail">
               {{username}}

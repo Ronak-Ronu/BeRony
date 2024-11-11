@@ -3,6 +3,7 @@ import { account } from '../../lib/appwrite';
 import { WriteserviceService } from '../writeservice.service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-userdashboard',
@@ -23,6 +24,10 @@ export class UserdashboardComponent implements OnInit{
   userData: any;
   isEmailVerified:boolean=false
   isViewingOwnProfile:boolean=false
+  bucketName:string | null = null;
+  project:string | null = null;
+  mode:string | null = null;
+  imageurl:string | null = null
 
 
   constructor(private service:WriteserviceService,
@@ -31,6 +36,11 @@ export class UserdashboardComponent implements OnInit{
   )
   {}
   async ngOnInit() {
+
+    this.bucketName=encodeURIComponent(environment.bucketName);
+    this.project=encodeURIComponent(environment.project);
+    this.mode=encodeURIComponent(environment.mode);   
+
     this.route.paramMap.subscribe((params) => {
       const routeUserId = params.get('userId');  
       const secret = this.route.snapshot.queryParamMap.get('secret');  
@@ -40,10 +50,12 @@ export class UserdashboardComponent implements OnInit{
         this.userId = routeUserId;
         this.isViewingOwnProfile = this.userId === this.loggedInUserAccount?.$id;
         this.fetchUserData(this.userId);
+        this.imageurl= `https://cloud.appwrite.io/v1/storage/buckets/${this.bucketName}/files/${this.userId}/view?project=${this.project}&mode=${this.mode}`
       } else {
         this.userId = this.loggedInUserAccount?.$id;
         this.isViewingOwnProfile = true;
         this.getloggedinuserdata();
+
       }
      
 
@@ -59,6 +71,7 @@ export class UserdashboardComponent implements OnInit{
       this.username=this.loggedInUserAccount.name;
       this.userId=this.loggedInUserAccount.$id;
       this.isEmailVerified = this.loggedInUserAccount.emailVerification; 
+      this.imageurl= `https://cloud.appwrite.io/v1/storage/buckets/${this.bucketName}/files/${this.userId}/view?project=${this.project}&mode=${this.mode}`
 
       console.log(this.username);
       console.log(this.userId);

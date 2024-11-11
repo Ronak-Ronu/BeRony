@@ -18,7 +18,6 @@ export class UserloginComponent {
   name: string = '';
   profileImage:File | null =null
   loading:boolean=false
-  
   passwordVisible: boolean = false;
 
 constructor(private router:Router,private toastr: ToastrService,private service:WriteserviceService){}
@@ -110,6 +109,5 @@ async logout() {
   {
     this.passwordVisible=!this.passwordVisible;
   }
-
 
 }

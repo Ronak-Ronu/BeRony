@@ -64,6 +64,7 @@
     width: 10rem;
     height: 10rem;
     background-color: grey;
+    border-radius: 5px;
 }
 .usercurrentemotion{
     font-size: 3rem;
@@ -90,6 +91,15 @@
     margin-top: 10px;
     cursor: pointer;
 }
+
+.userprofileimage img {
+    width: 100%; 
+    height: auto; 
+    object-fit: cover; 
+    border-radius: 5px;
+
+}
+
 .sidebar li.active {
     color: rgb(81, 91, 194); 
   }
