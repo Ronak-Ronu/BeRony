@@ -1,4 +1,4 @@
-.updatebio, .updateemotion {
+.updatebio, .updateemotion, .updateprofileimage {
     background-color: #f9f9f9; 
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
@@ -13,7 +13,7 @@ b {
 }
 
 textarea {
-    width: 100%; 
+    width: auto; 
     height: 150px; 
     padding: 10px; 
     border: 1px solid #ccc; 
@@ -25,12 +25,12 @@ textarea {
 }
 
 textarea:focus {
-    border-color: rgb(143, 159, 233,0.3); 
+    border-color: rgb(143, 159, 233, 0.3); 
     outline: none; 
 }
 
 button {
-    background-color: rgb(143, 159, 233,0.8);
+    background-color: rgb(143, 159, 233, 0.8);
     color: white; 
     border: none; 
     border-radius: 4px; 
@@ -40,19 +40,8 @@ button {
     transition: background-color 0.3s; 
 }
 
-.followuserbutton button{
-    background-color: rgb(143, 159, 233,0.8);
-    color: white; 
-    border: none; 
-    border-radius: 4px; 
-    padding: 10px 15px; 
-    cursor: pointer; 
-    font-size: 1em; 
-    transition: background-color 0.3s; 
-    margin-left:2%;
-}
 button:hover {
-    background-color: rgb(143, 159, 233,0.5);
+    background-color: rgb(143, 159, 233, 0.5);
 }
 
 .updateemotion {
@@ -60,16 +49,29 @@ button:hover {
     flex-direction: row; 
     gap: 10px;
 }
-.selected{
+
+.selected {
     font-size: 40px;
 }
 
-span{
+span {
     font-size: 30px;
 }
 
+.followuserbutton button {
+    background-color: rgb(143, 159, 233, 0.8);
+    color: white; 
+    border: none; 
+    border-radius: 4px; 
+    padding: 10px 15px; 
+    cursor: pointer; 
+    font-size: 1em; 
+    transition: background-color 0.3s; 
+    margin-left: 2%;
+}
+
 @media (max-width: 600px) {
-    .updatebio, .updateemotion {
+    .updatebio, .updateemotion, .updateprofileimage {
         background-color: #f9f9f9; 
         border-radius: 5px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
@@ -96,12 +98,12 @@ span{
     }
     
     textarea:focus {
-        border-color: rgb(143, 159, 233,0.3); 
+        border-color: rgb(143, 159, 233, 0.3); 
         outline: none; 
     }
     
     button {
-        background-color: rgb(143, 159, 233,0.8);
+        background-color: rgb(143, 159, 233, 0.8);
         color: white; 
         border: none; 
         border-radius: 4px; 
@@ -111,10 +113,9 @@ span{
         transition: background-color 0.3s; 
         margin-top: 10px;
     }
-
     
     button:hover {
-        background-color: rgb(143, 159, 233,0.5);
+        background-color: rgb(143, 159, 233, 0.5);
     }
     
     .updateemotion {
@@ -122,12 +123,46 @@ span{
         flex-direction: column; 
         gap: 10px;
     }
-    .selected{
+    .selected {
         font-size: 30px;
     }
     
-    span{
+    span {
         font-size: 20px;
     }
+}
 
+.updateprofileimage {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.updateprofileimage input[type="file"] {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.updateprofileimage button {
+    background-color: rgb(143, 159, 233, 0.8);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    height: 3rem;
+    transition: background-color 0.3s;
+}
+
+.updateprofileimage button:hover {
+    background-color: rgb(143, 159, 233, 0.5);
 }

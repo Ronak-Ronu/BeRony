@@ -81,8 +81,6 @@ async register(email: string, password: string, name: string) {
  
       const response = await storage.createFile(environment.bucketName, userID, profile);
       console.log('Avatar uploaded:', response);
-     
-
     } catch (error: any) {
       console.error('Error uploading avatar:', error);
       this.toastr.error('Failed to upload avatar');
