@@ -1,8 +1,7 @@
-EEEEEEEEEEEEEEEEEEEEEEEEEEEEE<div class="headingwrite" [innerHTML]="post.title">
+<div class="headingwrite" [innerHTML]="post.title">
   <!-- <p>{{}}</p> -->
 </div>
 
-eeeeeeeeeeeeeeeeeeeeeee
 <div class="containerforeading"  >
   <div class="leftreadingsection">
     <div class="imagesection">
@@ -95,6 +94,18 @@ eeeeeeeeeeeeeeeeeeeeeee
     </div>
     <div style="height: 1px; background-color: grey;width: 70%;margin-left: 17%;margin-top: 2%;margin-bottom: 2%;"></div>
     <div class="postadmindetails">Written with ♥️ by - {{ post.username }} 
+    </div>
+    <div class="collaborators-section">
+      <h3>Collaborators:</h3>
+      <div class="collaborators">
+        <div *ngFor="let username of collaboratorsUsernames; let i = index">
+          <a [routerLink]="'/profile/' +post.collaborators[i]" >
+          <div class="collaborator">
+              <p>{{ username }}</p>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
     
     <div *ngIf="tagsarray.length" class="tagslist">

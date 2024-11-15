@@ -1,0 +1,10 @@
+<br>
+<h1>Collaborative Text Editor For {{postdata.title}} </h1>
+<p>Author :  <b> {{postdata.username}}</b></p>
+
+<div class="collab">
+  <textarea [(ngModel)]="text" (input)="onTextChange()" rows="10" cols="50"></textarea>
+  <br/>
+  <button (click)="onSaveChanges()">Update Changes</button>
+</div>
+

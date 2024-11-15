@@ -30,6 +30,8 @@ import { SettingsComponent } from './settings/settings.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BlogReelComponent } from './blog-reel/blog-reel.component'; 
 import { HammerModule } from '@angular/platform-browser';
+import { CollabComponent } from './collab/collab.component';
+import { SearchCollabComponent } from './search-collab/search-collab.component';
 
 
 const routes  = [
@@ -44,9 +46,10 @@ const routes  = [
   { path: 'blogreel', component: BlogReelComponent },
   { path: 'userdashboard', component: UserdashboardComponent,canActivate:[routeauthguardGuard] },
   { path: 'profile/:userId', component: UserdashboardComponent },
+  { path: 'collab/:userId/:postId', component: CollabComponent },
+  { path: 'search-add-collab/:postId', component: SearchCollabComponent},
   {path: '**', component: WrongpageComponent}
 ];
-``
 
 @NgModule({
 
@@ -66,6 +69,8 @@ const routes  = [
     AnalyticsComponent,
     SettingsComponent,
     BlogReelComponent,
+    CollabComponent,
+    SearchCollabComponent,
 
   ],
   imports: [

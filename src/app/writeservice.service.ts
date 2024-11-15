@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { WriteModel } from './Models/writemodel';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../environments/environment'
+// import { io } from 'socket.io-client';
 
  interface PromptRequest {
   prompt: string;
@@ -17,6 +18,10 @@ export class WriteserviceService {
   accessKey:string
   baseurl:string
   
+  // private socket = io(environment.beronyAPI); 
+  private textSubject = new BehaviorSubject<string>(''); 
+  text$ = this.textSubject.asObservable();
+
   constructor(private http:HttpClient) {
 
     this.url=`${environment.beronyAPI}/api/posts`
@@ -29,7 +34,12 @@ export class WriteserviceService {
     // this.drafturl='http://localhost:3000/api/drafts'
     // this.findposturl='http://localhost:3000/api/findpost'
     // this.baseurl='http://localhost:3000/api'
+    // this.socket.on('textChange', (text: string) => {
+    //   this.textSubject.next(text);
+    // });
+
    }
+
     publishblog(formData:FormData):Promise<any>
     {
       console.log("this is publish blog service");
@@ -91,7 +101,9 @@ export class WriteserviceService {
       console.log("Fetching posts with params:", params);
       return this.http.get<WriteModel[]>(this.url,{params});
     }
-
+    clearPostsCache(): Observable<any> {
+      return this.http.delete(`${this.baseurl}/clear-posts`);
+    }
     getsearchpostdata(tag: string | null=null,query:string='')
     {
       const params: any = {};
@@ -175,5 +187,14 @@ export class WriteserviceService {
     {
       return this.http.patch(`${this.baseurl}/user/${userId}/emotion`, { userEmotion: userEmotion })
      
+    }
+  
+    searchUsers(query: string): Observable<any> {
+      return this.http.get(`${this.baseurl}/search?query=${query}`);
+    }
+    addCollaborator(postId: string, collaboratorId: string): Observable<any> {
+      return this.http.post(`${this.baseurl}/${postId}/add-collaborator`, {
+        collaboratorId,
+      });
     }
 }

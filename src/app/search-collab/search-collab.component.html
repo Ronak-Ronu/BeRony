@@ -1,0 +1,25 @@
+<div class="add-collaborator">
+  <h3>Search Collaborator</h3>
+
+  <input
+    type="text"
+    [(ngModel)]="searchQuery"
+    (input)="searchUsers()"
+    placeholder="Search for users..."
+  />
+
+  <div *ngIf="users.length" class="user-list">
+    <ul>
+      <li *ngFor="let user of users">
+        <span>{{ user.username }}</span>
+        <button class="btn-add" (click)="addCollaborator(user.userId)">
+          Add as Collaborator
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="message" class="message">
+    <p>{{ message }}</p>
+  </div>
+</div>

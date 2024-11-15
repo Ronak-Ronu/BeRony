@@ -32,7 +32,7 @@
     <div class="main-content">
       
       <app-overview *ngIf="activeSection === 'overview'" [userBio]="userBio" [username]="username"></app-overview>
-      <app-my-blogs *ngIf="activeSection === 'my-blogs'" [posts]="posts" [bookmarkposts]="bookmarkposts" [loggedinuserid]="userId"></app-my-blogs>
+      <app-my-blogs *ngIf="activeSection === 'my-blogs'" [posts]="posts"   [bookmarkposts]="bookmarkposts" [loggedinuserid]="userId"></app-my-blogs>
       <app-analytics *ngIf="isViewingOwnProfile && activeSection === 'analytics'" [posts]="posts" ></app-analytics>
       <app-settings *ngIf="isViewingOwnProfile && activeSection === 'settings'" [userId]="userId" [isEmailVerified]="isEmailVerified"></app-settings>
     </div>

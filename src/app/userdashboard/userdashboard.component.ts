@@ -114,6 +114,7 @@ export class UserdashboardComponent implements OnInit{
         },
         error: (err) => {
           this.error = 'Error fetching posts.';
+          this.toastr.error('no post found.');
           console.error(err);
         }
   
@@ -148,6 +149,7 @@ export class UserdashboardComponent implements OnInit{
         },
         error: (err) => {
           this.error = 'Error fetching bookmarks.';
+          
           console.error(err);
         }
       }

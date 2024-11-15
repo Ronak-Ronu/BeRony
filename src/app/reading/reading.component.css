@@ -91,18 +91,30 @@
     font-size: 30px;
     user-select: text;
 }
+.collaborators-section{
+    width: 60%;
+    margin-left: 15%;
+    font-size: 22px;
+}
+.collaborators{
+    width: 60%;
+    margin-left: 15%;
+    color: rgb(127, 24, 223);
+}
+.collaborator{
+    font-size: 27px;
 
+}
 .endofnotesection{
     width: 50%;
     margin-top: 5%;
     margin-left: 20%;
-    font-size: 30px;
+    font-size: 20px;
 }
 .tagslist
 {
-    margin-left: 13%;
+    margin-left: 10%;
     margin-bottom: 5%;
-    margin-top: -5%;
 }
 .rightcommentsection{
     height: 90vh;

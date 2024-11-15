@@ -13,4 +13,6 @@ export class WriteModel{
     userEmotion:string=""
     tags:string[]=[]
     pageviews:number=0
+    collaborators:string[]=[]
+
 }

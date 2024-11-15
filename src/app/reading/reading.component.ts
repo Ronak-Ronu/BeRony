@@ -28,6 +28,9 @@ export class ReadingComponent implements OnInit {
   loveitcount!:number
   loggedInUserAccount:any=null
   tagsarray:string[]=[]
+  collabos:string[]=[]
+  collaboratorsUsernames: string[] = [];
+
   newCommentText:string='';
   comments: any[] = [];
   gifSearchQuery: string = ''; 
@@ -44,6 +47,7 @@ export class ReadingComponent implements OnInit {
   sanitizedBodyContent!: SafeHtml;
   loggedinuserid!:string
   readingblog:boolean=false
+  colloabousername!:string
 
   private synth = window.speechSynthesis;
   private utterance = new SpeechSynthesisUtterance();
@@ -109,7 +113,18 @@ export class ReadingComponent implements OnInit {
       }
   }
   
-
+  fetchUserData(userId: string) {
+    this.service.getUserData(userId).subscribe(
+      (data) => {
+        console.log('Fetched user data:', data);  // Debugging log
+        this.collaboratorsUsernames.push(data.user.username);
+      },
+      (error) => {
+        this.toastr.error('User does not exist.');
+        console.error('Error fetching user data:', error);
+      }
+    );
+  }
 
   readblogdatabyid(){
 
@@ -121,8 +136,16 @@ export class ReadingComponent implements OnInit {
                 console.log(this.post);
                 this.filetype = this.post.imageUrl.split('.').pop();
                 this.tagsarray = this.post.tags;
+                this.collabos=this.post.collaborators
                 console.log(this.filetype);
                 console.log(this.tagsarray);
+                console.log(this.collabos);
+                this.collaboratorsUsernames = []; // Reset collaborators' usernames
+                this.collabos.forEach(collaboratorId => {
+                  this.fetchUserData(collaboratorId);
+                });
+        
+        
                 this.sanitizeBodyContent()
             },
             error: (error) => {
@@ -385,4 +408,5 @@ stop(): void {
   this.synth.cancel();
   this.readingblog=false
 }
+
 }

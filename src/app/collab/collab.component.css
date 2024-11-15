@@ -1,0 +1,32 @@
+.collab{
+    width: 98vw;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding: 10px;    
+}
+textarea{
+    width: 90%;
+    height: 400px;
+    font-size: 17px;
+    padding: 1rem;
+    border-radius: 8px;
+    resize: none;   
+}
+button{
+    cursor: pointer;
+    font-size: 20px;
+    padding: 10px;
+    color: black;
+    background-color: rgba(75, 154, 250, 0.3);
+    margin-top: 10px;
+    transition: all 0.3s ease;
+
+}
+button:hover{
+    border: 3px solid rgb(63, 63, 63);
+    border-radius: 7px;
+}

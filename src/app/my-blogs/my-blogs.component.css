@@ -77,7 +77,28 @@
   background-color: rgb(250, 94, 66,0.3);
   margin-top: 10px;
 }
-.postnowbutton button{
+.addcollaborator button{
+  cursor: pointer;
+  font-size: 20px;
+  padding: 10px;
+  color: black;
+  background-color: rgba(130, 250, 66, 0.3);
+  margin-top: 10px;
+}
+.workspace button{
+  cursor: pointer;
+  font-size: 20px;
+  padding: 10px;
+  color: black;
+  background-color: rgba(158, 66, 250, 0.3);
+  margin-top: 10px;
+}
+button:hover{
+  border-radius: 9px;
+
+}
+.postnowbutton button,.readpost button
+{
   cursor: pointer;
   font-size: 20px;
   padding: 10px;

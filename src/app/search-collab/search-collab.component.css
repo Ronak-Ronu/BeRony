@@ -1,0 +1,92 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .add-collaborator {
+    width: 100%;
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .add-collaborator h2 {
+    font-size: 1.6rem;
+    color: rgb(143, 159, 233);
+    margin-bottom: 20px;
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    outline: none;
+  }
+  
+  input[type="text"]:focus {
+    border-color: rgb(143, 159, 233);
+  }
+  
+  .user-list ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+  
+  .user-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .user-list button {
+    background-color: rgb(143, 159, 233);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+  }
+  
+  .user-list button:hover {
+    background-color: rgb(123, 138, 210);
+  }
+  
+  .message {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    color: #333;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .add-collaborator {
+      padding: 15px;
+    }
+  
+    input[type="text"] {
+      padding: 12px;
+    }
+  
+    .user-list li {
+      flex-direction: column;
+      text-align: left;
+    }
+  }
+  

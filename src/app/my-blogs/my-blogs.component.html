@@ -30,9 +30,26 @@
       <div class="likes">
         <div>{{ post.funnycount + post.sadcount + post.loveitcount }} Likes</div>
       </div>
+      <div *ngIf="post.userId === userId else readpost">
+        <div class="addcollaborator">
+          <button [routerLink]="'/search-add-collab/'+post._id">Add Collaborator</button>
+        </div>
+        <div class="workspace">
+          <button [routerLink]="'/collab/'+userId+'/'+post._id">WorkSpace</button>
+        </div>
+        <div class="readpost">
+          <button style="cursor: pointer;"  [routerLink]="'/reading/' + post._id" >READ</button>
+        </div>
+      </div>
+      <ng-template #readpost>
+        <div class="readpost">
+          <button style="cursor: pointer;"  [routerLink]="'/reading/' + post._id" >READ</button>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>
+
 
 </div>
 
