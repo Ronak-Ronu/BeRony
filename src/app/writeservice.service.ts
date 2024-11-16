@@ -157,8 +157,8 @@ export class WriteserviceService {
       return this.http.post(`${this.baseurl}/users/${userId}/bookmarks`, body);
     }
 
-    addUserToDB(userId: string, username: string): Observable<any> {
-      const body = { userId,username }; 
+    addUserToDB(userId: string, username: string, userEmail: string): Observable<any> {
+      const body = { userId,username,userEmail}; 
       console.log('Request Body:', body);
       return this.http.post(`${this.baseurl}/user/register`, body);
     }
@@ -176,7 +176,10 @@ export class WriteserviceService {
     updateuserBio(userId:string,userBio:string):Observable<any>
     {
       return this.http.patch(`${this.baseurl}/user/${userId}/bio`, { userBio: userBio })
-     
+    }
+    updateuserEmail(userId:string,userEmail:string):Observable<any>
+    {
+      return this.http.patch(`${this.baseurl}/user/${userId}/email`, { userEmail:userEmail })
     }
     getUserData(userId:string): Observable<any>
     {
@@ -196,5 +199,9 @@ export class WriteserviceService {
       return this.http.post(`${this.baseurl}/${postId}/add-collaborator`, {
         collaboratorId,
       });
+    }
+    sendCollaborateInvite(userEmail:string, authorMail:string,authorName:string, postTitle:string, postDescription:string, workspaceLink:string): Observable<any>{
+      const body={userEmail, authorMail,authorName, postTitle, postDescription, workspaceLink};
+      return this.http.post(`${this.baseurl}/send-collab-invite`,body)
     }
 }

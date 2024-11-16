@@ -57,11 +57,10 @@ async register(email: string, password: string, name: string) {
   try {
     const userID=ID.unique()
     await account.create(userID, email, password, name);
-
     if (this.profileImage) {
       await this.uploadAvatar(userID, this.profileImage);
     }    
-    this.service.addUserToDB(userID,name)
+    this.service.addUserToDB(userID,name,email)
     this.login(email, password);
   } catch (error:any) {
     if(error?.message)

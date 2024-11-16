@@ -13,8 +13,7 @@ b {
 }
 
 textarea {
-    width: auto; 
-    height: 150px; 
+    width: 90%;
     padding: 10px; 
     border: 1px solid #ccc; 
     border-radius: 4px; 
@@ -23,7 +22,9 @@ textarea {
     margin-bottom: 10px; 
     transition: border-color 0.3s;
 }
-
+.updateEmail{
+    margin-top: 20px;
+}
 textarea:focus {
     border-color: rgb(143, 159, 233, 0.3); 
     outline: none; 

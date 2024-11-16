@@ -99,9 +99,10 @@ async getloggedinuserdata (){
   if (this.loggedInUserAccount) {
     this.username=this.loggedInUserAccount.name;
     this.userId=this.loggedInUserAccount.$id;
+    const email = this.loggedInUserAccount.email
     console.log(this.username);
     console.log(this.userId);
-    const response = await this.writeservice.addUserToDB(this.userId, this.username).toPromise();
+    const response = await this.writeservice.addUserToDB(this.userId, this.username,email).toPromise();
     console.log('User added to DB:', response);
 
   }

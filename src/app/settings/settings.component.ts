@@ -16,6 +16,8 @@ export class SettingsComponent {
   selectedEmoji:string=""
   userBio: string = '';
   verificationMessage:string=""
+  userEmail: string = '';
+
   emojis: string[] = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇']; // Add more emojis as needed
   selectedProfileImage: File | null = null
   userProfileImageUrl: string | null = null;
@@ -37,7 +39,7 @@ export class SettingsComponent {
   updateBio() {
     console.log('userBio before update:', this.userBio);
     if (this.userBio==="") {
-      this.toastr.error("cannot update empty bio");
+      this.toastr.error("cannot update empty field");
     }
     else{
       console.log(this.userId);
@@ -46,17 +48,33 @@ export class SettingsComponent {
       this.service.updateuserBio(this.userId,this.userBio).subscribe(
         ()=>{
           this.toastr.success("bio updated")
-          console.log(this.userBio);
-          
+          // console.log(this.userBio);
+
         },
         (error)=>{
           this.toastr.error("cannot update bio")
-          console.log(error);
+          // console.log(error);
           
         }
       )
     }
+  }
+  updateEmail()
+  {
+    if (this.userEmail==="") {
+      this.toastr.error("cannot update empty field");
+    }
+    else{
 
+      this.service.updateuserEmail(this.userId,this.userEmail).subscribe(
+        ()=>{
+          this.toastr.success("Email updated")
+        },
+        (error)=>{
+          this.toastr.error("cannot update email",error)
+        })
+      }
+    
   }
   updateEmotion()
   {
@@ -67,17 +85,18 @@ export class SettingsComponent {
       this.service.updateuserEmotion(this.userId,this.selectedEmoji).subscribe(
         ()=>{
           this.toastr.success("reaction updated")
-          console.log(this.selectedEmoji);
+          // console.log(this.selectedEmoji);
           
         },
         (error)=>{
           this.toastr.error("can't update emotion")
-          console.log(error);
+          // console.log(error);
           
         }
       )
     }
   }
+
   async sendVerificationEmail() {
     try {
       await account.createVerification(`${window.location.origin}/userdashboard`);
@@ -85,7 +104,7 @@ export class SettingsComponent {
       this.toastr.success(this.verificationMessage)
 
     } catch (error) {
-      console.error('Error sending verification email:', error);
+      // console.error('Error sending verification email:', error);
       this.verificationMessage = 'Failed to send verification email. Please try again.';
       this.toastr.error(this.verificationMessage)
     }
@@ -97,13 +116,13 @@ export class SettingsComponent {
     
     if (input.files && input.files.length > 0) {
       this.selectedProfileImage = input.files[0];
-      console.log(this.selectedProfileImage);
+      // console.log(this.selectedProfileImage);
       
     }
   }
   async uploadProfileImage() {
     const user = await account.get();  
-    console.log(this.selectedProfileImage);  
+    // console.log(this.selectedProfileImage);  
     try {
       if (!this.selectedProfileImage) {
         throw new Error('No profile image selected');

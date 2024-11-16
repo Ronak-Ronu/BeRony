@@ -46,7 +46,7 @@ const routes  = [
   { path: 'blogreel', component: BlogReelComponent },
   { path: 'userdashboard', component: UserdashboardComponent,canActivate:[routeauthguardGuard] },
   { path: 'profile/:userId', component: UserdashboardComponent },
-  { path: 'collab/:userId/:postId', component: CollabComponent },
+  { path: 'collab/:userId/:postId', component: CollabComponent,canActivate:[routeauthguardGuard] },
   { path: 'search-add-collab/:postId', component: SearchCollabComponent},
   {path: '**', component: WrongpageComponent}
 ];

@@ -42,7 +42,7 @@ export class UserdashboardComponent implements OnInit{
     this.mode=encodeURIComponent(environment.mode);   
 
     this.route.paramMap.subscribe((params) => {
-      const routeUserId = params.get('userId');  
+      const routeUserId =  this.route.snapshot.queryParamMap.get('userId');  
       const secret = this.route.snapshot.queryParamMap.get('secret');  
       console.log('routeUserId:', routeUserId);
 
@@ -57,8 +57,6 @@ export class UserdashboardComponent implements OnInit{
         this.getloggedinuserdata();
 
       }
-     
-
       if (routeUserId && secret) {
         this.verifyEmail(routeUserId, secret);
       }
@@ -80,7 +78,6 @@ export class UserdashboardComponent implements OnInit{
           console.log(data);
           this.userData = data.user
           this.fetchUserPosts();
-          
         },
         (error)=>{
           console.log(error);
