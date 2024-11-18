@@ -13,19 +13,29 @@ export class BlogReelComponent implements OnInit {
   startIndex: number = 0;
   blogsPerPage: number = 1;
   startX: number = 0;
-  threshold: number = 100; // Minimum distance to detect a swipe
+  threshold: number = 200;
+  loadingBlogs: boolean = false;  
 
   constructor(private readService: WriteserviceService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadBlogs();
+    window.addEventListener('touchstart', this.onTouchStart.bind(this));
+    window.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: false });
+  
   }
 
   loadBlogs() {
+    if (this.loadingBlogs) {
+      return;  
+    }
+    
+    this.loadingBlogs = true;  
+  
     this.readService.getpublishpostdata(this.startIndex, this.blogsPerPage).subscribe(
       (data: any[]) => {
         if (data.length > 0) {
-          this.blogs = [...this.blogs, ...data];
+          this.blogs = [...this.blogs, ...data]; 
           this.updateCurrentBlogView();
         } else {
           console.log("No more blogs to load.");
@@ -33,9 +43,13 @@ export class BlogReelComponent implements OnInit {
       },
       (error) => {
         console.error("Error fetching blogs:", error);
+      },
+      () => {
+        this.loadingBlogs = false;  
       }
     );
   }
+  
 
   updateCurrentBlogView() {
     this.currentBlogView = this.blogs.slice(this.startIndex, this.startIndex + this.blogsPerPage);
@@ -49,11 +63,12 @@ export class BlogReelComponent implements OnInit {
   onTouchMove(event: TouchEvent) {
     const moveX = event.touches[0].clientX;
     const diffX = this.startX - moveX;
-
-    // Check if the swipe distance exceeds the threshold
+  
     if (Math.abs(diffX) > this.threshold) {
-      // Prevent scrolling if we are swiping
-      event.preventDefault();
+      if (event.cancelable) {
+        event.preventDefault();
+      }
+  
       if (diffX > 0) {
         this.onSwipeLeft();
       } else {
@@ -61,20 +76,23 @@ export class BlogReelComponent implements OnInit {
       }
     }
   }
+  
 
   onSwipeLeft() {
     if (this.startIndex + this.blogsPerPage < this.blogs.length) {
       this.startIndex += this.blogsPerPage;
       this.updateCurrentBlogView();
     } else {
-      this.loadBlogs(); // Fetch more blogs if we reach the end
+      this.loadBlogs();
     }
   }
-
+  
   onSwipeRight() {
     if (this.startIndex - this.blogsPerPage >= 0) {
       this.startIndex -= this.blogsPerPage;
       this.updateCurrentBlogView();
     }
   }
+  
+  
 }

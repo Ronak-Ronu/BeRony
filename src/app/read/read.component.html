@@ -63,7 +63,7 @@
                 <p [innerHTML]="item.endnotecontent">
                     <!-- {{item.endnotecontent}} -->
                 </p>
-                <div style="display: flex;align-items: center;">
+                <div style="display: flex;align-items: center;justify-content: space-between; width: 100%;">
 
                     <div class="pickprofileblog">
                         <img [src]="'https://cloud.appwrite.io/v1/storage/buckets/'+bucketName+'/files/' + item.userId + '/view?project='+project+'&mode='+mode+''" alt="">
@@ -71,8 +71,12 @@
                     <div>
                         <u style="cursor: pointer;" (click)="goToAuthorProfile(item.userId)"
                         > {{item.username}} {{item.userEmotion}} </u>
-                    </div>
-                </div>
+                    </div>  
+                    <div style="font-size: 15px;margin-left: auto; color: #777; white-space: nowrap;"> 
+                         {{item.pageviews}} views
+                    </div>     
+                </div> 
+           
             </div>
 
             <div class="footerbuttons">

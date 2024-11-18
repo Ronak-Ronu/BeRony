@@ -23,10 +23,7 @@ So, why wait? Start creating and let the world see your work!
 
 
 ### Workflow
-![alt text](beronyworkflow.drawio.png)
-
->  note: this is older workflow image and not updated to latest
-
+![alt text](<Screenshot from 2024-11-17 16-40-34.png>)
 
 ### Future Features
 - Authentication & Authorization ✅

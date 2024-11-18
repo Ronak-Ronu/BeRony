@@ -144,7 +144,7 @@ export class SettingsComponent {
       const uploadResponse = await storage.createFile(environment.bucketName, userId, file);
       // console.log("Avatar uploaded", uploadResponse);
       this.toastr.success("Avatar uploaded")
-  
+
     } catch (error) {
       // console.error("Error uploading profile image", error);
       this.toastr.error("cannot update profile image/verify mail id");

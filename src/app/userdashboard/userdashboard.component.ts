@@ -28,7 +28,7 @@ export class UserdashboardComponent implements OnInit{
   project:string | null = null;
   mode:string | null = null;
   imageurl:string | null = null
-
+  routeUserId:string | null=''
 
   constructor(private service:WriteserviceService,
     private route: ActivatedRoute,
@@ -42,23 +42,24 @@ export class UserdashboardComponent implements OnInit{
     this.mode=encodeURIComponent(environment.mode);   
 
     this.route.paramMap.subscribe((params) => {
-      const routeUserId =  this.route.snapshot.queryParamMap.get('userId');  
+      this.routeUserId =  params.get('userId');  
       const secret = this.route.snapshot.queryParamMap.get('secret');  
-      console.log('routeUserId:', routeUserId);
+      console.log('routeUserId:', this.routeUserId);
 
-      if (routeUserId) {
-        this.userId = routeUserId;
+      if (this.routeUserId) {
+        this.userId = this.routeUserId;
         this.isViewingOwnProfile = this.userId === this.loggedInUserAccount?.$id;
-        this.fetchUserData(this.userId);
+        this.fetchUserData(this.userId || '' );
         this.imageurl= `https://cloud.appwrite.io/v1/storage/buckets/${this.bucketName}/files/${this.userId}/view?project=${this.project}&mode=${this.mode}`
+
       } else {
+
         this.userId = this.loggedInUserAccount?.$id;
         this.isViewingOwnProfile = true;
         this.getloggedinuserdata();
-
       }
-      if (routeUserId && secret) {
-        this.verifyEmail(routeUserId, secret);
+      if (this.routeUserId && secret) {
+        this.verifyEmail(this.routeUserId, secret);
       }
     });
 
@@ -73,7 +74,7 @@ export class UserdashboardComponent implements OnInit{
 
       console.log(this.username);
       console.log(this.userId);
-      this.service.getUserData(this.userId).subscribe(
+      this.service.getUserData(this.userId || '').subscribe(
         (data)=>{
           console.log(data);
           this.userData = data.user
@@ -118,7 +119,7 @@ export class UserdashboardComponent implements OnInit{
       }
     )
   }
-  fetchUserData(userId: string) {
+  fetchUserData(userId: string ) {
     this.service.getUserData(userId).subscribe(
       (data) => {
         console.log('Fetched user data:', data);  // Debugging log
@@ -137,7 +138,7 @@ export class UserdashboardComponent implements OnInit{
   
   fetchbookmarks()
   {
-    this.service.getBookmark(this.userId).subscribe(
+    this.service.getBookmark(this.userId || '').subscribe(
       {
         next:(data)=>{
             this.bookmarkposts=data
