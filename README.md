@@ -29,11 +29,14 @@ So, why wait? Start creating and let the world see your work!
 - Authentication & Authorization ✅
 - Share blogs throughtout various social media ✅
 - Comment Section to share thoughts about posts ✅
-- Reeling Blogs and vlogs
-- Create and share video blogs or vlogs
-- will introduce Android,ios applications
-- collaborative blogging
+- Reeling Blogs and vlogs (v1.0.1) ✅
+- Create and share video blogs or vlogs ✅
+- will introduce Android,ios applications 
+- collaborative blogging (v1.0.1) ✅
 - monetize your ideas
+- Users can order Hard Copy of their favourite blog
+- schedule blog publication
+- Scaling and Marketing
 
 ## Run Development 
 
