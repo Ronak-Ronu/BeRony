@@ -28,6 +28,13 @@
     object-position: center;     
     margin-left: 17%;
 }
+.imagesection video{
+    width: 80%; 
+    height: 70%; 
+    object-fit: cover; 
+    object-position: center;     
+    margin-left: 17%;
+}
 .headingwrite{
     font-size: 35px;
     font-weight: bold;

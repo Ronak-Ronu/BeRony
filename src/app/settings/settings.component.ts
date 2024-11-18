@@ -122,7 +122,7 @@ export class SettingsComponent {
   }
   async uploadProfileImage() {
     const user = await account.get();  
-    // console.log(this.selectedProfileImage);  
+    console.log(this.selectedProfileImage);  
     try {
       if (!this.selectedProfileImage) {
         throw new Error('No profile image selected');
@@ -139,6 +139,7 @@ export class SettingsComponent {
         if (getProfile) {
         const deleteResponse = await storage.deleteFile(environment.bucketName, userId);
         // console.log("Avatar deleted", deleteResponse);
+        this.toastr.info("processing...")
       }
       const file = this.selectedProfileImage;
       const uploadResponse = await storage.createFile(environment.bucketName, userId, file);

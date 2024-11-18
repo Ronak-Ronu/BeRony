@@ -74,6 +74,8 @@ export class ReadingComponent implements OnInit {
     this.checkUserReactions();
     this.fetchComments();
     window.speechSynthesis.onvoiceschanged = () => this.setVoice();
+    const url = this.post.imageUrl || this.post.videoUrl;
+    this.filetype = url.split('.').pop()?.toLowerCase();
 
 
   //   this._id=this.router.snapshot.paramMap.get("postid")

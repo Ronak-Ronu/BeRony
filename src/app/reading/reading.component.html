@@ -5,13 +5,19 @@
 <div class="containerforeading"  >
   <div class="leftreadingsection">
     <div class="imagesection">
-      <div>
-        <img [src]="post.imageUrl" [alt]="post.imageUrl" />
+      <div *ngIf="post.imageUrl">
+        <img [src]="post.imageUrl" [alt]="post.title" />
       </div>
-      <div *ngIf="filetype === 'mp4'">
-        <video [src]="post.imageUrl"></video>
+      
+      <!-- Check if videoUrl exists, if not, show nothing or handle it as fallback -->
+      <div *ngIf="post.videoUrl && !post.imageUrl">
+        <video [src]="post.videoUrl" controls>
+          Your browser does not support the video tag.
+        </video>
       </div>
+    
     </div>
+    
 
 
     <div class="buttonsection">
