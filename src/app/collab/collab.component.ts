@@ -3,6 +3,7 @@ import { WriteserviceService } from '../writeservice.service';
 import { io, Socket } from 'socket.io-client';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-collab',
@@ -18,6 +19,7 @@ export class CollabComponent implements OnInit {
   constructor(
     private service: WriteserviceService,
     private route: ActivatedRoute,
+    private toaster: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -70,9 +72,11 @@ export class CollabComponent implements OnInit {
     this.service.clearPostsCache().subscribe(
       (response) => {
         console.log('Cache cleared successfully:', response);
+        this.toaster.success("changes updated.")
       },
       (error) => {
         console.error('Error clearing cache:', error);
+        
       }
     );
   }

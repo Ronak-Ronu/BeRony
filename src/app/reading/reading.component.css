@@ -358,6 +358,10 @@
         height: 100%; 
         margin-left: 0%;   
     }
+    .imagesection video{
+        width: 97%;
+        margin-left: 0%;
+    }
     .rightcommentsection{
         height: auto;
         width: 100%;

@@ -4,6 +4,18 @@
     <div class="readcontainer">
         <div class="blogscontainer">
             <div *ngFor="let item of currentBlogView" class="contentdivs">
+                <div class="assetsimgvid">
+                </div>
+                <div *ngIf="item.imageUrl">
+                    <img [src]="item.imageUrl" [alt]="item.title" />
+                </div>
+                
+                <div *ngIf="item.videoUrl && !item.imageUrl">
+                    <video [src]="item.videoUrl" controls>
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                
                 <h3>{{ item.title }} - <span style="color: rgb(98, 98, 98);">{{item.username}}</span></h3>
                 <hr>
                 <div [innerHTML]="item.bodyofcontent"></div>

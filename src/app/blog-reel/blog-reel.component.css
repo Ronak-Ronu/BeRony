@@ -32,6 +32,9 @@
 .readcontainer {
     pointer-events: auto; /* Enable events for scrolling */
 }
+.assetsimgvid img,video{
+    width: 100%;
+}
 
 @media (max-width: 700px) {
     .readingreel{

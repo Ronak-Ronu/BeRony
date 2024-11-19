@@ -6,7 +6,7 @@ import { account } from '../../lib/appwrite';
 import { ToastrService } from 'ngx-toastr';
 import { Client, Databases, ID, Query } from 'appwrite';
 import { environment } from '../../environments/environment';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, Meta, SafeHtml, Title } from '@angular/platform-browser';
 import axios from 'axios';
 
 @Component({
@@ -30,7 +30,6 @@ export class ReadingComponent implements OnInit {
   tagsarray:string[]=[]
   collabos:string[]=[]
   collaboratorsUsernames: string[] = [];
-
   newCommentText:string='';
   comments: any[] = [];
   gifSearchQuery: string = ''; 
@@ -48,6 +47,7 @@ export class ReadingComponent implements OnInit {
   loggedinuserid!:string
   readingblog:boolean=false
   colloabousername!:string
+  seotitle:string=''
 
   private synth = window.speechSynthesis;
   private utterance = new SpeechSynthesisUtterance();
@@ -56,7 +56,9 @@ export class ReadingComponent implements OnInit {
   constructor(private service:WriteserviceService,private cdr: ChangeDetectorRef,private router:ActivatedRoute,
     // private ngnavigateservice:NgNavigatorShareService,
     private toastr: ToastrService,
-    private sanitizer: DomSanitizer)
+    private sanitizer: DomSanitizer,
+    private meta: Meta, private title: Title
+  )
    {
     const client = new Client().
     setEndpoint(environment.appwriteEndpoint)
@@ -69,6 +71,8 @@ export class ReadingComponent implements OnInit {
 
 
   ngOnInit(): void {
+  
+
     this.readblogdatabyid()
     this.getloggedinuserdata()
     this.checkUserReactions();
@@ -86,6 +90,7 @@ export class ReadingComponent implements OnInit {
   //   console.log(this._id);
     
   // })
+
     
   }
   private setVoice(): void {
@@ -96,11 +101,9 @@ export class ReadingComponent implements OnInit {
         console.warn('No voices available. Check browser support for Speech Synthesis API.');
     }
 }
-  getSanitizedHtml(text: string): SafeHtml {
-    const sanitized=this.sanitizer.bypassSecurityTrustHtml(text);
-    console.log('Sanitized HTML:', sanitized);
-    return sanitized
-  }
+getSanitizedHtml(text: string): SafeHtml {
+  return this.sanitizer.bypassSecurityTrustHtml(text);
+}
   sanitizeBodyContent() {
     this.sanitizedBodyContent = this.sanitizer.bypassSecurityTrustHtml(this.post.bodyofcontent);
   }
@@ -136,12 +139,24 @@ export class ReadingComponent implements OnInit {
             next: (data: WriteModel) => {
                 this.post = data;
                 console.log(this.post);
-                this.filetype = this.post.imageUrl.split('.').pop();
+                this.seotitle=this.stripHTML(data.title);
+                this.title.setTitle(this.seotitle);
+                this.meta.addTags([
+                  { name: 'description', content: this.stripHTML(data.bodyofcontent) },
+                  { name: 'keywords', content: data.tags.toLocaleString() },
+                  { property: 'og:title', content: this.stripHTML(data.bodyofcontent) },
+                  { property: 'og:description', content: data.bodyofcontent },
+                  { property: 'og:image', content: data.imageUrl },
+                  { property: 'og:url', content:  window.location.href},
+                ]);
+              
+                // this.filetype = this.post.imageUrl.split('.').pop();
                 this.tagsarray = this.post.tags;
                 this.collabos=this.post.collaborators
-                console.log(this.filetype);
-                console.log(this.tagsarray);
-                console.log(this.collabos);
+
+                // console.log(this.filetype);
+                // console.log(this.tagsarray);
+                // console.log(this.collabos);
                 this.collaboratorsUsernames = []; // Reset collaborators' usernames
                 this.collabos.forEach(collaboratorId => {
                   this.fetchUserData(collaboratorId);
