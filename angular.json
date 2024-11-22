@@ -43,20 +43,24 @@
               "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [],
-            "allowedCommonJsDependencies": ["isomorphic-form-data", "cross-fetch"]
-
+           "allowedCommonJsDependencies": [
+              "isomorphic-form-data",
+              "cross-fetch",
+              "hammerjs",
+              "rfdc"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1MB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1.5MB",
+                  "maximumError": "1.5MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "1MB",
+                  "maximumWarning": "1.5MB",
                   "maximumError": "2MB"
                 }
               ],

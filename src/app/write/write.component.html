@@ -40,8 +40,18 @@
     <div class="container">
        
         <form #writecontentform="ngForm">
-        <div class="toolbar">
-            <button style="cursor: pointer;" class="toolbarbutton">LINK</button>
+        <div class="toolbar" > 
+            <button style="cursor: pointer;" class="toolbarbutton" (click)="toggleCodeEditor()">Code</button>
+            <div class="code-editor-popup" *ngIf="showCodeEditor">
+                <div style="cursor: pointer;" (click)="toggleCodeEditor()">Save & Close</div>
+                <textarea 
+                          placeholder="print('HAPPY CODING')"
+                          name="codecontent"
+                          #codecontent="ngModel"
+                          [(ngModel)]="editCodeContent">
+                </textarea>
+            </div>
+            
             <button style="cursor: pointer;" class="toolbarbutton" (click)="toggleImageUploadPopup()" >IMAGE</button>
 
             <div class="popup-backdrop" *ngIf="showImageUploadPopup" (click)="closePopup()">
@@ -80,9 +90,8 @@
                  >
                 
                 </textarea>
-            
-            
-             <textarea cols="83"
+
+                <textarea cols="83"
                rows="17"
                maxlength="3000"
                placeholder="Write whatever you like! TRY: <h1>Hello World</h1>"
@@ -90,18 +99,17 @@
                #bodyofcontent="ngModel"
                [(ngModel)]="editbodycontent"
                required
-               ></textarea>
-               
+               ></textarea>          
 
-            <textarea cols="83"
-             rows="2" 
-             maxlength="300" 
-             placeholder="Share your post script/ending note"
-             name="endnotecontent"
-             #endnotecontent="ngModel"
-             required
-             [(ngModel)]="editendnotecontent"
-             ></textarea>
+                <textarea cols="83"
+                rows="2" 
+                maxlength="300" 
+                placeholder="Share your post script/ending note"
+                name="endnotecontent"
+                #endnotecontent="ngModel"
+                required
+                [(ngModel)]="editendnotecontent"
+                ></textarea>
 
              <div class="tagsinputarea">
                 <input

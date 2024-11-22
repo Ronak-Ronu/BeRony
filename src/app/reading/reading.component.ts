@@ -82,16 +82,6 @@ export class ReadingComponent implements OnInit {
     this.filetype = url.split('.').pop()?.toLowerCase();
 
 
-  //   this._id=this.router.snapshot.paramMap.get("postid")
-    
-  //   this.service.getpublishpostdatabyid(this._id).subscribe((data:WriteModel)=>{
-  //   this.post = data ;
-  //   console.log(this.post);
-  //   console.log(this._id);
-    
-  // })
-
-    
   }
   private setVoice(): void {
     const voices = this.synth.getVoices();
@@ -425,5 +415,8 @@ stop(): void {
   this.synth.cancel();
   this.readingblog=false
 }
+
+
+
 
 }

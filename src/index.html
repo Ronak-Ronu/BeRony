@@ -1,39 +1,71 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <title>BeRony-create & share stories</title>
-  <base href="/">
-  <style>
 
-    body{
+  <!-- Title of the page -->
+  <title>BeRony - Create & Share Stories</title>
+
+  <!-- Meta Description (important for SEO) -->
+  <meta name="description" content="BeRony allows you to create and share engaging stories with the world. Join our community and get a chance to win exclusive BeRony merch.">
+
+  <!-- Meta Keywords (optional, but can help with SEO) -->
+  <meta name="keywords" content="stories, create, share, BeRony, storytelling, win, merch, exclusive">
+
+  <!-- Open Graph meta tags for social sharing -->
+  <meta property="og:title" content="BeRony - Create & Share Stories">
+  <meta property="og:description" content="Join BeRony today, create your stories, share them with others, and get a chance to win exclusive BeRony merch.">
+  <meta property="og:image" content="path/to/your/og-image.jpg"> <!-- Replace with the correct image URL -->
+  <meta property="og:url" content="https://yourdomain.com"> <!-- Replace with your actual website URL -->
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card meta tags (for Twitter sharing) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BeRony - Create & Share Stories">
+  <meta name="twitter:description" content="Create and share your stories on BeRony, and get a chance to win exclusive BeRony merch.">
+  <meta name="twitter:image" content="path/to/your/twitter-image.jpg"> <!-- Replace with the correct image URL -->
+
+  <!-- Base href for routing -->
+  <base href="/">
+
+  <!-- CSS Styling -->
+  <style>
+    body {
       background-color: #E6E8FF;
     }
+    .loaderimg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20%;
+  }
 
-    .loaderimg{
-      height: 300px;
-      width: 300px;
-      margin-top: 30%;
-      margin-left: 50%;
-    }
+  .loaderimg img {
+    width: 90px;
+  }
 
   </style>
 
+  <!-- Web Manifest & Theme Color -->
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#1976d2">
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#1976d2">
+
 </head>
+
 <body>
   <app-root>
 
     <div class="loaderimg">
-      <img src="/assets/img/logo.png" alt="">
+      <img src="/assets/img/logo.png"   alt="BeRony Logo">
     </div>
 
   </app-root>
-  <noscript>Please enable JavaScript to continue using this application.</noscript>
+
+  <noscript>Share your stories and get a chance to win a BeRony merch!</noscript>
+
 </body>
+
 </html>

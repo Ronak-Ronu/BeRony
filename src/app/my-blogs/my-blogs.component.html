@@ -23,13 +23,18 @@
 
 <div class="post-cards-container" >
   <div *ngFor="let post of posts">
-    <div class="post-card">
-      <h2>{{ post.title }}</h2>
+    <div class="post-card" style="--post-height: 350px;"
+    (mousemove)="onCardMouseMove($event)"
+    (mouseleave)="onCardMouseLeave()"
+    [ngStyle]="{'--x': cursorX, '--y': cursorY}"
+  >
+      <h2 [innerHTML]="post.title"></h2>
       <p class="post-date">{{ post.createdAt | date:'mediumDate' }}</p>
       <img [src]="post.imageUrl" alt="Post Image" class="post-image" *ngIf="post.imageUrl" />
       <div class="likes">
         <div>{{ post.funnycount + post.sadcount + post.loveitcount }} Likes</div>
       </div>
+      
       <div *ngIf="post.userId === userId else readpost">
         <div class="addcollaborator">
           <button [routerLink]="'/search-add-collab/'+post._id">Add Collaborator</button>
@@ -57,8 +62,12 @@
     <!-- <p>My Saved Posts</p> -->
     <div  class="post-cards-container" >
     <div *ngFor="let post of bookmarkposts">
-  <div class="post-card">
-    <h2>{{ post.title }}</h2>
+  <div class="post-card" 
+  (mousemove)="onCardMouseMove($event)"
+  (mouseleave)="onCardMouseLeave()"
+  [ngStyle]="{'--x': cursorX, '--y': cursorY}"
+>
+    <h2 [innerHTML]="post.title"></h2>
     <p class="post-admin-name">{{ post.username }}</p>
 
     <p class="post-date">{{ post.createdAt | date:'mediumDate' }}</p>

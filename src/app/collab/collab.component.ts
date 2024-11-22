@@ -53,6 +53,8 @@ export class CollabComponent implements OnInit {
       (data) => {
         this.text = data.bodyofcontent; 
         this.postdata=data
+        console.log(this.postdata);
+        
       },
       (error) => {
         console.error('Error fetching post content:', error);

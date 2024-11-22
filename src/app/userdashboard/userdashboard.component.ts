@@ -29,6 +29,7 @@ export class UserdashboardComponent implements OnInit{
   mode:string | null = null;
   imageurl:string | null = null
   routeUserId:string | null=''
+  loading: boolean = true;
 
   constructor(private service:WriteserviceService,
     private route: ActivatedRoute,
@@ -36,7 +37,7 @@ export class UserdashboardComponent implements OnInit{
   )
   {}
   async ngOnInit() {
-
+    this.loading = true;
     this.bucketName=encodeURIComponent(environment.bucketName);
     this.project=encodeURIComponent(environment.project);
     this.mode=encodeURIComponent(environment.mode);   
@@ -79,6 +80,7 @@ export class UserdashboardComponent implements OnInit{
           console.log(data);
           this.userData = data.user
           this.fetchUserPosts();
+          this.loading = false;
         },
         (error)=>{
           console.log(error);
@@ -114,6 +116,7 @@ export class UserdashboardComponent implements OnInit{
           this.error = 'Error fetching posts.';
           this.toastr.error('no post found.');
           console.error(err);
+          this.loading = false;
         }
   
       }
@@ -132,6 +135,7 @@ export class UserdashboardComponent implements OnInit{
       (error) => {
         this.toastr.error('User does not exist.');
         console.error('Error fetching user data:', error);
+        this.loading = false;
       }
     );
   }

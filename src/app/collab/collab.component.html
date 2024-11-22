@@ -1,10 +1,29 @@
 <br>
-<h1>Collaborative Text Editor For {{postdata.title}} </h1>
-<p>Author :  <b> {{postdata.username}}</b></p>
-
-<div class="collab">
-  <textarea [(ngModel)]="text" (input)="onTextChange()" rows="10" cols="50"></textarea>
-  <br/>
-  <button (click)="onSaveChanges()">Update Changes</button>
+<div class="collaborative-editor">
+  <header>
+    
+    <div *ngIf="postdata.imageUrl">
+      <img [src]="postdata.imageUrl" [alt]="postdata.title" />
+    </div>
+    
+    <div *ngIf="postdata.videoUrl && !postdata.imageUrl">
+      <video [src]="postdata.videoUrl" controls>
+        Your browser does not support the video tag.
+      </video>
+    </div>
+      <h2>Collaborative Editor for: <span [innerHTML]="postdata.title"></span></h2>
+    <p>Author: <strong>{{postdata.username}}</strong></p>
+  </header>
+  
+  <div class="editor-container">
+    <textarea 
+      [(ngModel)]="text" 
+      (input)="onTextChange()" 
+      placeholder="Start collaborating here..."
+    ></textarea>
+    <div class="button-group">
+      <button class="btn-save" (click)="onSaveChanges()">💾 Save Changes</button>
+    </div>
+  </div>
 </div>
 

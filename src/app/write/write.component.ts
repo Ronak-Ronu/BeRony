@@ -33,7 +33,6 @@ export class WriteComponent implements OnInit {
   imageUrl!:string | null;
   previewBlog:WriteModel[]=[];
   ispreview:boolean=false
-
   previewTitle:String=""
   previewBodyContent:String=""
   previewEndNote:String=""
@@ -45,6 +44,8 @@ export class WriteComponent implements OnInit {
   userId!:string
   prompt!:string
   photos: any[] = [];
+  showCodeEditor:boolean=false
+  editCodeContent: string = '';
 
   constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef,private toastr: ToastrService){  }
   ngOnInit(): void {
@@ -60,20 +61,21 @@ export class WriteComponent implements OnInit {
 
 publishblog(publishdata: WriteModel) {
   const formData = new FormData();
+  const bdy= this.formatCode(this.editCodeContent)+ publishdata.bodyofcontent
+  console.log(bdy);
   formData.append('title', publishdata.title);
-  formData.append('bodyofcontent', publishdata.bodyofcontent);
+  formData.append('bodyofcontent', bdy);
   formData.append('endnotecontent', publishdata.endnotecontent);
   formData.append('tags', JSON.stringify(this.tags));
   formData.append('userId',this.userId)
   formData.append('username',this.username)
+  
   if (this.selectedimagefile) {
     formData.append('imageUrl', this.selectedimagefile);
-    
   }
 
   formData.forEach((value, key) => {
     console.log(`${key}:`, value);
-
   });
 
   this.writeservice.publishblog(formData).then(
@@ -82,16 +84,13 @@ publishblog(publishdata: WriteModel) {
       
       if (res){
         console.log("blog published");
-        
-          this.toastr.success("blog published")
+        this.toastr.success("blog published")
         }
       else{
         this.toastr.error("failed to publish blog")
       }
     }
   );
-
-
 }
 
 async getloggedinuserdata (){
@@ -104,7 +103,6 @@ async getloggedinuserdata (){
     console.log(this.userId);
     const response = await this.writeservice.addUserToDB(this.userId, this.username,email).toPromise();
     console.log('User added to DB:', response);
-
   }
 }
 
@@ -201,9 +199,10 @@ async getloggedinuserdata (){
   {
     this.ispreview=true
     console.log("preview");
+    const bdy= this.formatCode(this.editCodeContent)+ this.editbodycontent
         const formData = new FormData();
       formData.append('title', this.edittitle);
-      formData.append('bodyofcontent', this.editbodycontent);
+      formData.append('bodyofcontent', bdy);
       formData.append('endnotecontent', this.editendnotecontent);
      
 
@@ -249,26 +248,21 @@ addTag(tag: string) {
   }
 }
 
-  removeTag(tag:string)
-  {
+  removeTag(tag:string){
     this.tags = this.tags.filter(t => t !== tag);
   }
-  generateImage()
-  {
+  generateImage(){
    console.log(this.prompt);
     this.writeservice.searchPhotos(this.prompt).subscribe(
-
       (res)=>{
         this.photos=res.results.map((image: any) => image.urls.small);
         
       }
     )
-   
   }
   generateimagewindow()
   {
     this.openimagegeneratepopup=!this.openimagegeneratepopup;
-    
   }
   closeImagePopup() {
     this.openimagegeneratepopup = false;
@@ -294,8 +288,27 @@ addTag(tag: string) {
         this.toastr.error('Failed to fetch image.');
     });
 
-    
   }
+  toggleCodeEditor() {
+    this.showCodeEditor = !this.showCodeEditor;
+}
+
+formatCode(code: string): string {
+  const lines = code.split('\n');
+  const styledLines = lines.map(line => {
+      return `<font color="grey" size="4">${this.escapeHtml(line)}</font>`;
+  });
+  return `<hr/><div bgcolor="#f0f0f0"><pre><code>${styledLines.join('\n')}</code></pre><div><hr/>`;
+}
+escapeHtml(unsafe: string): string {
+  return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+}
+
   
 }
 

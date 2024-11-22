@@ -394,6 +394,19 @@ input {
     transform: scale(1.05); 
 }
 
+.code-editor-popup{
+    position: fixed;
+    margin-top: 15%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+}
+.code-editor-popup textarea{
+   height: 50vh;
+   width: 70vw;
+}
 
 
   @media (max-width: 600px) {
@@ -735,6 +748,20 @@ input {
         .image-item img:hover {
             transform: scale(1.05); 
         }
+
+            .code-editor-popup{
+                position: fixed;
+                top: 12%;
+                background-color: white;
+                padding: 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                z-index: 999;
+            }
+            .code-editor-popup textarea{
+            height: 60vh;
+            width: 70vw;
+            }
 }
 
 

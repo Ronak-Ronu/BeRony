@@ -1,11 +1,13 @@
+
 <div class="profileheadingwrite">
     <div class="username">
-
-      {{userData.username}} 
-    </div>
-    <div class="usercurrentemotion">
-      {{userData.userEmotion}} 
+      <div *ngIf="loading" class="usernaemdiv"></div>
+      <div *ngIf="!loading">{{ userData.username }}</div>
       </div>
+    <div class="usercurrentemotion">
+      <div *ngIf="loading" class="usernaemdiv"></div>
+      <div *ngIf="!loading">{{ userData.userEmotion }}</div>
+        </div>
 </div>
 
 <div class="profilecomponent">
@@ -45,7 +47,10 @@
               <img draggable="false" [src]="imageurl" alt="">
           </div>
           <div class="usernamedetail">
-              {{username}}
+            <div *ngIf="loading" class="usernaemdiv"></div>
+            <div *ngIf="!loading">{{username}}</div>
+        
+          
           </div>
           <div class="userfollowanalytics">
 

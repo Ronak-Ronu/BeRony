@@ -1,32 +1,85 @@
-.collab{
-    width: 98vw;
-    height: auto;
+.collaborative-editor {
+    width: 70%;
+    margin: 5% auto;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    font-family: "PT Sans", sans-serif;
+}
+
+.collaborative-editor header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.collaborative-editor header img,
+.collaborative-editor header video {
+    width: 40%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.collaborative-editor header h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+}
+
+.collaborative-editor header p {
+    font-size: 20px;
+    color: #555;
+}
+
+.editor-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    margin-bottom: 20px;
-    padding: 10px;    
+    gap: 20px;
+    align-items: center;
 }
-textarea{
+
+.editor-container textarea {
     width: 90%;
     height: 400px;
-    font-size: 17px;
-    padding: 1rem;
-    border-radius: 8px;
-    resize: none;   
-}
-button{
-    cursor: pointer;
-    font-size: 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
     padding: 10px;
-    color: black;
-    background-color: rgba(75, 154, 250, 0.3);
-    margin-top: 10px;
-    transition: all 0.3s ease;
-
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    resize: none;
 }
-button:hover{
-    border: 3px solid rgb(63, 63, 63);
-    border-radius: 7px;
+
+.editor-container textarea:focus {
+    border-color: #8b8beb;
+    box-shadow: 0 0 8px rgba(139, 139, 235, 0.5);
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.button-group .btn-save {
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #bdc2fb;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.button-group .btn-save:hover {
+    background-color: #8b8beb;
+}
+
+.button-group .btn-save:active {
+    background-color: #6f6fd1;
+    transform: scale(0.95);
 }

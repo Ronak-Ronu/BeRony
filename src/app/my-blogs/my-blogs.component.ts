@@ -12,6 +12,9 @@ export class MyBlogsComponent implements OnInit {
   @Input() posts: any[] = []; 
   @Input() bookmarkposts: any[] = [];
   @Input() loggedinuserid:string="";
+  cursorX: string = '50%'; // Default X-coordinate for glow
+  cursorY: string = '50%'; // Default Y-coordinate for glow
+
   loggedInUserAccount:any=null
   userId!:string
   activeSection: string = 'My-Posts';
@@ -22,6 +25,20 @@ ngOnInit(): void {
   this.getloggedinuserdata();
   console.log(this.userId);
 }
+
+
+onCardMouseMove(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+  const rect = target.getBoundingClientRect();
+  this.cursorX = `${event.clientX - rect.left}px`;
+  this.cursorY = `${event.clientY - rect.top}px`;
+}
+onCardMouseLeave(): void {
+  this.cursorX = '50%';
+  this.cursorY = '50%';
+}
+
+
 
   setActiveSection(section: string)
   {
