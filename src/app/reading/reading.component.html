@@ -10,8 +10,8 @@
       </div>
       
       <!-- Check if videoUrl exists, if not, show nothing or handle it as fallback -->
-      <div *ngIf="post.videoUrl && !post.imageUrl">
-        <video [src]="post.videoUrl" controls>
+      <div *ngIf="post.videoUrl && !post.imageUrl" >
+        <video [src]="post.videoUrl" controls >
           Your browser does not support the video tag.
         </video>
       </div>

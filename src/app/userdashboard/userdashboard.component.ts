@@ -8,7 +8,8 @@ import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-userdashboard',
   templateUrl: './userdashboard.component.html',
-  styleUrls: ['./userdashboard.component.css']
+  styleUrls: ['./userdashboard.component.css'],
+
 })
 export class UserdashboardComponent implements OnInit{
 
@@ -30,6 +31,7 @@ export class UserdashboardComponent implements OnInit{
   imageurl:string | null = null
   routeUserId:string | null=''
   loading: boolean = true;
+
 
   constructor(private service:WriteserviceService,
     private route: ActivatedRoute,

@@ -136,10 +136,10 @@ getSanitizedHtml(text: string): SafeHtml {
                   { name: 'keywords', content: data.tags.toLocaleString() },
                   { property: 'og:title', content: this.stripHTML(data.bodyofcontent) },
                   { property: 'og:description', content: data.bodyofcontent },
+                  { name: 'keywords', content: `${data.tags.toLocaleString() }`},
                   { property: 'og:image', content: data.imageUrl },
                   { property: 'og:url', content:  window.location.href},
                 ]);
-              
                 // this.filetype = this.post.imageUrl.split('.').pop();
                 this.tagsarray = this.post.tags;
                 this.collabos=this.post.collaborators

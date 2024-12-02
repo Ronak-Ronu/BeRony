@@ -33,11 +33,11 @@ export class AppComponent  {
   logoimage!:string;
   constructor(private meta: Meta, private title: Title)
   {
-    this.logoimage="./assets/logo.png"
+    this.logoimage="./assets/logo.gif"
     this.title.setTitle("BeRony-create & share stories");
 
     this.meta.updateTag({ name: 'description', content: 'Search and explore stories on BeRony. Share your creativity and connect with yourself.' });
-    this.meta.updateTag({ name: 'keywords', content: 'BeRony, Search Stories, Create Writing, Share Stories' });
+    this.meta.updateTag({ name: 'keywords', content: 'BeRony, Search Stories, Create Writing, Share Stories blogging platform write blogs online free blogging website publish articles create a blog best blog platform personal blogs online storytelling blogging community share your story grow your audience social media sharing blogging for beginners how to blog                                                                                                 ' });
 
   }
   

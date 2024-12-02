@@ -1,12 +1,10 @@
 
 <div class="profileheadingwrite">
     <div class="username">
-      <div *ngIf="loading" class="usernaemdiv"></div>
-      <div *ngIf="!loading">{{ userData.username }}</div>
+      <div>{{ userData.username }}</div>
       </div>
     <div class="usercurrentemotion">
-      <div *ngIf="loading" class="usernaemdiv"></div>
-      <div *ngIf="!loading">{{ userData.userEmotion }}</div>
+      <div >{{ userData.userEmotion }}</div>
         </div>
 </div>
 
@@ -47,8 +45,7 @@
               <img draggable="false" [src]="imageurl" alt="">
           </div>
           <div class="usernamedetail">
-            <div *ngIf="loading" class="usernaemdiv"></div>
-            <div *ngIf="!loading">{{username}}</div>
+            <div >{{username}}</div>
         
           
           </div>
@@ -73,5 +70,6 @@
 </div>
 
   </div>
+
 
 </div>

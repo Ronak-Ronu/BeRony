@@ -1,4 +1,4 @@
-import { Component, NgModule, isDevMode } from '@angular/core';
+import {  NgModule, CUSTOM_ELEMENTS_SCHEMA, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'
 import { ToastrModule } from 'ngx-toastr';
@@ -32,7 +32,6 @@ import { BlogReelComponent } from './blog-reel/blog-reel.component';
 import { HammerModule } from '@angular/platform-browser';
 import { CollabComponent } from './collab/collab.component';
 import { SearchCollabComponent } from './search-collab/search-collab.component';
-
 
 const routes  = [
 
@@ -88,7 +87,9 @@ const routes  = [
   providers: [WriteserviceService,  provideFirebaseApp(() => initializeApp(environment.firebaseConfig)), 
     provideAnalytics(() => getAnalytics()),
     provideFirestore(() => getFirestore()),ScreenTrackingService],
-  bootstrap: [AppComponent]
+    
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 export class AppModule { }

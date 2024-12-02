@@ -14,7 +14,7 @@ So, why wait? Start creating and let the world see your work!
 
 ### Prototype and Documentation
 
-[Figma](https://www.figma.com/proto/MdKE4cZHqWNX5EfF0TskaQ/BeRony?node-id=17-27&t=LRWsNUp91I0YgKFk-1&scaling=contain&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=17%3A27)
+[Figma](https://www.figma.com/proto/MdKE4cZHqWNX5EfF0TskanQ/BeRony?node-id=17-27&t=LRWsNUp91I0YgKFk-1&scaling=contain&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=17%3A27)
 
 [Document](https://docs.google.com/document/d/1r846Ox72KJ1shtKyNrlCZoLMeOUpct84T4AcEgT5aqE/edit?usp=sharing)
 

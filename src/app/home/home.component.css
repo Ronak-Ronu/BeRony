@@ -40,6 +40,7 @@
   max-width: 100%;
   width: 290px;
   height: auto; 
+  margin-bottom: 0%;
   
 }
 @media (max-width: 600px) {
@@ -73,6 +74,7 @@
     max-width: 100%;
     width: 150px;
     height: auto; 
+  margin-bottom: 0%;
     
   }
 
