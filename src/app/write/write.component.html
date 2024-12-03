@@ -52,7 +52,7 @@
                 </textarea>
             </div>
             
-            <button style="cursor: pointer;" class="toolbarbutton" (click)="toggleImageUploadPopup()" >IMAGE</button>
+            <button style="cursor: pointer;" class="toolbarbutton" (click)="toggleImageUploadPopup()" >FILE</button>
 
             <div class="popup-backdrop" *ngIf="showImageUploadPopup" (click)="closePopup()">
                 <div class="popup-modal" (click)="$event.stopPropagation()">
@@ -76,10 +76,11 @@
         </div>
         
 
-        <div class="writecontentarea">
+        <div class="writecontentarea paper-style">
 
         
-                <textarea cols="83" 
+                <textarea 
+                #titleTextarea
                   rows="2"
                  placeholder="Title Goes Here"
                  name="title" 
@@ -91,7 +92,8 @@
                 
                 </textarea>
 
-                <textarea cols="83"
+                <textarea 
+                #bodyTextarea
                rows="17"
                maxlength="3000"
                placeholder="Write whatever you like! TRY: <h1>Hello World</h1>"
@@ -101,7 +103,8 @@
                required
                ></textarea>          
 
-                <textarea cols="83"
+                <textarea 
+                #endnoteTextarea
                 rows="2" 
                 maxlength="300" 
                 placeholder="Share your post script/ending note"
@@ -128,8 +131,8 @@
         </div>
 
         <div class="footerbuttons">
-            <button class="footerbutton" (click)="publishblog(writecontentform.value)">PUBLISH</button>
-            <button class="footerbutton" (click)="saveasdraft(writecontentform.value)" >DRAFT IT</button>
+            <button class="footerbutton" (click)="publishblog(writecontentform.value)" style="cursor: pointer;">PUBLISH</button>
+            <button class="footerbutton" (click)="saveasdraft(writecontentform.value)"style="cursor: pointer;" >DRAFT IT</button>
         </div>
 
     </form>
@@ -139,9 +142,11 @@
 
         <div class="headerofdraft">
             <p>DRAFTS </p>
-            <div (click)="refreshcomponent()" class="refreshbtn">⟳</div>
+            <div (click)="refreshcomponent()" class="refreshbtn" >⟳</div>
         </div>
-        <div *ngFor="let item of draftblogs">
+        <div *ngIf="draftblogs && draftblogs.length > 0 ; else noDrafts">
+
+        <div *ngFor="let item of draftblogs ">
             <div class="draftsbody">
             
                 <div class="draft1">
@@ -156,16 +161,15 @@
                 
             </div>
         </div>
+    </div>
         
-
-        <div class="draftsbody">
-            
-            <div class="draft1">
-                <p>TITLE </p>
-                <button class="continuewritingbutton">PUBLISH</button>
+        <ng-template #noDrafts>
+            <div class="draftsbody">
+                <div class="draft1" style="text-align: center;">
+                    <p>NO DRAFTS </p>
+                </div>
             </div>
-            
-        </div>
+        </ng-template>
 </div>
 
 </div>

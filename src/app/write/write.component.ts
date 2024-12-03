@@ -1,4 +1,4 @@
-import { Component, OnInit ,ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit ,ChangeDetectorRef, AfterViewInit,ElementRef,ViewChild} from '@angular/core';
 import { WriteModel } from '../Models/writemodel';
 import { WriteserviceService } from '../writeservice.service';
 import { account } from '../../lib/appwrite'; 
@@ -22,7 +22,8 @@ import { ToastrService } from 'ngx-toastr';
   ]
 
 })
-export class WriteComponent implements OnInit {
+export class WriteComponent implements OnInit,AfterViewInit {
+  
   draftblogs:WriteModel[]=[]
   edittitle:string=""
   editbodycontent:string=""
@@ -45,7 +46,11 @@ export class WriteComponent implements OnInit {
   prompt!:string
   photos: any[] = [];
   showCodeEditor:boolean=false
-  editCodeContent: string = '';
+  editCodeContent: string = ''
+  @ViewChild('titleTextarea') titleTextarea!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('bodyTextarea') bodyTextarea!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('endnoteTextarea') endnoteTextarea!: ElementRef<HTMLTextAreaElement>;
+;
 
   constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef,private toastr: ToastrService){  }
   ngOnInit(): void {
@@ -53,16 +58,32 @@ export class WriteComponent implements OnInit {
     //Add 'implements OnInit' to the class.
     this.readdraftblog()
     this.getloggedinuserdata()
+    }
 
-
-
+  ngAfterViewInit() {
+    const textarea = this.titleTextarea.nativeElement;
+    const bodyTextarea = this.bodyTextarea.nativeElement;
+    const endnoteTextarea = this.endnoteTextarea.nativeElement;
+    textarea.addEventListener('input', () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    });
+    bodyTextarea.addEventListener('input', () => {
+      bodyTextarea.style.height = 'auto';
+      bodyTextarea.style.height = `${bodyTextarea.scrollHeight}px`;
+    });
+    endnoteTextarea.addEventListener('input', () => {
+      endnoteTextarea.style.height = 'auto';
+      endnoteTextarea.style.height = `${endnoteTextarea.scrollHeight}px`;
+    });
   }
+
 
 
 publishblog(publishdata: WriteModel) {
   const formData = new FormData();
   const bdy= this.formatCode(this.editCodeContent)+ publishdata.bodyofcontent
-  console.log(bdy);
+  // console.log(bdy);
   formData.append('title', publishdata.title);
   formData.append('bodyofcontent', bdy);
   formData.append('endnotecontent', publishdata.endnotecontent);
@@ -71,6 +92,12 @@ publishblog(publishdata: WriteModel) {
   formData.append('username',this.username)
   
   if (this.selectedimagefile) {
+    const maxSize = 20 * 1024 * 1024; 
+    if(this.selectedimagefile.size > maxSize)
+    {
+        this.toastr.error("file size exceeds  20MB")
+        return
+    }
     formData.append('imageUrl', this.selectedimagefile);
   }
 
