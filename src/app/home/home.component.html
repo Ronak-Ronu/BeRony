@@ -8,5 +8,50 @@
       <img src="assets/img/character.png" alt="">
   </div>
    -->
+
+   <div class="homepageContainer">
+      <div class="greybox">
+        <div class="aboutronymore">
+          <div style="font-weight: bold; margin-bottom: 15px;">Hey try this new feature </div>  
+          <div>The Collaborative writing <span style="font-size: 30px;">🤝</span></div>     
+  <div>
+    Collaborative writing allows multiple users to contribute to a single document in real-time. 
+    Share your ideas and build on each other's thoughts
+  </div>
+        </div>
+
+        <div class="collabwriting">
+            <textarea 
+            [(ngModel)]="text" 
+            (input)="onTextChange()" 
+            placeholder="Start collaborating here..."
+            ></textarea>
+          <div class="button-group">
+            <button class="btn-save" (click)="onSaveChanges()">💾 Save Changes</button>
+          </div>
+        </div>
+
+        <div class="aboutcollabwriting">
+          <div class="userimage">
+            <img [src]="postdata.imageUrl" alt="">
+          </div>
+          <div class="posttitle">
+            {{postdata.title}}
+          </div>
+          <div class="authorname">{{postdata.username}}</div> 
+          <div class="likes">
+            <div>
+              😘<span>{{postdata.loveitcount}}</span>
+            </div>
+            <div>
+              🤣<span>{{postdata.funnycount}}</span>
+            </div>
+            <div>
+              😕<span>{{postdata.sadcount}}</span>
+            </div>
+          </div>
+      </div>
+   </div>
+
   </div>
   

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { WriteserviceService } from '../writeservice.service';
 import { io, Socket } from 'socket.io-client';
 import { ActivatedRoute } from '@angular/router';
@@ -53,8 +53,7 @@ export class CollabComponent implements OnInit {
       (data) => {
         this.text = data.bodyofcontent; 
         this.postdata=data
-        console.log(this.postdata);
-        
+        // console.log(this.postdata);
       },
       (error) => {
         console.error('Error fetching post content:', error);
@@ -73,7 +72,7 @@ export class CollabComponent implements OnInit {
   clearCache(): void {
     this.service.clearPostsCache().subscribe(
       (response) => {
-        console.log('Cache cleared successfully:', response);
+        // console.log('Cache cleared successfully:', response);
         this.toaster.success("changes updated.")
       },
       (error) => {
