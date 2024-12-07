@@ -4,6 +4,7 @@ import { io, Socket } from 'socket.io-client';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
+import { account } from '../../lib/appwrite';
 
 @Component({
   selector: 'app-collab',
@@ -16,6 +17,9 @@ export class CollabComponent implements OnInit {
   postId: string = ''; 
   userId: string = ''; 
   postdata:any
+  username: string = ''
+  editingUser: string =''
+  loggedInUserAccount:any 
   constructor(
     private service: WriteserviceService,
     private route: ActivatedRoute,
@@ -23,30 +27,46 @@ export class CollabComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    
     this.userId = this.route.snapshot.paramMap.get('userId') || '';
     this.postId = this.route.snapshot.paramMap.get('postId') || ''; 
-    this.fetchPostContent();
 
-    this.socket = io(environment.beronyAPI, {
-      auth: {
-          userId: this.userId,  
-          postId: this.postId   
-        }
-      });
-      this.service.text$.subscribe((newText: string) => {
-        this.text = newText;
-      });
-      
-      this.socket.on("textChange", (newText:string) => {
-          this.text = newText;
-      });
+    this.getloggedinusername().then(() => {
+      this.initializeSocket(); 
+      this.fetchPostContent();
+    }).catch((error)=>{
+      console.log(error);
+      this.toaster.error("something went wrong")
+    });
+
+
     }
-    ngOnDestroy(): void {
+  
+    
+  ngOnDestroy(): void {
       if (this.socket) {
         this.socket.disconnect();
       }
     }
   
+    initializeSocket(): void {
+      this.socket = io(environment.beronyAPI, {
+        auth: {
+          userId: this.userId,
+          postId: this.postId,
+          username: this.username,
+        },
+      });
+    
+      this.socket.on("textChange", (newText: string) => {
+        this.text = newText;
+      });
+    
+      this.socket.on("startEditing", (username: string) => {
+        this.editingUser = username;
+        // console.log(`${username} is editing right now.`);
+      });
+    }
 
   fetchPostContent(): void {
     this.service.getpublishpostdatabyid(this.postId).subscribe(
@@ -60,11 +80,25 @@ export class CollabComponent implements OnInit {
       }
     );
   }
+  async getloggedinusername(){
+    this.loggedInUserAccount = await account.get();
+    if (this.loggedInUserAccount) {
+      this.username=this.loggedInUserAccount.name;
+    }
+    // console.log(this.username);
+    
+  }
 
   onTextChange(): void {
     this.socket.emit('textChange', this.text);
+
     console.log(this.text); 
   }
+  startEditing(): void {
+    this.socket.emit("startEditing",this.username);
+  }
+
+
   onSaveChanges(): void {
     this.socket.emit('saveChanges', this.text);  
     this.clearCache();
@@ -81,4 +115,6 @@ export class CollabComponent implements OnInit {
       }
     );
   }
+
+  
 }

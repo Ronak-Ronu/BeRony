@@ -10,15 +10,21 @@
       <video [src]="postdata.videoUrl" controls>
         Your browser does not support the video tag.
       </video>
-    </div>
+    </div>  
+  
       <h2>Collaborative Editor for: <span [innerHTML]="postdata.title"></span></h2>
     <p>Author: <strong>{{postdata.username}}</strong></p>
   </header>
-  
+  <div style="align-items: start; color: rgb(112, 112, 179); padding: 10px;">
+
+    {{editingUser}} editing...
+  </div>
   <div class="editor-container">
+    
     <textarea 
       [(ngModel)]="text" 
       (input)="onTextChange()" 
+      (focus)="startEditing()"
       placeholder="Start collaborating here..."
     ></textarea>
     <div class="button-group">

@@ -38,6 +38,7 @@ export class WriteComponent implements OnInit,AfterViewInit {
   previewBodyContent:String=""
   previewEndNote:String=""
   tagInput: string = ''
+  postScheduleInput:Date | undefined
   tags:string[]=[]
   openimagegeneratepopup:boolean=false;
   loggedInUserAccount:any=null
@@ -82,6 +83,8 @@ export class WriteComponent implements OnInit,AfterViewInit {
 
 publishblog(publishdata: WriteModel) {
   const formData = new FormData();
+  const scheduleDate  = this.postScheduleInput || new Date()
+
   const bdy= this.formatCode(this.editCodeContent)+ publishdata.bodyofcontent
   // console.log(bdy);
   formData.append('title', publishdata.title);
@@ -90,6 +93,8 @@ publishblog(publishdata: WriteModel) {
   formData.append('tags', JSON.stringify(this.tags));
   formData.append('userId',this.userId)
   formData.append('username',this.username)
+  formData.append('postStatus', new Date(scheduleDate).toISOString())
+
   
   if (this.selectedimagefile) {
     const maxSize = 20 * 1024 * 1024; 
@@ -118,6 +123,8 @@ publishblog(publishdata: WriteModel) {
       }
     }
   );
+  // console.log(formData);
+  
 }
 
 async getloggedinuserdata (){

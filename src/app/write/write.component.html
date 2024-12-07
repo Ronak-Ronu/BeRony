@@ -81,7 +81,7 @@
         
                 <textarea 
                 #titleTextarea
-                  rows="2"
+                rows="2"
                  placeholder="Title Goes Here"
                  name="title" 
                  #title="ngModel"
@@ -127,7 +127,9 @@
                     <div style="cursor: pointer;color: blueviolet;font-weight: bolder;" [@tagAnimation] (click)="removeTag(tag)">X</div>
                 </span>
             </div>
-            
+            <!-- <label for="scheduleDate">Schedule Post</label>
+            <input id="scheduleDate" type="datetime-local" [(ngModel)]="postScheduleInput" name="postScheduleInput" /> -->
+          
         </div>
 
         <div class="footerbuttons">
