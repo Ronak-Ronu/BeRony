@@ -2,7 +2,7 @@
 ![alt text](src/assets/img/logo.png)
 
 
-The place where you can bring your stories to life. Whether you want to:
+The virtual place where you can bring your stories to life. Whether you want to:
 
 - **Write** your thoughts,
 - **Visualize** your ideas,
@@ -14,13 +14,11 @@ So, why wait? Start creating and let the world see your work!
 
 ### Prototype and Documentation
 
-[Figma](https://www.figma.com/proto/MdKE4cZHqWNX5EfF0TskanQ/BeRony?node-id=17-27&t=LRWsNUp91I0YgKFk-1&scaling=contain&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=17%3A27)
+[Figma](https://www.figma.com/design/MdKE4cZHqWNX5EfF0TskaQ/BeRony?node-id=0-1&t=NDjcIEaqz540ignf-1)
 
 [Document](https://docs.google.com/document/d/1r846Ox72KJ1shtKyNrlCZoLMeOUpct84T4AcEgT5aqE/edit?usp=sharing)
 
-
 > State: Development
-
 
 ### Workflow
 ![alt text](<Screenshot from 2024-11-17 16-40-34.png>)
@@ -39,13 +37,10 @@ So, why wait? Start creating and let the world see your work!
 - Scaling and Marketing
 
 ## Run Development 
-
 1)  Clone the repository.
-
 2)  Navigate to the project directory `cd BeRony`.
-
 3)  Run `npm install` to install all dependencies and prepare BeRony for use on the DOM
-
-4)  Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-
+4) Setup environment credentials and verify
+5) Run `ng serve -o` to directly open the project in web.
+6) Write and build your ideas and create a PR.
+7) Every thing have an end but not this time.

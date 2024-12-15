@@ -132,6 +132,11 @@ input:focus{
     -ms-overflow-style: none; 
     scrollbar-width: none;
 }
+.profilenameimg{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
 .footerbuttoncls{
     background-color: #C6CAF9;
     height: 5vh;
@@ -157,9 +162,11 @@ input:focus{
     flex-direction: row;
     justify-content: center;
     gap: 8%;
+    align-items: stretch;
     margin-top: 7%;
     padding-bottom: 4%;
     border-bottom: 0.5px solid grey;
+    cursor: pointer;
 }
 .thumbnailname{
     font-size: 25px;
@@ -169,8 +176,30 @@ input:focus{
 }
 .footerbuttons{
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: column;
+    cursor: pointer;
+    height: 70%;
     justify-content:space-evenly;
+}
+.tags{
+    display: flex;
+    width: auto;
+    flex-direction: row;
+    gap: 25px;
+    font-size: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+.tag{
+    background-color: rgb(195, 207, 244);
+    border-radius: 20px;
+    color: black;
+    padding: 10px;
+    margin-top:10px;
+}
+.tag:hover{
+    background-color: rgb(180, 193, 237);
 }
 .invisiblediv
 {
@@ -281,6 +310,13 @@ input:focus{
     color: blue;
 }
 
+.rightcontentthumbnail {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start; 
+    padding: 10px; 
+}
+
 @media (max-width: 600px) {
     .readmainbody{
         width: 100%;
@@ -301,7 +337,8 @@ input:focus{
     }
     .searchbutton{
         opacity: 0;
-        display: block;
+        display: none;
+        width: 0px;
     }
 
     .searchitems{
@@ -381,7 +418,7 @@ input:focus{
 
         .contentdivs{
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             justify-content: space-between;
             align-items: flex-start; 
             gap: 20px;
@@ -393,7 +430,7 @@ input:focus{
         }
         .thumbnail{
             height: 30vh;
-            width: 30vw;
+            width: 100%;
             border-radius: 10px;
             object-fit: cover; 
             background-size: cover; 
@@ -405,13 +442,14 @@ input:focus{
             height: 70%;
             width: 100%;
             text-wrap: pretty;
-            margin-bottom: 20%;
+            margin-bottom: 4%;
         }
         
         .footerbuttons
         {
             display: flex;
             justify-content: space-between; 
+            flex-direction: row;
             margin-top: 10px;
 
         
@@ -440,6 +478,28 @@ input:focus{
             justify-content: space-between; 
             padding: 10px; 
         }
+        .tags {
+            display: flex;
+            width: 100%; 
+            flex-direction: row;
+            font-size: 15px;
+            margin-top: 20px;
+            overflow-x: auto; 
+            white-space: nowrap; 
+            padding: 10px;
+        }
+        
+        .tag {
+            background-color: rgb(195, 207, 244);
+            border-radius: 20px;
+            color: black;
+            padding: 10px;
+            white-space: nowrap; 
+        }
+        .footerbutton img{
+            height: 50%;
+        }
+        
         
 }
 @media (min-width: 601px) and (max-width: 1000px) {
@@ -581,6 +641,7 @@ input:focus{
     .footerbuttons {
         display: flex;
         justify-content: space-between; 
+        flex-direction: row;
         margin-top: 10px; 
         font-size: 50px;
     }

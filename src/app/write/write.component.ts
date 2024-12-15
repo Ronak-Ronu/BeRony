@@ -1,10 +1,10 @@
-import { Component, OnInit ,ChangeDetectorRef, AfterViewInit,ElementRef,ViewChild} from '@angular/core';
+import { Component, OnInit ,ChangeDetectorRef, AfterViewInit,ElementRef,ViewChild, createNgModule} from '@angular/core';
 import { WriteModel } from '../Models/writemodel';
 import { WriteserviceService } from '../writeservice.service';
 import { account } from '../../lib/appwrite'; 
 import { trigger, style, animate, transition } from '@angular/animations';
 import { ToastrService } from 'ngx-toastr';
-
+import * as fabric from 'fabric'; 
 @Component({
   selector: 'app-write',
   templateUrl: './write.component.html',
@@ -48,20 +48,33 @@ export class WriteComponent implements OnInit,AfterViewInit {
   photos: any[] = [];
   showCodeEditor:boolean=false
   editCodeContent: string = ''
+  showcanvas:boolean=false
+  canvas!: fabric.Canvas 
+  pickedcolor:string = "#000000"
+  brushsize:number=11
+
   @ViewChild('titleTextarea') titleTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('bodyTextarea') bodyTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('endnoteTextarea') endnoteTextarea!: ElementRef<HTMLTextAreaElement>;
-;
 
   constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef,private toastr: ToastrService){  }
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
+    
+   
     this.readdraftblog()
     this.getloggedinuserdata()
-    }
+  }
+
 
   ngAfterViewInit() {
+  this.canvas = new fabric.Canvas('fabricCanvas')
+  // this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
+  this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas)
+  this.canvas.freeDrawingBrush.color = this.pickedcolor;
+  this.canvas.freeDrawingBrush.width = this.brushsize;
+
+ 
+
     const textarea = this.titleTextarea.nativeElement;
     const bodyTextarea = this.bodyTextarea.nativeElement;
     const endnoteTextarea = this.endnoteTextarea.nativeElement;
@@ -77,6 +90,9 @@ export class WriteComponent implements OnInit,AfterViewInit {
       endnoteTextarea.style.height = 'auto';
       endnoteTextarea.style.height = `${endnoteTextarea.scrollHeight}px`;
     });
+
+    
+
   }
 
 
@@ -139,6 +155,46 @@ async getloggedinuserdata (){
     console.log('User added to DB:', response);
   }
 }
+setBrushColor()
+{
+    this.canvas.freeDrawingBrush!.color = this.pickedcolor;
+}
+setBrushSize()
+{
+  this.canvas.freeDrawingBrush!.width = this.brushsize;
+
+}
+addImageToCanvas(event: Event): void {
+  const input = event.target as HTMLInputElement;
+
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = (e) => {
+      const imgUrl = e.target?.result;
+
+      if (typeof imgUrl === 'string') {
+        const imageElement = document.createElement('img');
+        imageElement.src = imgUrl;
+
+        imageElement.onload = () => {
+          const image = new fabric.Image(imageElement);
+          this.canvas.add(image);
+          this.canvas.setActiveObject(image);
+          image.scale(0.4)
+
+          this.canvas.renderAll();
+        };
+      } else {
+        console.error('Image data could not be read as a string.');
+      }
+    };
+  }
+}
+
 
   publishdraft(draftdata:WriteModel)
   {
@@ -342,6 +398,71 @@ escapeHtml(unsafe: string): string {
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
 }
+
+
+opencanvas(){
+    this.showcanvas= !this.showcanvas;
+}
+// addRect(): void {
+
+//     const rect = new fabric.Rect({
+//       fill: this.pickedcolor ,
+//       width: 100,
+//       height: 100,
+//       left: Math.random() * 250,
+//       top: Math.random() * 250,
+//     });
+//     this.canvas.add(rect);
+//     this.canvas.renderAll()
+
+// }
+clearcanvas()
+{
+  const activeObject = this.canvas.getActiveObject(); 
+  
+  if (activeObject) {
+  
+    this.canvas.remove(activeObject)
+    this.canvas.renderAll()
+  
+  } else {
+    
+    this.canvas.clear()
+  }
+
+}
+draw()
+{
+  this.canvas.isDrawingMode = !this.canvas.isDrawingMode
+ 
+}
+
+saveCanvas() {
+  const dataURL = this.canvas.toDataURL({
+    format: 'png',      
+    quality: 1,         
+    multiplier: 1
+  });
+  const link = document.createElement('a');
+  link.href = dataURL;
+  link.download = 'canvas-image.png'; 
+  link.click();
+  
+}
+addText(){
+  const text = new fabric.Textbox("Add Your Text Here",{
+    left: this.canvas.getWidth() / 2,
+    top: this.canvas.getHeight() / 2,
+    width: this.canvas.getWidth() * 0.4,
+    originX: "center",
+    originY: "center",
+    fill: this.pickedcolor
+  })
+  this.canvas.add(text)
+  this.canvas.renderAll()
+}
+
+
 
   
 }

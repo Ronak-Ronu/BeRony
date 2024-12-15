@@ -53,6 +53,11 @@
             </div>
             
             <button style="cursor: pointer;" class="toolbarbutton" (click)="toggleImageUploadPopup()" >FILE</button>
+            <button style="cursor: pointer;" class="toolbarbutton" (click)="opencanvas()">Canvas</button>
+
+              
+
+
 
             <div class="popup-backdrop" *ngIf="showImageUploadPopup" (click)="closePopup()">
                 <div class="popup-modal" (click)="$event.stopPropagation()">
@@ -74,6 +79,28 @@
             <img [src]="imageUrl" width="35%" height="35%" alt="">
             <!-- <b>{{selectedimagefile.name}}</b> -->
         </div>
+
+        <div class="canvasdiv">
+            <div class="canvaseditbuttons">
+                <!-- <button (click)="addRect()">addRect</button>  -->
+                <span style="font-size: 19px;">Setting:</span>
+                <div style="display: flex;flex-direction: row;">
+                    <input type="color" [(ngModel)]="pickedcolor" name="pickedcolor" (change)="setBrushColor()" />
+                    <input type="number" [(ngModel)]="brushsize"  name="brushsize" (change)="setBrushSize()"  />
+                </div>
+                <div>
+                    <input type="file" (change)="addImageToCanvas($event)" />
+                  </div>
+                <button (click)="clearcanvas()">Clear</button> 
+                <button (click)="draw()">Draw</button>   
+                <button (click)="addText()">Text</button>   
+
+                <button (click)="saveCanvas()">Save</button>  
+            </div>
+            <div>
+                <canvas id="fabricCanvas" width="900" height="500" class="canvas" ></canvas>
+            </div>
+          </div>
         
 
         <div class="writecontentarea paper-style">

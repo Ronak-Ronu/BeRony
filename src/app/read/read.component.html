@@ -49,46 +49,67 @@
 
 <div *ngFor="let item of blogs">
             
-        <div class="contentdivs">
-        <div class="thumbnail" [ngStyle]="{'background-image': getBackgroundImage(item)}">
+        <div class="contentdivs" >
+        <div [routerLink]="'/reading/' + item._id" (click)="getid(item)" class="thumbnail" [ngStyle]="{'background-image': getBackgroundImage(item)}">
 
         </div>
 
         <div class="rightcontentthumbnail">
             
-            <div class="thumbnailname" >
-                <b [innerHTML]="item.title">
-                    <!-- {{item.title}} -->
-                </b>
-                <p [innerHTML]="item.endnotecontent">
-                    <!-- {{item.endnotecontent}} -->
-                </p>
-                <div style="display: flex;align-items: center;justify-content: space-between; width: 100%;">
+            <div class="thumbnailname" [routerLink]="'/reading/' + item._id" (click)="getid(item)">
+                <div>
 
-                    <div class="pickprofileblog">
-                        <img [src]="'https://cloud.appwrite.io/v1/storage/buckets/'+bucketName+'/files/' + item.userId + '/view?project='+project+'&mode='+mode+''" alt="">
+                    <b [innerHTML]="item.title">
+                        <!-- {{item.title}} -->
+                    </b>
+                    <p [innerHTML]="item.endnotecontent">
+                        <!-- {{item.endnotecontent}} -->
+                    </p>
+            
+                </div>
+                
+                <div class="profilenameimg">
+
+                    <div class="pickprofileblog" >
+                        <img [src]="'https://cloud.appwrite.io/v1/storage/buckets/'+bucketName+'/files/' + item.userId + '/view?project='+project+'&mode='+mode+''" />
                     </div>
                     <div>
-                        <u style="cursor: pointer;" (click)="goToAuthorProfile(item.userId)"
-                        > {{item.username}} {{item.userEmotion}} </u>
-                    </div>  
-                    <div style="font-size: 15px;margin-left: auto; color: #777; white-space: nowrap;"> 
-                         {{item.pageviews}} views
-                    </div>     
+                        <u style="cursor: pointer;font-size: 19px;" (click)="goToAuthorProfile(item.userId)">{{item.username}} {{item.userEmotion}} </u>
+                    </div> 
+                    
                 </div> 
-           
+                <div style="font-size: 15px;margin-right: auto; color: #777; white-space: nowrap;margin-top:20px;"> 
+                    {{item.pageviews}} views
+               </div> 
+               <div class="tags">
+                   <div *ngFor="let tag of item.tags" >
+                       <span class="tag">{{tag}}</span>
+                    </div>
+                </div>
+<!--            
+
+               <div class="tags" *ngIf="if tagsarray.length">
+                <span *ngFor="let tag of tagsarray">{{tag}}</span>
+
+               </div> -->
             </div>
 
             <div class="footerbuttons">
-                <button style="cursor: pointer;" class="footerbuttoncls" [routerLink]="'/reading/' + item._id" (click)="getid(item)">READ</button>
-                <div class="invisiblediv"></div>
-                <button style="cursor: pointer;" class="footerbuttoncls" (click)="addPostBookmark(item._id)">SAVE</button>
-                <div *ngIf="item.userId===this.userId && this.loggedInUserAccount">
-                    <button class="footerbuttoncls" style="cursor: pointer;" (click)="deletepost(item)">DEL</button>
+                <button *ngIf="this.loggedInUserAccount" class="footerbutton" (click)="addPostBookmark(item._id)">
+                    <img style="cursor: pointer;" src="../../assets/img/bookmark.png" alt=""  /> 
+                  </button>
+                <!-- <button style="cursor: pointer;" class="footerbuttoncls" (click)="addPostBookmark(item._id)">SAVE</button> -->
+                <div *ngIf="item.userId===this.userId && this.loggedInUserAccount" >
+                    <button class="footerbutton">
+                        <img style="cursor: pointer;" (click)="deletepost(item)" src="../../assets/img/binicon.png" alt=""  /> 
+                      </button>
+                    <!-- <button style="cursor: pointer;" >DEL</button> -->
                 </div>
-
             </div>
+
+          
         </div>
+
         </div>
     </div>
 </div>

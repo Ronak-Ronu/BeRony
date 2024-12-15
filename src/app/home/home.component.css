@@ -235,17 +235,10 @@ textarea:focus{
 }
 
 .collabwriting textarea{
-  width: 80vw;
-  height: 250px;
-  resize: none;
+  width: 75vw;
+  height: 46vh;
   font-size: 18px;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; 
-  color: rgb(0, 0, 0,0.8);
-  border-radius: 10px;
-  border: 1px solid #8b8beb;
-  outline: none;
-  background-color: #f8f8f8;
-  padding: 16px;
+  padding: 10px;
 }
 
 textarea:focus{
@@ -256,9 +249,9 @@ textarea:focus{
 
 .collabwriting {
   position: relative;
+  width: 60vw;
   top: 40%; 
-  left:55%;
-  transform: translateX(-50%); 
+  margin-left:-72%;
 }
 .button-group{
   position: relative;
@@ -284,7 +277,7 @@ textarea:focus{
   border-radius: 10px;
   border: 1px solid #8b8beb;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
-  padding: 15px; 
+  padding: 10px; 
   transition: transform 0.2s; 
 }
 
@@ -347,9 +340,9 @@ textarea:focus{
 .aboutronymore{
   font-size: 18px;
   position: absolute;
-  padding: 27px;
+  padding: 10px;
   line-height: 1.5;
-  width: 370px;
+  width: 80%;
 }
 
 

@@ -11,7 +11,7 @@
   <div *ngIf="users.length" class="user-list">
     <ul>
       <li *ngFor="let user of users">
-        <span>{{ user.username }}</span>
+        <span style="text-align: left;">{{ user.username }} <br/> <span style="font-size: 14px;color: rgb(95, 95, 95);"> {{ user.userEmail }}</span> </span>
         <button class="btn-add" (click)="addCollaborator(user.userId)">
           Add as Collaborator
         </button>

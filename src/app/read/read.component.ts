@@ -32,13 +32,12 @@ export class ReadComponent implements OnInit{
   useremotion:string="🙂"
 
 
-  ngOnInit(): void {
+ngOnInit(): void {
     this.bucketName=encodeURIComponent(environment.bucketName);
     this.project=encodeURIComponent(environment.project);
     this.mode=encodeURIComponent(environment.mode);    
     this.readblogdata()
     this.getloggedinuserdata()
-
   }
 
   constructor(private readsevice:WriteserviceService,
@@ -70,19 +69,16 @@ export class ReadComponent implements OnInit{
     try {
       this.isloadingblogs = true;
       this.readsevice.getsearchpostdata(this.selectedTag,this.searchQuery).subscribe(
-        (data:WriteModel[])=>{
+        (  data:WriteModel[])=>{
             this.blogs=data;
             this.isloadingblogs=false
-            console.log(this.blogs);
-            this.addUserEmotion()
-
-            
+            this.addUserEmotion();
         }
       )
-        } catch (error) {
-            console.log(error);
+      } catch (error) {
+            // console.log(error);
             this.isloadingblogs=false
-        } 
+        }
   }
 
   onSearch()

@@ -12,7 +12,27 @@
     border-radius: 10px;
 }
 
+canvas {
+    margin: 0 auto;
+    border: 1px solid black;
+  }
 
+  
+.canvasdiv{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+.canvaseditbuttons{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.canvaseditbuttons button{
+   font-size: 20px;
+   padding: 10px;
+}
+  
 .writemainbody{
     height: 85vh;
     position: relative;
@@ -332,7 +352,6 @@ button:hover{
     font-size: 30px;
     border-radius: 20px;
     border: 1px solid white;
-
   }
 .generateimagepopup {
     position: fixed;
@@ -759,6 +778,27 @@ input {
             .code-editor-popup textarea{
             height: 60vh;
             width: 70vw;
+            }
+            .canvas{
+                width: 380px !important;
+                height: 300px !important;
+            }
+            .canvasdiv{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 10px;
+            }
+            .canvaseditbuttons{
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .canvaseditbuttons button{
+            font-size: 18px;
+            padding: 10px;
             }
 }
 

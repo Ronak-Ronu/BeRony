@@ -5,11 +5,10 @@ export const environment = {
     databaseId:'APPWRITE DATABASE ID',
     collectionId:'APPWRITE COLLECTION ID',
     beronyAPI: 'BACKEND SERVER API',
-    bucketName: 'your appwrite bucket id',
-    project:'your appwrite bucket project id',
+    bucketName: 'appwrite bucket id',
+    project:'appwrite bucket project id',
     mode:'role->admin/user/guest',
-    Unsplash_ACCESSKEY:'Your unsplash access key'
-
+    Unsplash_ACCESSKEY:'unsplash access key'
   };
 
   
