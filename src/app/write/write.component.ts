@@ -5,6 +5,8 @@ import { account } from '../../lib/appwrite';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { ToastrService } from 'ngx-toastr';
 import * as fabric from 'fabric'; 
+import { environment } from '../../environments/environment';
+import axios from 'axios';
 @Component({
   selector: 'app-write',
   templateUrl: './write.component.html',
@@ -52,6 +54,9 @@ export class WriteComponent implements OnInit,AfterViewInit {
   canvas!: fabric.Canvas 
   pickedcolor:string = "#000000"
   brushsize:number=11
+  gifSearchQuery: string = ''; 
+  gifs: any[] = []; 
+  showstickerwindow:boolean=false
 
   @ViewChild('titleTextarea') titleTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('bodyTextarea') bodyTextarea!: ElementRef<HTMLTextAreaElement>;
@@ -164,37 +169,6 @@ setBrushSize()
   this.canvas.freeDrawingBrush!.width = this.brushsize;
 
 }
-addImageToCanvas(event: Event): void {
-  const input = event.target as HTMLInputElement;
-
-  if (input.files && input.files[0]) {
-    const file = input.files[0];
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-
-    reader.onload = (e) => {
-      const imgUrl = e.target?.result;
-
-      if (typeof imgUrl === 'string') {
-        const imageElement = document.createElement('img');
-        imageElement.src = imgUrl;
-
-        imageElement.onload = () => {
-          const image = new fabric.Image(imageElement);
-          this.canvas.add(image);
-          this.canvas.setActiveObject(image);
-          image.scale(0.4)
-
-          this.canvas.renderAll();
-        };
-      } else {
-        console.error('Image data could not be read as a string.');
-      }
-    };
-  }
-}
-
 
   publishdraft(draftdata:WriteModel)
   {
@@ -463,7 +437,78 @@ addText(){
 }
 
 
+addImageToCanvas(event: Event): void {
+  const input = event.target as HTMLInputElement;
 
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = (e) => {
+      const imgUrl = e.target?.result;
+
+      if (typeof imgUrl === 'string') {
+        const imageElement = document.createElement('img');
+        imageElement.src = imgUrl;
+
+        imageElement.onload = () => {
+          const image = new fabric.Image(imageElement);
+          this.canvas.add(image);
+          this.canvas.setActiveObject(image);
+          image.scale(0.4)
+
+          this.canvas.renderAll();
+        };
+      } else {
+        console.error('Image data could not be read as a string.');
+      }
+    };
+  }
+}
+
+
+  addSticker()
+  {
+    this.showstickerwindow=!this.showstickerwindow
+  }
+
+
+  async searchGifs() {
+    const apiKey = environment.giphyAPIKEY; // Replace with your Giphy API key
+    try {
+      const response = await axios.get(`https://api.giphy.com/v1/stickers/search`, {
+        params: {
+          api_key: apiKey,
+          q: this.gifSearchQuery,
+          limit: 16 
+        }
+      });
+      this.gifs = response.data.data; 
+      console.log(this.gifs);
+      console.log(response);
+      console.log(this.gifSearchQuery);
+    } catch (error) {
+      console.error('Error fetching GIFs', error);
+    }
+  }
+  selectGif(gif: any) {
+    // const gifUrl = gif.images.original.url
+    const gifUrl=gif.images.fixed_height.url
+    console.log('Click to send gif:', gifUrl);  
+    const imageElement = document.createElement('img');
+    imageElement.src = gifUrl;
+
+    imageElement.onload = () => {
+      const image = new fabric.Image(imageElement);
+      this.canvas.add(image);
+      this.canvas.setActiveObject(image);
+      image.scale(0.7)
+
+      this.canvas.renderAll();
+  }
+}
   
 }
 

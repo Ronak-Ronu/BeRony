@@ -32,6 +32,23 @@ canvas {
    font-size: 20px;
    padding: 10px;
 }
+.gif-container {
+    display: flex;
+    flex-wrap: wrap;
+    height: 500px;
+    overflow-y: scroll;
+  }
+  
+  .gif {
+    margin: 5px;
+    cursor: pointer;
+  }
+  
+  .gif img {
+    width: 100px; 
+    height: auto;
+  }
+
   
 .writemainbody{
     height: 85vh;
@@ -83,7 +100,6 @@ canvas {
     padding: 10px;
     cursor: pointer;
 }
-
 
 .writecontentarea{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;

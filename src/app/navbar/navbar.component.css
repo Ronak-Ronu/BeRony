@@ -8,6 +8,7 @@
   font-family: "Julius Sans One", sans-serif;
   font-weight: 400;
   font-style: normal;
+
 }
 /* General styles */
 .logo {
@@ -72,11 +73,29 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-
-
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0; 
+  z-index: 99999;
+  animation: hidenav linear;
+  animation-timeline: view();
 }
 
-/* Hamburger icon styles */
+@keyframes hidenav {
+  0%{
+    opacity: 1;
+  }
+  50%{
+    opacity: 1;
+  }
+  55%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 0;
+  }
+}
+
 .hamburger {
   display: none;
   cursor: pointer;
@@ -90,13 +109,12 @@
   background-color: #333;
 }
 
-/* Hide menu on mobile by default */
 .rightcontent {
   display: flex;
   right: 100%;
 }
 .rightcontent.show-menu {
-  right: 0; /* Bring it back on screen */
+  right: 0; 
 }
 
 
@@ -114,9 +132,7 @@
 }
 
 
-/* Media queries */
 @media (max-width: 600px) {
-  /* Hamburger menu for small screens */
 
 
   .hamburger {

@@ -53,11 +53,7 @@
             </div>
             
             <button style="cursor: pointer;" class="toolbarbutton" (click)="toggleImageUploadPopup()" >FILE</button>
-            <button style="cursor: pointer;" class="toolbarbutton" (click)="opencanvas()">Canvas</button>
-
-              
-
-
+            <!-- <button style="cursor: pointer;" class="toolbarbutton" (click)="opencanvas()">Canvas</button> -->
 
             <div class="popup-backdrop" *ngIf="showImageUploadPopup" (click)="closePopup()">
                 <div class="popup-modal" (click)="$event.stopPropagation()">
@@ -81,12 +77,45 @@
         </div>
 
         <div class="canvasdiv">
-            <div class="canvaseditbuttons">
+            <div *ngIf="showstickerwindow">
+                <div>
+                    <div style="display: flex;align-items: center; justify-content: space-between;">
+                        <div class="inputgif">
+
+                            <input class="inputgifstyle"
+                            type="text" 
+                            name="gifSearchQuery"
+                            [(ngModel)]="gifSearchQuery" 
+                            (input)="searchGifs()" 
+                            placeholder="Comment gif?" 
+                            style="font-size: 27px;"
+                            />
+                        </div>
+                        <div class="closebtn" style="cursor: pointer;font-size: 32px;">
+                            <span (click)="addSticker()">X</span>
+                        </div>
+                    </div>
+                    
+                    <div *ngIf="gifs.length">
+                      <div class="gif-container">
+                        <div  style="background-color: rgb(190, 190, 190);"
+                          class="gif" 
+                          *ngFor="let gif of gifs" 
+                          (click)="selectGif(gif)">
+                          <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            
+          
+            </div>
+            <div class="canvaseditbuttons" *ngIf="!showstickerwindow">
                 <!-- <button (click)="addRect()">addRect</button>  -->
                 <span style="font-size: 19px;">Setting:</span>
                 <div style="display: flex;flex-direction: row;">
                     <input type="color" [(ngModel)]="pickedcolor" name="pickedcolor" (change)="setBrushColor()" />
-                    <input type="number" [(ngModel)]="brushsize"  name="brushsize" (change)="setBrushSize()"  />
+                    <input type="number" [(ngModel)]="brushsize"  name="brushsize" placeholder="brush size" (change)="setBrushSize()"  />
                 </div>
                 <div>
                     <input type="file" (change)="addImageToCanvas($event)" />
@@ -94,8 +123,9 @@
                 <button (click)="clearcanvas()">Clear</button> 
                 <button (click)="draw()">Draw</button>   
                 <button (click)="addText()">Text</button>   
+                <button (click)="addSticker()">Sticker</button>  
+                <button (click)="saveCanvas()">Save</button>
 
-                <button (click)="saveCanvas()">Save</button>  
             </div>
             <div>
                 <canvas id="fabricCanvas" width="900" height="500" class="canvas" ></canvas>

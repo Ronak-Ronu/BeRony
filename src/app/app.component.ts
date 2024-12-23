@@ -37,7 +37,9 @@ export class AppComponent  {
     this.title.setTitle("BeRony-create & share stories");
 
     this.meta.updateTag({ name: 'description', content: 'Search and explore stories on BeRony. Share your creativity and connect with yourself.' });
-    this.meta.updateTag({ name: 'keywords', content: 'BeRony, Search Stories, Create Writing, Share Stories blogging platform write blogs online free blogging website publish articles create a blog best blog platform personal blogs online storytelling blogging community share your story grow your audience social media sharing blogging for beginners how to blog                                                                                                 ' });
+    this.meta.updateTag({ name: 'keywords',
+      content: 'BeRony, Search Stories, Create Writing, Share Stories, blogging platform, write blogs online, free blogging website, publish articles, create a blog, best blog platform, personal blogs, online storytelling, blogging community, share your story, grow your audience, social media sharing, blogging for beginners, how to blog, blog tips, content creation, blogging ideas, online blog publishing, write for the web, blog posts, start a blog, creative writing, storytelling platform, digital storytelling, blog design, blog templates, article writing, self-publishing platform, freelance writing, blog writing tips, website for bloggers, best blogging tools, blog promotion, audience engagement, blog marketing, SEO for blogs, blogging for business, writing community, blog monetization, blog writing guides, creative blog posts, guest blogging, lifestyle blogs, fashion blogging, food blogging, travel blogs, blogging tutorials, blog branding, online writing, blog inspiration, blog hosting, personal brand building, blog strategies, blog SEO optimization, digital content creation'      
+      });
 
   }
   
