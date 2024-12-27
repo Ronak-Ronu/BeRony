@@ -57,6 +57,7 @@ export class WriteComponent implements OnInit,AfterViewInit {
   gifSearchQuery: string = ''; 
   gifs: any[] = []; 
   showstickerwindow:boolean=false
+  isdrawing:boolean=false
 
   @ViewChild('titleTextarea') titleTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('bodyTextarea') bodyTextarea!: ElementRef<HTMLTextAreaElement>;
@@ -408,6 +409,7 @@ clearcanvas()
 draw()
 {
   this.canvas.isDrawingMode = !this.canvas.isDrawingMode
+  this.isdrawing=!this.isdrawing
  
 }
 
@@ -496,10 +498,12 @@ addImageToCanvas(event: Event): void {
   selectGif(gif: any) {
     // const gifUrl = gif.images.original.url
     const gifUrl=gif.images.fixed_height.url
+    
     console.log('Click to send gif:', gifUrl);  
     const imageElement = document.createElement('img');
+    imageElement.crossOrigin = 'anonymous'; 
     imageElement.src = gifUrl;
-
+  
     imageElement.onload = () => {
       const image = new fabric.Image(imageElement);
       this.canvas.add(image);

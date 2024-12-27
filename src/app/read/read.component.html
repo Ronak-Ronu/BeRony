@@ -96,7 +96,7 @@
 
             <div class="footerbuttons">
                 <button *ngIf="this.loggedInUserAccount" class="footerbutton" (click)="addPostBookmark(item._id)">
-                    <img style="cursor: pointer;" src="../../assets/img/bookmark.png" alt=""  /> 
+                    <img style="cursor: pointer;transform: rotate(180deg);" src="../../assets/img/bookmark.png" alt=""  /> 
                   </button>
                 <!-- <button style="cursor: pointer;" class="footerbuttoncls" (click)="addPostBookmark(item._id)">SAVE</button> -->
                 <div *ngIf="item.userId===this.userId && this.loggedInUserAccount" >

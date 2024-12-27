@@ -49,6 +49,16 @@ canvas {
     height: auto;
   }
 
+  input[type="color"] {
+    width: 40px;            
+    height:40px;           
+    padding: 0;              
+    border-radius:100px;      
+    cursor: pointer;       
+  }
+  
+  
+
   
 .writemainbody{
     height: 85vh;

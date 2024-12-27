@@ -112,19 +112,19 @@
             </div>
             <div class="canvaseditbuttons" *ngIf="!showstickerwindow">
                 <!-- <button (click)="addRect()">addRect</button>  -->
-                <span style="font-size: 19px;">Setting:</span>
+                <span style="font-size: 19px;">Brush Setting:</span>
                 <div style="display: flex;flex-direction: row;">
                     <input type="color" [(ngModel)]="pickedcolor" name="pickedcolor" (change)="setBrushColor()" />
-                    <input type="number" [(ngModel)]="brushsize"  name="brushsize" placeholder="brush size" (change)="setBrushSize()"  />
+                    <input type="range" [(ngModel)]="brushsize"  name="brushsize" placeholder="brush size" (change)="setBrushSize()"  />
                 </div>
                 <div>
                     <input type="file" (change)="addImageToCanvas($event)" />
                   </div>
-                <button (click)="clearcanvas()">Clear</button> 
-                <button (click)="draw()">Draw</button>   
-                <button (click)="addText()">Text</button>   
-                <button (click)="addSticker()">Sticker</button>  
-                <button (click)="saveCanvas()">Save</button>
+                <button (click)="clearcanvas()" [disabled]="isdrawing">Clear</button> 
+                <button (click)="draw()" >Draw</button>   
+                <button (click)="addText()" [disabled]="isdrawing">Text</button>   
+                <button (click)="addSticker()" [disabled]="isdrawing">Sticker</button>  
+                <button (click)="saveCanvas()" [disabled]="isdrawing">Save</button>
 
             </div>
             <div>
