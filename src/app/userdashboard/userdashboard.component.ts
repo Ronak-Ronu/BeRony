@@ -13,7 +13,7 @@ import { environment } from '../../environments/environment';
 })
 export class UserdashboardComponent implements OnInit{
 
-  username!:string
+  username:string="Guest 🫣"
   loggedInUserAccount:any=null
   userId!:string
   activeSection: string = 'overview';
@@ -75,8 +75,8 @@ export class UserdashboardComponent implements OnInit{
       this.isEmailVerified = this.loggedInUserAccount.emailVerification; 
       this.imageurl= `https://cloud.appwrite.io/v1/storage/buckets/${this.bucketName}/files/${this.userId}/view?project=${this.project}&mode=${this.mode}`
 
-      console.log(this.username);
-      console.log(this.userId);
+      // console.log(this.username);
+      // console.log(this.userId);
       this.service.getUserData(this.userId || '').subscribe(
         (data)=>{
           console.log(data);

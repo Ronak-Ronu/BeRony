@@ -1,3 +1,4 @@
+
 <div class="headingwrite" [innerHTML]="post.title">
   <!-- <p>{{}}</p> -->
 </div>
@@ -36,6 +37,9 @@
         </div>
         <div>
           <button class="footerbutton" (click)="share()">SHARE</button>
+        </div>
+        <div>
+          <button class="footerbutton" (click)="printSpecificSection()">Print</button>
         </div>
       </div>
       <div class="likebuttons">
@@ -88,8 +92,6 @@
 
         
     <div class="endofnotesection" [innerHTML]="post.endnotecontent">
-      <!-- <p>{{post.endnotecontent}}</p> -->
-      <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi quasi aliquam aliquid voluptatum, possimus aspernatur facilis omnis eum dolorum alias, totam unde adipisci repudiandae rerum</p> -->
     </div>
     <div style="height: 1px; background-color: grey;width: 70%;margin-left: 17%;margin-top: 2%;margin-bottom: 2%;"></div>
     <div class="postadmindetails">Written with ♥️ by - {{ post.username }} 

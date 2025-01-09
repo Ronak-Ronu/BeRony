@@ -29,9 +29,9 @@ async login(email: string, password: string) {
     await account.createEmailPasswordSession(email, password);
     this.loggedInUser = await account.get();
     
-    console.log(this.loggedInUser.name);
-    console.log(this.loggedInUser.id);
-    console.log(this.loggedInUser.avatar);
+    // console.log(this.loggedInUser.name);
+    // console.log(this.loggedInUser.id);
+    // console.log(this.loggedInUser.avatar);
 
     this.router.navigate(['/write'])
 
@@ -51,6 +51,25 @@ async login(email: string, password: string) {
    
     
   }
+async guestlogin()
+{
+  this.loading=true;
+  try {
+    const guest = account.createAnonymousSession();
+    guest.then((res)=>{
+      this.router.navigate(['/write'])
+      // console.log(res); 
+    })
+    .catch((error)=>{
+      console.log(error);
+      
+    })
+
+  } catch (error) {
+      console.log(error);
+      
+  }
+}
 
 async register(email: string, password: string, name: string) {
   this.loading = true;

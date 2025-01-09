@@ -75,7 +75,7 @@ export class WriteComponent implements OnInit,AfterViewInit {
   ngAfterViewInit() {
   this.canvas = new fabric.Canvas('fabricCanvas')
   // this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
-  this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas)
+  this.canvas.freeDrawingBrush = new fabric.SprayBrush(this.canvas)
   this.canvas.freeDrawingBrush.color = this.pickedcolor;
   this.canvas.freeDrawingBrush.width = this.brushsize;
 
@@ -117,34 +117,36 @@ publishblog(publishdata: WriteModel) {
   formData.append('username',this.username)
   formData.append('postStatus', new Date(scheduleDate).toISOString())
 
-  
-  if (this.selectedimagefile) {
-    const maxSize = 20 * 1024 * 1024; 
-    if(this.selectedimagefile.size > maxSize)
-    {
-        this.toastr.error("file size exceeds  20MB")
-        return
-    }
-    formData.append('imageUrl', this.selectedimagefile);
-  }
-
-  formData.forEach((value, key) => {
-    console.log(`${key}:`, value);
-  });
-
-  this.writeservice.publishblog(formData).then(
-    res=>{
-      console.log(res);
-      
-      if (res){
-        console.log("blog published");
-        this.toastr.success("blog published")
-        }
-      else{
-        this.toastr.error("failed to publish blog")
+    if (this.selectedimagefile) {
+      const maxSize = 20 * 1024 * 1024; 
+      if(this.selectedimagefile.size > maxSize)
+      {
+          this.toastr.error("file size exceeds  20MB")
+          return
       }
+      formData.append('imageUrl', this.selectedimagefile);
     }
-  );
+  
+    formData.forEach((value, key) => {
+      console.log(`${key}:`, value);
+    });
+    if (this.username!=="") {
+    this.writeservice.publishblog(formData).then(
+      res=>{
+        console.log(res); 
+        if (res){
+          console.log("blog published");
+          this.toastr.success("blog published 🥳")
+          }
+        else{
+          this.toastr.error("failed to publish blog")
+        }
+      }
+    );  
+  }
+  else{
+    this.toastr.warning("GUEST? SORRY 🥺")
+  }
   // console.log(formData);
   
 }

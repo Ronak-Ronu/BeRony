@@ -9,16 +9,17 @@
         font-weight: 400;
         font-style: normal;
 }
+
 .rightcommentsection::-webkit-scrollbar {
     width: 8px;
 }
 .rightcommentsection::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: #9cbeee; 
     border-radius: 10px;
 }
 .rightcommentsection::-webkit-scrollbar-thumb {
     background: #727e8d; 
-    border-radius: 10px;
+    border-radius: 50px;
 }
 
 .imagesection img{
@@ -377,13 +378,13 @@
     }
     .rightcommentsection{
         height: auto;
-        width: 100%;
+        width: 95%;
         background-color: rgb(255, 255, 255);
-        margin-top: 5%;
-        margin-left: 1%;
+        margin-top: 4%;
+        margin-left: 0%;
         overflow: auto;
         border: 1px solid rgb(53, 53, 53);
-        border-radius: 6px;
+        border-radius: 10px;
         padding: 10px;
     }
     .addcommentsection{

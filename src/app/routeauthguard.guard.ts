@@ -22,7 +22,6 @@ export class routeauthguardGuard implements CanActivate {
     } catch (error) {
       this.router.navigate(['/userlogin']);
       console.log("login to continue with error");
-
       return false;
     }
   }

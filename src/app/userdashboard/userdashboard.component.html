@@ -1,7 +1,7 @@
 
 <div class="profileheadingwrite">
     <div class="username">
-      <div>{{ userData.username }}</div>
+      <div>{{ username==""?"guest 🫣":userData.username}}</div>
       </div>
     <div class="usercurrentemotion">
       <div >{{ userData.userEmotion }}</div>
@@ -45,17 +45,16 @@
               <img draggable="false" [src]="imageurl" alt="">
           </div>
           <div class="usernamedetail">
-            <div >{{username}}</div>
-        
-          
+            <div>{{ username==""?"guest 🫣":userData.username}}</div>
           </div>
           <div class="userfollowanalytics">
 
             <div class="usebrpostsdetail">
-              16 Posts
+              0 Posts
+
             </div>
             <div class="userfollowers">
-              12k Followers
+              1 Followers
             </div>
           </div>
     </div>

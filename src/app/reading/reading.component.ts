@@ -416,7 +416,13 @@ stop(): void {
   this.readingblog=false
 }
 
-
-
-
+printSpecificSection(): void {
+  const printContent = document.getElementById('blogContent');
+  const originalContent = document.body.innerHTML;
+  if (printContent) {
+    document.body.innerHTML = printContent.innerHTML;
+    window.print();
+    document.body.innerHTML = originalContent; 
+    }
+  }
 }
