@@ -8,6 +8,7 @@ import { Client, Databases, ID, Query } from 'appwrite';
 import { environment } from '../../environments/environment';
 import { DomSanitizer, Meta, SafeHtml, Title } from '@angular/platform-browser';
 import axios from 'axios';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-reading',
@@ -416,13 +417,50 @@ stop(): void {
   this.readingblog=false
 }
 
-printSpecificSection(): void {
-  const printContent = document.getElementById('blogContent');
-  const originalContent = document.body.innerHTML;
-  if (printContent) {
-    document.body.innerHTML = printContent.innerHTML;
-    window.print();
-    document.body.innerHTML = originalContent; 
+downloadBlog()
+{
+  const pdf = new jsPDF()
+  const img = new Image()
+  const blogimage = new Image()
+  img.src = '../../assets/img/berony-blog-template.png'
+  blogimage.src = this.post.imageUrl
+  
+  
+  img.onload = ()=>{
+    pdf.addImage(img,'PNG',0,0,210,297)
+    pdf.addImage(blogimage, 'PNG', 10, 10, 100, 50); 
+    pdf.setFont('lobster', 'normal');
+    pdf.setFontSize(20);
+    pdf.text(`${this.post.title.toUpperCase()}`, 10, 80);
+
+    
+    pdf.setTextColor(153, 50, 204)
+    pdf.setFontSize(18);
+    pdf.text(`${this.post.username} | ${this.post.funnycount + this.post.loveitcount + this.post.sadcount} Likes`,10,90)
+
+    pdf.setFontSize(14);
+    pdf.setTextColor(128); // grey
+    pdf.text(`${this.post.pageviews} Views`,10,100)
+
+    pdf.setTextColor(47, 79, 79)	
+    pdf.setFontSize(13);
+    const content = this.stripHTML(this.post.bodyofcontent);
+    const splitContent = pdf.splitTextToSize(content,170);
+    pdf.text(splitContent, 10, 105);
+
+
+    pdf.setTextColor(153, 50, 204)
+    pdf.setFontSize(15);
+    if (this.collaboratorsUsernames) {
+      pdf.text(`Collaborators : ${this.collaboratorsUsernames}`, 10, 270);
     }
+
+    pdf.save(`${this.post.title}.pdf`);
+
   }
+  
+
+}
+
+
 }

@@ -55,14 +55,13 @@
     width: 70vw;
 }
 .buttonsection{
-    display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
+    flex-direction: row;
+    justify-content: space-around;
     width: 50vw;
     height: 7vh;
     display: flex;
     align-items: center;
-    gap: 0%;    
+    gap: 0%;
     margin-left: 20%;
     margin-top: 2%;
 }
