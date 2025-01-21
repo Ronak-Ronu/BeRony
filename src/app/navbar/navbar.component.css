@@ -8,23 +8,25 @@
   font-family: "Julius Sans One", sans-serif;
   font-weight: 400;
   font-style: normal;
-  background-color: #E6E8FF;
+  background-color: hsla(235, 77%, 88%, 0.5);
+  border-radius: 30px;
 
 }
 /* General styles */
 .logo {
-  width: 200px;
+  width: 100px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin-top: 49px;
+  background-color: transparent;
+
 }
 
 .logoimage img{
-  height: 100px;
-  width: 100px;
+  height: 74px;
+  width: 74px;
   border-radius: 6px;
-  margin-left: -59px;
+
 }
 
 .logoname {
@@ -41,17 +43,21 @@
   font-size: 20px;
   transition: all 0.3s ease;
   gap: 5rem;
-  font-size: 40px;
-  margin-right: 2rem;
+  font-size: 30px;
+  margin-right: 10px;
+  background-color: transparent;
 }
 
 
 .rightcontent p a {
   text-decoration: none;
+  background-color: transparent;
+
 
 }
 .rightcontent p {
   position: relative; 
+  background-color: transparent;
 }
 
 .rightcontent p a::after {
@@ -64,10 +70,12 @@
   position: absolute; 
   bottom: -5px; 
   left: 0; 
+
 }
 
 .rightcontent p a:hover::after {
   width: 100%; 
+
 }
 
 .navbar {
@@ -75,8 +83,7 @@
   justify-content: space-around;
   align-items: center;
   position: sticky;
-  position: -webkit-sticky;
-  top: 0; 
+  top: 10px; 
   z-index: 1000;
   /* animation: hidenav linear;
   animation-timeline: view(); */
@@ -132,16 +139,21 @@
   color: rgb(85, 85, 85);
 }
 
+.translatelogo svg {
+  display: block;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+}
+
 
 @media (max-width: 600px) {
-
 
   .hamburger {
     display: flex;
     gap: 15px;
     margin-right: 7%;
     z-index: 10;
-    margin-top: 3%;
 
   }
   .hamburger .bar {
@@ -157,10 +169,10 @@
 
 
   .logoimage img{
-    margin-top: 10px;
-    height: 75px;
-    width: 75px;
+    height: 65px;
+    width: 65px;
     border-radius: 6px;
+    margin-bottom: 15px;
   }
 
   .rightcontent {
@@ -169,7 +181,7 @@
     top: 10px;
     right: 100%;
     flex-direction: column;
-    width: 94%;
+    width: 100%;
     height: 97vh;
     background-color: rgba(132, 158, 194, 0.6); 
     backdrop-filter: blur(10px);

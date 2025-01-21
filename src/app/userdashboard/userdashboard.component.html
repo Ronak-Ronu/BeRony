@@ -51,10 +51,10 @@
 
             <div class="usebrpostsdetail">
               0 Posts
-
             </div>
             <div class="userfollowers">
-              1 Followers
+        {{userData.followers.length}} Followers <br/>
+        {{userData.following.length}} Following
             </div>
           </div>
     </div>
@@ -62,8 +62,12 @@
 
       <div class="userbiodetail">
         {{userData.userBio}}
+
       </div>
       <div class="followuserbutton">
+        <button *ngIf="!isViewingOwnProfile" (click)="followUser(loggedinuserid,userId)">Follow</button> <br/>
+        <button *ngIf="!isViewingOwnProfile" (click)="unfollowUser(loggedinuserid,userId)">Unfollow</button> <br/>
+
         <button (click)="shareProfile()">Share Profile</button>
       </div>
 </div>

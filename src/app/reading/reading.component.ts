@@ -430,8 +430,10 @@ downloadBlog()
     pdf.addImage(img,'PNG',0,0,210,297)
     pdf.addImage(blogimage, 'PNG', 10, 10, 100, 50); 
     pdf.setFont('lobster', 'normal');
-    pdf.setFontSize(20);
-    pdf.text(`${this.post.title.toUpperCase()}`, 10, 80);
+    pdf.setFontSize(24);
+    const maxTitleWidth = 190;
+    const title = pdf.splitTextToSize(this.post.title.toUpperCase(), maxTitleWidth);
+    pdf.text(title, 10, 80);
 
     
     pdf.setTextColor(153, 50, 204)
@@ -443,18 +445,17 @@ downloadBlog()
     pdf.text(`${this.post.pageviews} Views`,10,100)
 
     pdf.setTextColor(47, 79, 79)	
-    pdf.setFontSize(13);
+    pdf.setFontSize(12);
     const content = this.stripHTML(this.post.bodyofcontent);
     const splitContent = pdf.splitTextToSize(content,170);
     pdf.text(splitContent, 10, 105);
 
 
-    pdf.setTextColor(153, 50, 204)
-    pdf.setFontSize(15);
     if (this.collaboratorsUsernames) {
+      pdf.setTextColor(153, 50, 204)
+      pdf.setFontSize(10);  
       pdf.text(`Collaborators : ${this.collaboratorsUsernames}`, 10, 270);
     }
-
     pdf.save(`${this.post.title}.pdf`);
 
   }

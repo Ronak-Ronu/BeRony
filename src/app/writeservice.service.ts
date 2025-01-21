@@ -40,7 +40,7 @@ export class WriteserviceService {
     {
       console.log("this is publish blog service");
       formData.forEach((value, key) => {
-        console.log(`FormData Key: ${key}, Value: ${value}`);
+        // console.log(`FormData Key: ${key}, Value: ${value}`);
       });
       return new Promise((resolve,reject)=>{
         this.http.post<WriteModel>(this.url,formData).subscribe(
@@ -191,6 +191,15 @@ export class WriteserviceService {
     searchUsers(query: string): Observable<any> {
       return this.http.get(`${this.baseurl}/search?query=${query}`);
     }
+
+    followUser(currentuserid: string,method: string,userid: string):Observable<any>
+    {
+        return this.http.post(`${this.baseurl}/${currentuserid}/${method}/${userid}`,{})
+    }
+    unfollowUser(currentuserid: string,method: string,userid: string):Observable<any>
+    {
+        return this.http.post(`${this.baseurl}/${currentuserid}/${method}/${userid}`,{})
+    }
     addCollaborator(postId: string, collaboratorId: string): Observable<any> {
       return this.http.post(`${this.baseurl}/${postId}/add-collaborator`, {
         collaboratorId,
@@ -200,4 +209,6 @@ export class WriteserviceService {
       const body={userEmail, authorMail,authorName, postTitle, postDescription, workspaceLink};
       return this.http.post(`${this.baseurl}/send-collab-invite`,body)
     }
+
+
 }

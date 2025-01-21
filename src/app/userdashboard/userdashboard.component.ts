@@ -31,6 +31,9 @@ export class UserdashboardComponent implements OnInit{
   imageurl:string | null = null
   routeUserId:string | null=''
   loading: boolean = true;
+  loggedinuserid!:string;
+  viewprofileuserId!:string;
+  isFollowing: boolean = false;
 
 
   constructor(private service:WriteserviceService,
@@ -40,43 +43,43 @@ export class UserdashboardComponent implements OnInit{
   {}
   async ngOnInit() {
     this.loading = true;
-    this.bucketName=encodeURIComponent(environment.bucketName);
-    this.project=encodeURIComponent(environment.project);
-    this.mode=encodeURIComponent(environment.mode);   
-
+    this.bucketName = encodeURIComponent(environment.bucketName);
+    this.project = encodeURIComponent(environment.project);
+    this.mode = encodeURIComponent(environment.mode);
+  
+    // Fetch logged-in user details
+    this.loggedInUserAccount = await account.get();
+    this.loggedinuserid = this.loggedInUserAccount?.$id || '';
+  
     this.route.paramMap.subscribe((params) => {
-      this.routeUserId =  params.get('userId');  
-      const secret = this.route.snapshot.queryParamMap.get('secret');  
+      this.routeUserId = params.get('userId'); 
       console.log('routeUserId:', this.routeUserId);
-
+  
       if (this.routeUserId) {
-        this.userId = this.routeUserId;
-        this.isViewingOwnProfile = this.userId === this.loggedInUserAccount?.$id;
-        this.fetchUserData(this.userId || '' );
-        this.imageurl= `https://cloud.appwrite.io/v1/storage/buckets/${this.bucketName}/files/${this.userId}/view?project=${this.project}&mode=${this.mode}`
-
+        this.userId = this.routeUserId; 
+        this.isViewingOwnProfile = this.userId === this.loggedinuserid;
+        this.fetchUserData(this.userId);
       } else {
-
-        this.userId = this.loggedInUserAccount?.$id;
+        this.userId = this.loggedinuserid;
         this.isViewingOwnProfile = true;
         this.getloggedinuserdata();
       }
-      if (this.routeUserId && secret) {
-        this.verifyEmail(this.routeUserId, secret);
-      }
     });
-
   }
+  
     async getloggedinuserdata (){
     this.loggedInUserAccount = await account.get();
     if (this.loggedInUserAccount) {
       this.username=this.loggedInUserAccount.name;
-      this.userId=this.loggedInUserAccount.$id;
+      // this.userId=this.loggedInUserAccount.$id;
+      this.loggedinuserid=this.loggedInUserAccount.$id;
+      console.log(this.loggedinuserid);
+      
       this.isEmailVerified = this.loggedInUserAccount.emailVerification; 
       this.imageurl= `https://cloud.appwrite.io/v1/storage/buckets/${this.bucketName}/files/${this.userId}/view?project=${this.project}&mode=${this.mode}`
 
-      // console.log(this.username);
-      // console.log(this.userId);
+      console.log(this.username);
+      console.log(this.userId);
       this.service.getUserData(this.userId || '').subscribe(
         (data)=>{
           console.log(data);
@@ -181,6 +184,43 @@ export class UserdashboardComponent implements OnInit{
             alert('Failed to copy the URL.');
         });
 }
+}
+followUser(currentuserid: string,userid:string)
+{
+  // console.log(currentuserid,userid);
+
+  this.service.followUser(currentuserid,"Follow",userid).subscribe(
+    (response)=>{
+      // console.log(response.message);
+      this.toastr.success(response.message)
+      this.isFollowing = true;
+
+    },
+    (error)=>{
+      // console.log(error.error.message);
+      this.toastr.warning(error.error.message)
+
+      
+    }
+  )
+}
+unfollowUser(currentuserid: string,userid:string)
+{
+  // console.log(currentuserid,userid);
+
+  this.service.unfollowUser(currentuserid,"Unfollow",userid).subscribe(
+    (response)=>{
+      // console.log(response.message);
+      this.toastr.success(response.message)
+      this.isFollowing = false;
+
+    },
+    (error)=>{
+      // console.log(error.error.message);
+      this.toastr.warning(error.error.message)
+      
+    }
+  )
 }
 
 

@@ -11,6 +11,7 @@ export class NavbarComponent implements OnInit{
   loggedInUser!: boolean;
   loggedInUserAccount:any=null
   menuOpen: boolean = false;
+  showTranslate:boolean = false
 
   
 constructor(private router:Router){}
@@ -51,6 +52,10 @@ async login() {
 toggleMenu() {
   this.menuOpen = !this.menuOpen;
 }
+toggleTranslate() {
+  this.showTranslate = !this.showTranslate;
+}
+
 
 
 }

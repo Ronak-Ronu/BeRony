@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit{
     }
     onTextChange(): void {
       this.socket.emit('textChange', this.text);
-      console.log(this.text); 
+      // console.log(this.text); 
     }
     onSaveChanges(): void {
       this.socket.emit('saveChanges', this.text);  
