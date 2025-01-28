@@ -55,7 +55,7 @@
         >
           🤣
         </button>
-        <span style="font-size: 30px">
+        <span style="font-size: 25px">
           {{ funnycount }}
         </span>
       </div>
@@ -67,7 +67,7 @@
         >
           😟
         </button>
-        <span style="font-size: 30px">
+        <span style="font-size: 25px">
           {{ sadcount }}
         </span>
       </div>
@@ -79,7 +79,7 @@
         >
           😘
         </button>
-        <span style="font-size: 30px">
+        <span style="font-size: 25px">
           {{ loveitcount }}
         </span>
       </div>
@@ -87,7 +87,6 @@
     </div>
 
     </div>
-
       <div class="bodycontentsection" (mouseup)="highlightText()" >
         <div [innerHTML]="sanitizedBodyContent"></div>
          <!-- <p>{{post.bodyofcontent}}</p>  -->
@@ -98,6 +97,16 @@
     </div>
     <div style="height: 1px; background-color: grey;width: 70%;margin-left: 17%;margin-top: 2%;margin-bottom: 2%;"></div>
     <div class="postadmindetails">Written with ♥️ by - {{ post.username }} 
+      <div class="followunfolloebuttons">
+
+        <div class="followuserunfollowuserbtn">
+          <button (click)="followUser(loggedinuserid,post.userId)">Follow {{post.username}} </button>
+        </div>
+        <div class="followuserunfollowuserbtn">
+          <button (click)="unfollowUser(loggedinuserid,post.userId)">UnFollow {{post.username}}</button>
+        </div>
+      </div>
+  
     </div>
     <div class="collaborators-section">
       <h3>Collaborators:</h3>

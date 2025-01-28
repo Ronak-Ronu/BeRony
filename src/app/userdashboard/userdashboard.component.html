@@ -14,24 +14,24 @@
     <div class="sidebar">
       <ul>
         <div>
-          <li (click)="setActiveSection('overview')" [ngClass]="{'active': activeSection === 'overview'}">Overview</li>
+          <li (click)="setActiveSection('overview')" [ngClass]="{'active': activeSection === 'overview'}" unselectable="on" style="user-select: none;">Overview</li>
         </div>
 
         <div>
-          <li (click)="setActiveSection('my-blogs')" [ngClass]="{'active': activeSection === 'my-blogs'}">My Blogs</li>
+          <li (click)="setActiveSection('my-blogs')" [ngClass]="{'active': activeSection === 'my-blogs'}" unselectable="on" style="user-select: none;">My Blogs</li>
         </div>
         <div>
 
-          <li *ngIf="isViewingOwnProfile" (click)="setActiveSection('analytics')" [ngClass]="{'active': activeSection === 'analytics'}">Analytics</li>
+          <li *ngIf="isViewingOwnProfile" (click)="setActiveSection('analytics')" [ngClass]="{'active': activeSection === 'analytics'}" unselectable="on" style="user-select: none;">Analytics</li>
         </div>
         <div>
-          <li *ngIf="isViewingOwnProfile" (click)="setActiveSection('settings')" [ngClass]="{'active': activeSection === 'settings'}">Settings</li>
+          <li *ngIf="isViewingOwnProfile" (click)="setActiveSection('settings')" [ngClass]="{'active': activeSection === 'settings'}" unselectable="on" style="user-select: none;">Settings</li>
         </div>
       </ul>
     </div>
     <div class="main-content">
       
-      <app-overview *ngIf="activeSection === 'overview'" [userBio]="userBio" [username]="username"></app-overview>
+      <app-overview  *ngIf="activeSection === 'overview'" [userBio]="userBio" [username]="username"></app-overview>
       <app-my-blogs *ngIf="activeSection === 'my-blogs'" [posts]="posts"   [bookmarkposts]="bookmarkposts" [loggedinuserid]="userId"></app-my-blogs>
       <app-analytics *ngIf="isViewingOwnProfile && activeSection === 'analytics'" [posts]="posts" ></app-analytics>
       <app-settings *ngIf="isViewingOwnProfile && activeSection === 'settings'" [userId]="userId" [isEmailVerified]="isEmailVerified"></app-settings>
@@ -42,7 +42,7 @@
       <div class="bottomuserbiodetails">
 
           <div class="userprofileimage">
-              <img draggable="false" [src]="imageurl" alt="">
+              <img draggable="false" [src]="imageurl" alt="userprofileimage" style="user-select: none;">
           </div>
           <div class="usernamedetail">
             <div>{{ username==""?"guest 🫣":userData.username}}</div>

@@ -317,6 +317,27 @@ input:focus{
     padding: 10px; 
 }
 
+.hoverusernameofuser{
+    cursor: pointer;font-size: 19px;
+}
+.hoverdiv
+{
+    display: none;
+}
+.hoverusernameofuser:hover  .hoverdiv{
+        display: block;
+        width: auto;
+        height: auto;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: -80px;
+        background-color: rgb(0, 0, 0,0.7);
+        color: white;
+        z-index: 1000;
+        position: absolute;
+}   
+
+
 @media (max-width: 600px) {
     .readmainbody{
         width: 100%;
@@ -360,7 +381,7 @@ input:focus{
         border-bottom: 0.5px solid rgb(77, 77, 77);
       }
       .filteremoji{
-        font-size: 15px;
+        font-size: 11px;
       }
   
       .filterbutton1

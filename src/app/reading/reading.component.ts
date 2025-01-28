@@ -462,6 +462,42 @@ downloadBlog()
   
 
 }
+followUser(currentuserid: string,userid:string)
+{
+  // console.log(currentuserid,userid);
+
+  this.service.followUser(currentuserid,"Follow",userid).subscribe(
+    (response)=>{
+      // console.log(response.message);
+      this.toastr.success(response.message)
+
+    },
+    (error)=>{
+      // console.log(error.error.message);
+      this.toastr.warning(error.error.message)
+
+      
+    }
+  )
+}
+unfollowUser(currentuserid: string,userid:string)
+{
+  // console.log(currentuserid,userid);
+
+  this.service.unfollowUser(currentuserid,"Unfollow",userid).subscribe(
+    (response)=>{
+      // console.log(response.message);
+      this.toastr.success(response.message)
+
+    },
+    (error)=>{
+      // console.log(error.error.message);
+      this.toastr.warning(error.error.message)
+      
+    }
+  )
+}
+
 
 
 }

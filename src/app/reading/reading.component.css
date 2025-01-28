@@ -75,9 +75,9 @@
 }
 .likebuttons{
     display:flex;
-    gap: 1%;
+    gap: 1px;
     justify-content: space-evenly;
-    width: 20vw;
+    width: 12vw;
     /* background-color: rebeccapurple; */
 }
 .footerbutton{
@@ -351,6 +351,21 @@
     border: none;
   }
   
+  .followunfolloebuttons{
+    display: flex;
+    gap: 10px;
+  }
+  .followuserunfollowuserbtn button{
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #b1b8fcc2;
+        font-size: 15px;
+        cursor: pointer;
+  }
+  .followuserunfollowuserbtn button:hover{
+    background-color: #b1b8fc9c;
+  }
+
   @media (max-width: 600px) {
 
     .headingwrite{

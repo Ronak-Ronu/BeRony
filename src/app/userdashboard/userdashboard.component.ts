@@ -193,7 +193,6 @@ followUser(currentuserid: string,userid:string)
     (response)=>{
       // console.log(response.message);
       this.toastr.success(response.message)
-      this.isFollowing = true;
 
     },
     (error)=>{
@@ -212,7 +211,6 @@ unfollowUser(currentuserid: string,userid:string)
     (response)=>{
       // console.log(response.message);
       this.toastr.success(response.message)
-      this.isFollowing = false;
 
     },
     (error)=>{
