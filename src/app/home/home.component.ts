@@ -1,4 +1,4 @@
-import { Component ,OnInit} from '@angular/core';
+import { Component ,ElementRef,OnInit, ViewChild} from '@angular/core';
 import { WriteserviceService } from '../writeservice.service';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../environments/environment';
@@ -11,11 +11,15 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class HomeComponent implements OnInit{
   // https://berony.web.app/collab/67274249002493a5ec52/6736eaca42540998b25ca0a2
+  @ViewChild('memeGif') memeGif!: ElementRef<HTMLImageElement>;
+
   private socket!: Socket;
   text: string = ''; 
   postId: string = '6736eaca42540998b25ca0a2'; 
   userId: string = '67274249002493a5ec52'; 
   postdata:any
+  isHidden: boolean=true;
+  memeGifSrc:string=""
   constructor(
     private service: WriteserviceService,
     private toaster:ToastrService
@@ -38,6 +42,22 @@ export class HomeComponent implements OnInit{
       this.socket.on("textChange", (newText:string) => {
           this.text = newText;
       });
+    }
+    showMeme(event: MouseEvent,gif:string) {
+      this.memeGifSrc=gif
+      this.isHidden = false;
+      this.moveMeme(event); // Update position instantly
+    }
+  
+    moveMeme(event: MouseEvent) {
+      if (this.memeGif) {
+        this.memeGif.nativeElement.style.left = event.pageX + 10 + 'px';
+        this.memeGif.nativeElement.style.top = event.pageY + 10 + 'px';
+      }
+    }
+  
+    hideMeme() {
+      this.isHidden = true;
     }
     fetchPostContent()
     {

@@ -34,6 +34,8 @@ export class UserdashboardComponent implements OnInit{
   loggedinuserid!:string;
   viewprofileuserId!:string;
   isFollowing: boolean = false;
+  followingtrue:boolean = false;
+  follwingfalse: boolean = false;
 
 
   constructor(private service:WriteserviceService,
@@ -58,12 +60,13 @@ export class UserdashboardComponent implements OnInit{
       if (this.routeUserId) {
         this.userId = this.routeUserId; 
         this.isViewingOwnProfile = this.userId === this.loggedinuserid;
-        this.fetchUserData(this.userId);
       } else {
         this.userId = this.loggedinuserid;
         this.isViewingOwnProfile = true;
-        this.getloggedinuserdata();
       }
+          this.getloggedinuserdata();
+    this.fetchUserData(this.userId);
+
     });
   }
   
@@ -91,7 +94,6 @@ export class UserdashboardComponent implements OnInit{
           console.log(error);
         }
       )
-      // this.fetchUserPosts();
 
       this.fetchbookmarks();
       
@@ -198,8 +200,7 @@ followUser(currentuserid: string,userid:string)
     (error)=>{
       // console.log(error.error.message);
       this.toastr.warning(error.error.message)
-
-      
+        this.followingtrue=true;
     }
   )
 }

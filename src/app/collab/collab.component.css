@@ -60,6 +60,7 @@
 .button-group {
     display: flex;
     justify-content: center;
+    align-items: flex-start;
     gap: 15px;
 }
 
@@ -82,4 +83,65 @@
 .button-group .btn-save:active {
     background-color: #6f6fd1;
     transform: scale(0.95);
+}
+
+@media (max-width: 600px) {
+    .collaborative-editor {
+        width: 92%;
+        margin: 0% auto;
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        font-family: "PT Sans", sans-serif;
+    }
+    .collaborative-editor header {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .collaborative-editor header img,
+    .collaborative-editor header video {
+        width: 50%;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 10px;
+        margin-bottom: 0px;
+    }
+
+    .collaborative-editor header h2 {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+    }
+    .collaborative-editor header p {
+        font-size: 14px;
+        color: rgb(112, 112, 179);
+    }
+
+    .editor-container textarea {
+        width:99%;
+        height: 470px;
+        font-size: 15px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        padding: 9px;
+        outline: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        resize: none;
+    }
+
+    .button-group .btn-save {
+        font-size: 14px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        background-color: #a3aaee;
+        color: #fff;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+        
+
 }

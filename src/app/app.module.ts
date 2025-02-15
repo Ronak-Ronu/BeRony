@@ -32,6 +32,7 @@ import { BlogReelComponent } from './blog-reel/blog-reel.component';
 import { HammerModule } from '@angular/platform-browser';
 import { CollabComponent } from './collab/collab.component';
 import { SearchCollabComponent } from './search-collab/search-collab.component';
+import { NumberAbbrPipe } from './number-abbr.pipe';
 
 const routes  = [
 
@@ -70,6 +71,7 @@ const routes  = [
     BlogReelComponent,
     CollabComponent,
     SearchCollabComponent,
+    NumberAbbrPipe,
 
   ],
   imports: [

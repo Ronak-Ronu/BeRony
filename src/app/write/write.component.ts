@@ -414,19 +414,36 @@ draw()
   this.isdrawing=!this.isdrawing
  
 }
-
 saveCanvas() {
   const dataURL = this.canvas.toDataURL({
     format: 'png',      
     quality: 1,         
     multiplier: 1
   });
+
+  // Convert base64 to Blob
+  const byteString = atob(dataURL.split(',')[1]);
+  const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+  const arrayBuffer = new ArrayBuffer(byteString.length);
+  const uintArray = new Uint8Array(arrayBuffer);
+  
+  for (let i = 0; i < byteString.length; i++) {
+    uintArray[i] = byteString.charCodeAt(i);
+  }
+
+  const blob = new Blob([uintArray], { type: mimeString });
+
+  // Convert Blob to File
+  this.selectedimagefile = new File([blob], "canvas-image.png", { type: mimeString });
+  this.imageUrl = dataURL;
+
+  // Download the image
   const link = document.createElement('a');
   link.href = dataURL;
   link.download = 'canvas-image.png'; 
-  link.click();
-  
+  link.click(); 
 }
+
 addText(){
   const text = new fabric.Textbox("Add Your Text Here",{
     left: this.canvas.getWidth() / 2,

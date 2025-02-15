@@ -31,12 +31,14 @@ onCardMouseMove(event: MouseEvent) {
   const target = event.target as HTMLElement;
   const rect = target.getBoundingClientRect();
   this.cursorX = `${event.clientX - rect.left}px`;
-  this.cursorY = `${event.clientY - rect.top}px`;
+  this.cursorY = `${event.clientY- rect.left}px`;
 }
-onCardMouseLeave(): void {
-  this.cursorX = '50%';
-  this.cursorY = '50%';
+
+onCardMouseLeave() {
+  this.cursorX = "50%";
+  this.cursorY = "50%";
 }
+
 
 
 

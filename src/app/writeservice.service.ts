@@ -24,22 +24,22 @@ export class WriteserviceService {
 
   constructor(private http:HttpClient) {
 
-    this.url=`${environment.beronyAPI}/api/posts`
-    this.drafturl=`${environment.beronyAPI}/api/drafts`
-    this.findposturl=`${environment.beronyAPI}/api/findpost`
-    this.baseurl=`${environment.beronyAPI}/api`
+    // this.url=`${environment.beronyAPI}/api/posts`
+    // this.drafturl=`${environment.beronyAPI}/api/drafts`
+    // this.findposturl=`${environment.beronyAPI}/api/findpost`
+    // this.baseurl=`${environment.beronyAPI}/api`
     this.accessKey=environment.Unsplash_ACCESSKEY
     
-    // this.url='http://localhost:3000/api/posts'
-    // this.drafturl='http://localhost:3000/api/drafts'
-    // this.findposturl='http://localhost:3000/api/findpost'
-    // this.baseurl='http://localhost:3000/api'
+    this.url='http://localhost:3000/api/posts'
+    this.drafturl='http://localhost:3000/api/drafts'
+    this.findposturl='http://localhost:3000/api/findpost'
+    this.baseurl='http://localhost:3000/api'
    }
 
     publishblog(formData:FormData):Promise<any>
     {
       console.log("this is publish blog service");
-      formData.forEach((value, key) => {
+      formData.forEach((value, key) => { 
         // console.log(`FormData Key: ${key}, Value: ${value}`);
       });
       return new Promise((resolve,reject)=>{

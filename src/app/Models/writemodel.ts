@@ -15,5 +15,6 @@ export class WriteModel{
     tags:string[]=[]
     pageviews:number=0
     collaborators:string[]=[]
+    createdAt:string="s"
 
 }

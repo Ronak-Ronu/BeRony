@@ -1,4 +1,4 @@
-import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef,Renderer2 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WriteModel } from '../Models/writemodel';
 import { WriteserviceService } from '../writeservice.service';
@@ -58,7 +58,8 @@ export class ReadingComponent implements OnInit {
     // private ngnavigateservice:NgNavigatorShareService,
     private toastr: ToastrService,
     private sanitizer: DomSanitizer,
-    private meta: Meta, private title: Title
+    private meta: Meta, private title: Title,
+    private renderer: Renderer2
   )
    {
     const client = new Client().
@@ -81,9 +82,42 @@ export class ReadingComponent implements OnInit {
     window.speechSynthesis.onvoiceschanged = () => this.setVoice();
     const url = this.post.imageUrl || this.post.videoUrl;
     this.filetype = url.split('.').pop()?.toLowerCase();
+    this.addJsonLdSchema();
 
 
   }
+
+  addJsonLdSchema() {
+    const script = this.renderer.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": this.post.title,
+      "author": {
+        "@type": "Person",
+        "name": this.post.username
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "BeRony",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://berony.com/logo.png"
+        }
+      },
+      "datePublished": Date.now(),
+      "dateModified": Date.now(),
+      "description": this.post.bodyofcontent,
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": window.location.href
+      }
+    });
+
+    this.renderer.appendChild(document.head, script);
+  }
+
   private setVoice(): void {
     const voices = this.synth.getVoices();
     if (voices.length > 0) {

@@ -62,7 +62,7 @@
                     <b [innerHTML]="item.title">
                         <!-- {{item.title}} -->
                     </b>
-                    <p [innerHTML]="item.endnotecontent">
+                    <p [innerHTML]="item.endnotecontent.slice(0,150)+' ...'">
                         <!-- {{item.endnotecontent}} -->
                     </p>
             
@@ -71,7 +71,9 @@
                 <div class="profilenameimg">
 
                     <div class="pickprofileblog" >
+                        
                         <img [src]="'https://cloud.appwrite.io/v1/storage/buckets/'+bucketName+'/files/' + item.userId + '/view?project='+project+'&mode='+mode+''" />
+
                     </div>
                     <div>
                         <div>
@@ -85,7 +87,9 @@
                     
                 </div> 
                 <div style="font-size: 15px;margin-right: auto; color: #777; white-space: nowrap;margin-top:20px;"> 
-                    {{item.pageviews}} views
+                    {{item.pageviews | numberAbbr}} views  
+                      <p class="post-date">{{ item.createdAt | date:'mediumDate' }}</p>
+
                </div> 
                <div class="tags">
                    <div *ngFor="let tag of item.tags" >
@@ -111,6 +115,11 @@
                       </button>
                     <!-- <button style="cursor: pointer;" >DEL</button> -->
                 </div>
+                <div *ngIf="item.userId===this.userId && this.loggedInUserAccount" >
+                        <img style="cursor: pointer;width: 47px;height: auto;" [routerLink]="'/collab/'+userId+'/'+item._id" src="../../assets/img/editiconberony.png" alt=""  /> 
+                    <!-- <button style="cursor: pointer;" >DEL</button> -->
+                </div>
+
             </div>
 
           

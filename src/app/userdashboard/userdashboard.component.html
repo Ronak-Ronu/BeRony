@@ -42,7 +42,7 @@
       <div class="bottomuserbiodetails">
 
           <div class="userprofileimage">
-              <img draggable="false" [src]="imageurl" alt="userprofileimage" style="user-select: none;">
+              <img draggable="false" [src]="imageurl" [alt]="userData.username" style="user-select: none;">
           </div>
           <div class="usernamedetail">
             <div>{{ username==""?"guest 🫣":userData.username}}</div>
@@ -65,9 +65,8 @@
 
       </div>
       <div class="followuserbutton">
-        <button *ngIf="!isViewingOwnProfile" (click)="followUser(loggedinuserid,userId)">Follow</button> <br/>
-        <button *ngIf="!isViewingOwnProfile" (click)="unfollowUser(loggedinuserid,userId)">Unfollow</button> <br/>
-
+        <button *ngIf="!isViewingOwnProfile" [disabled]="followingtrue" (click)="followUser(loggedinuserid,userId)">Follow</button> <br/>
+        <button *ngIf="!isViewingOwnProfile" [disabled]="follwingfalse" (click)="unfollowUser(loggedinuserid,userId)">Unfollow</button> <br/>
         <button (click)="shareProfile()">Share Profile</button>
       </div>
 </div>

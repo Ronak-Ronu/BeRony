@@ -62,16 +62,13 @@
     <!-- <p>My Saved Posts</p> -->
     <div  class="post-cards-container" >
     <div *ngFor="let post of bookmarkposts">
-  <div class="post-card" 
-  (mousemove)="onCardMouseMove($event)"
-  (mouseleave)="onCardMouseLeave()"
-  [ngStyle]="{'--x': cursorX, '--y': cursorY}"
->
+  <div class="post-card"   (mousemove)="onCardMouseMove($event)"
+  [ngStyle]="{'--x': cursorX, '--y': cursorY}">
     <h2 [innerHTML]="post.title"></h2>
     <p class="post-admin-name">{{ post.username }}</p>
 
     <p class="post-date">{{ post.createdAt | date:'mediumDate' }}</p>
-    <img [src]="post.imageUrl" alt="Post Image" class="post-image" *ngIf="post.imageUrl" />
+    <img [src]="post.imageUrl" alt="Post Image" class="post-image" *ngIf="post.imageUrl" loading="lazy"/>
     <div class="likes">
       <div>{{ post.funnycount + post.sadcount + post.loveitcount }} Likes</div>
     </div>
@@ -85,7 +82,9 @@
     </div>
     
   </div>
-  
+  <p *ngIf="posts.length === 0">No posts found</p>
+<p *ngIf="bookmarkposts.length === 0">No saved posts</p>
+
 </div>
 
 </div>

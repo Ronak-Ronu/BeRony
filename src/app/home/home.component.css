@@ -8,6 +8,42 @@
   font-weight: 400;
   font-style: normal;
 }
+#meme-gif {
+  position: absolute;
+  width: 200px; 
+  pointer-events: none;
+  border-radius: 12px;
+  z-index: 999;
+}
+.hidden {
+  display: none;
+}
+@keyframes gradientGlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.highlight1, .highlight2, .highlight3, .highlight4 {
+  color: #fff;
+  font-weight: bold;
+  background: linear-gradient(45deg, #663399, #8844aa, #b26cd7, #d4a4ff);
+  background-size: 300% 300%;
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: background 0.5s ease-in-out;
+}
+
+.highlight1:hover,
+.highlight2:hover,
+.highlight3:hover,
+.highlight4:hover {
+  background-position: 100% 0;
+  box-shadow: 0px 0px 15px rgba(178, 108, 215, 0.6);
+  animation: gradientGlow 3s infinite alternate;
+  margin: 2px;
+}
+
 
 .bodyelement {
   width: 93vw;
@@ -23,7 +59,7 @@
   top: 20rem; 
   margin-top: 15vh;
   text-align: center;
-  line-height: 1;
+  line-height: 0;
   font-size: 96px;
   animation: fade-out linear;
   animation-timeline: view();
