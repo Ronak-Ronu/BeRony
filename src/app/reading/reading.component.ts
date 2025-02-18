@@ -49,6 +49,8 @@ export class ReadingComponent implements OnInit {
   readingblog:boolean=false
   colloabousername!:string
   seotitle:string=''
+  isDiscussionOpen = false;
+
 
   private synth = window.speechSynthesis;
   private utterance = new SpeechSynthesisUtterance();
@@ -533,5 +535,8 @@ unfollowUser(currentuserid: string,userid:string)
 }
 
 
+toggleDiscussion() {
+  this.isDiscussionOpen = !this.isDiscussionOpen;
+}
 
 }

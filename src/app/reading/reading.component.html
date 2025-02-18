@@ -137,4 +137,88 @@
   
 </div>
 
+<button class="floating-chat-btn" (click)="toggleDiscussion()">
+  💬
+</button>
+<div *ngIf="isDiscussionOpen" class="rightcommentsection">
+  <button class="floating-chat-btn" (click)="toggleDiscussion()">
+    X
+  </button>
+  <div class="discussionheader">
+    <h1>DISCUSSION</h1><div (click)="refreshcomponent()" class="refreshbtn">⟳</div>
+  </div>
+  <div class="addcommentsection">
+    <div *ngIf="loggedInUserAccount">
+      <h2>Leave a Comment</h2>
+      <div *ngIf="isCommentBoxOpen" >
+        <span class="showhighlightTextInCommentStyle">
+          {{showhighlightTextInComment}}
+        </span>
+    </div> 
+      <div class="inputbox">
+     
+        <div class="textarea-container">
+            <textarea
+                [(ngModel)]="newCommentText"
+                name="newCommentText"
+                maxlength="300"
+                placeholder="What's your thought on this :)"
+                (keydown.enter)="addComment()"
+            ></textarea>
+        </div>
+        <div class="button-container">
+            <button class="submitComment" (click)="addComment()">Post</button>
+        </div>
+    </div>
+
+    <div>
+      <input class="inputgifstyle"
+        type="text" 
+        [(ngModel)]="gifSearchQuery" 
+        (input)="searchGifs()" 
+        placeholder="Comment gif?" 
+      />
+      
+      <div *ngIf="gifs.length">
+        <div class="gif-container">
+          <div  style="background-color: rgb(190, 190, 190);"
+            class="gif" 
+            *ngFor="let gif of gifs" 
+            (click)="selectGif(gif)">
+            <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+   
+  </div>
+
+  <div *ngIf="!loggedInUserAccount">
+    <p>Please log in to leave a comment</p>
+  </div>
+  
+  <div *ngFor="let comment of comments" class="userandcomments">
+    <div class="user1">
+      <div class="userdata">
+        <div class="userprofile"></div>
+        <div class="username">{{comment.username}}
+
+          <br>
+          <small>{{ comment.createdAt | date:'short' }}</small>
+
+        </div>
+        
+      </div>
+      <div class="usercomment">
+        <p [innerHTML]="getSanitizedHtml(comment.commentText)">
+          <!-- {{comment.commentText}} -->
+        </p>
+      </div>
+    </div>
+
+  </div>
+  
+</div>
+
 

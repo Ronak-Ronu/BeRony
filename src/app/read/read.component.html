@@ -4,13 +4,33 @@
     <div class="headingread">
         <p>READ</p>
     </div>
-
-    <div class="searchitems">
-        <div class="searchbar">
-            <input type="text" placeholder="ronak" [(ngModel)]="searchQuery"  (keydown.enter)="onSearch()">
+    <div class="searchelement">
+        <div class="searchitems">
+            <div class="searchbar">
+                <input type="text" placeholder="Wanna Search?" [(ngModel)]="searchQuery" 
+                       (focus)="showRecentSearches()"  
+                       (blur)="hideRecentSearches()" 
+                       (keydown.enter)="onSearch()">
+                
+                <!-- Recent Searches Dropdown -->
+                <div *ngIf="recentsearch.length && showHistory" class="search-history">
+                    <!-- Clear Button Aligned to Right -->
+                    <div class="clearbtn">
+                        <button (click)="clearhistory()">Clear</button>
+                    </div>
+        
+                    <ul>
+                        <li *ngFor="let search of recentsearch" (click)="selectSearch(search)">
+                            {{ search }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <button class="searchbutton" (click)="onSearch()">YUP <span style="font-size: 40px;">↵</span></button>
         </div>
-        <button class="searchbutton" (click)="onSearch()">YUP <span style="font-size: 40px;">↵</span></button>
+        
     </div>
+    
 </div>
 
 <!-- endoftopitems -->

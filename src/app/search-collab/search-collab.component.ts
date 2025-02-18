@@ -59,6 +59,8 @@ export class SearchCollabComponent implements OnInit {
 
     }
   searchUsers(): void {
+    if (this.searchQuery.trim() === '') return;
+
     this.service.searchUsers(this.searchQuery).subscribe(
       (response) => {
         this.users = response;
@@ -96,20 +98,19 @@ export class SearchCollabComponent implements OnInit {
     );
   }
   updateCollaborator() {
-    console.log("Checking values before sending email:");
-    console.log("collaboUserEmail:", this.collaboUserEmail);
-    console.log("authorEmail:", this.authorEmail);
-    console.log("username:", this.username);
-    console.log("postTitle:", this.postTitle);
-    console.log("postDescription:", this.postDescription);
-    console.log("currentUrl:", this.currenturl);
+    // console.log("Checking values before sending email:");
+    // console.log("collaboUserEmail:", this.collaboUserEmail);
+    // console.log("authorEmail:", this.authorEmail);
+    // console.log("username:", this.username);
+    // console.log("postTitle:", this.postTitle);
+    // console.log("postDescription:", this.postDescription);
+    // console.log("currentUrl:", this.currenturl);
   
     if (!this.collaboUserEmail || !this.authorEmail || !this.username || !this.postTitle || !this.postDescription || !this.currenturl) {
       console.error("Missing required field(s). Please check.");
-      return; // Prevent sending the email if any value is missing
+      return; 
     }
   
-    // Proceed with sending the email
     this.service.sendCollaborateInvite(
       this.collaboUserEmail,
       this.authorEmail,

@@ -179,6 +179,9 @@
                     placeholder="Press Enter to add tag"
                 />
             </div>
+            <label>Schedule Post (Optional):</label>
+            <input type="datetime-local" [(ngModel)]="postScheduleTime"   name="postScheduleTime" />
+          
             <div class="tags">
                 <span *ngFor="let tag of tags" class="tag">{{ tag }}
                     <div style="cursor: pointer;color: blueviolet;font-weight: bolder;" [@tagAnimation] (click)="removeTag(tag)">X</div>

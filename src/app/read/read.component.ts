@@ -30,6 +30,8 @@ export class ReadComponent implements OnInit{
   start = 0;
   limit = 5; 
   useremotion:string="🙂"
+  recentsearch: string[] = [];
+  showHistory: boolean=false;
 
 
 ngOnInit(): void {
@@ -70,9 +72,10 @@ ngOnInit(): void {
       this.isloadingblogs = true;
       this.readsevice.getsearchpostdata(this.selectedTag,this.searchQuery).subscribe(
         (  data:WriteModel[])=>{
-            this.blogs=data;
-            this.isloadingblogs=false
-            this.addUserEmotion();
+          this.blogs=data;
+          this.isloadingblogs=false
+          this.savesearchquery(this.searchQuery);
+          this.addUserEmotion();
         }
       )
       } catch (error) {
@@ -87,7 +90,40 @@ ngOnInit(): void {
     this.readqueryblogdata(); 
 
   }
-  
+  savesearchquery(query:string)
+    {  let searches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+    
+    // Remove duplicates and keep only latest 5 searches
+    searches = [query, ...searches.filter((q: string) => q !== query)].slice(0, 5);
+    
+    localStorage.setItem('recentSearches', JSON.stringify(searches));
+    this.recentsearch = searches;
+  }
+
+  showRecentSearches() {
+    this.loadRecentSearch(); 
+    this.showHistory=true
+  }
+  hideRecentSearches() {
+    setTimeout(() => {
+      this.showHistory = false; 
+    }, 200); 
+  }
+  loadRecentSearch()
+  {
+    this.recentsearch = JSON.parse(localStorage.getItem('recentSearches') || '[]')
+
+  }
+  selectSearch(query: string) {
+    this.searchQuery = query;
+    this.onSearch();
+  }
+
+  clearhistory()
+  {
+    localStorage.removeItem('recentSearches');
+    this.recentsearch=[];
+  }
   toggleFilters() {
     this.showFilters = !this.showFilters;
   }

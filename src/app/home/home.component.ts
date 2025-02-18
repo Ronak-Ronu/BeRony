@@ -29,7 +29,11 @@ export class HomeComponent implements OnInit{
 
     this.fetchPostContent();
 
-    this.socket = io(environment.beronyAPI, {
+    this.socket = io(
+      
+      environment.beronyAPI 
+      // "http://localhost:3000"
+      , {
       auth: {
           userId: this.userId,  
           postId: this.postId   
