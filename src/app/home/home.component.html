@@ -1,65 +1,139 @@
 <div class="bodyelement">
-    <div class="centerelements">
-      <p>WELCOME TO BERONY</p>
-      <P class="centerbelow">
-        <span  (mouseenter)="showMeme($event,'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXdrMGw4OWd5OHQ5MWU3bDNxZGhhY2RubGwzb3V0eW5xc2RiZDcycCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PKlxwoxQd2A4HJc3Jy/giphy.gif')"  (mousemove)="moveMeme($event)" (mouseleave)="hideMeme()" [ngClass]="{'highlight1':!isHidden}">Doodles,</span>
-        <span (mouseenter)="showMeme($event,'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExY3RzOHMya2ExaHpwdTFiYXAwbXB0cmJ4M2F0aTd2OWtzNzlqOW40dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8VxuCj45eSkUg/giphy.gif')" (mousemove)="moveMeme($event)" (mouseleave)="hideMeme()"  [ngClass]="{'highlight2':!isHidden}">Drama, </span> 
-        <span (mouseenter)="showMeme($event,'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExempkZXpvank1d2V2MXhkamw2bWYwZXkzbmtldmlmZXMwYXN4ZTI4byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lXu72d4iKwqek/giphy.gif')" (mousemove)="moveMeme($event)" (mouseleave)="hideMeme()"  [ngClass]="{'highlight3':!isHidden}">Deep Thoughts</span> 
-         <span (mouseenter)="showMeme($event,'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWlpamlucG4yYmlkejJ3cGQ2eDBzNzQyenVwOHNxaTM1eGczYm5tNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kbjHSdIfkp7z3PtrFf/giphy.gif')" (mousemove)="moveMeme($event)" (mouseleave)="hideMeme()"  [ngClass]="{'highlight4':!isHidden}">, Dump It All Here (No Paper Needed)!
-         </span>
-      
-      </P>
-    </div>
-    <img [src]="memeGifSrc" id="meme-gif" [ngClass]="{'hidden': isHidden}" #memeGif />
-    <!-- <div class="footer">
+  <div class="centerelements">
+    <p>WELCOME TO BERONY</p>
+    <P class="centerbelow">
+      <span
+        (mouseenter)="
+          showMeme(
+            $event,
+            'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXdrMGw4OWd5OHQ5MWU3bDNxZGhhY2RubGwzb3V0eW5xc2RiZDcycCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PKlxwoxQd2A4HJc3Jy/giphy.gif'
+          )
+        "
+        (mousemove)="moveMeme($event)"
+        (mouseleave)="hideMeme()"
+        [ngClass]="{ highlight1: !isHidden }"
+        >Doodles,</span
+      >
+      <span
+        (mouseenter)="
+          showMeme(
+            $event,
+            'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExY3RzOHMya2ExaHpwdTFiYXAwbXB0cmJ4M2F0aTd2OWtzNzlqOW40dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8VxuCj45eSkUg/giphy.gif'
+          )
+        "
+        (mousemove)="moveMeme($event)"
+        (mouseleave)="hideMeme()"
+        [ngClass]="{ highlight2: !isHidden }"
+        >Drama,
+      </span>
+      <span
+        (mouseenter)="
+          showMeme(
+            $event,
+            'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExempkZXpvank1d2V2MXhkamw2bWYwZXkzbmtldmlmZXMwYXN4ZTI4byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lXu72d4iKwqek/giphy.gif'
+          )
+        "
+        (mousemove)="moveMeme($event)"
+        (mouseleave)="hideMeme()"
+        [ngClass]="{ highlight3: !isHidden }"
+        >Deep Thoughts</span
+      >
+      <span
+        (mouseenter)="
+          showMeme(
+            $event,
+            'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWlpamlucG4yYmlkejJ3cGQ2eDBzNzQyenVwOHNxaTM1eGczYm5tNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kbjHSdIfkp7z3PtrFf/giphy.gif'
+          )
+        "
+        (mousemove)="moveMeme($event)"
+        (mouseleave)="hideMeme()"
+        [ngClass]="{ highlight4: !isHidden }"
+        >, Dump It All Here (No Paper Needed)!
+      </span>
+    </P>
+  </div>
+  <img
+    [src]="memeGifSrc"
+    id="meme-gif"
+    [ngClass]="{ hidden: isHidden }"
+    #memeGif
+  />
+  <!-- <div class="footer">
       <img src="assets/img/character.png" alt="">
   </div>
    -->
 
-   <div class="homepageContainer">
-      <div class="greybox">
-        <div class="aboutronymore">
-          <div style="font-weight: bold; margin-bottom: 15px;">Hey try this new feature </div>  
-          <div>The Collaborative writing <span style="font-size: 27px;">🤝</span></div>     
-  <div>
-    Collaborative writing allows multiple users to contribute to a single document in real-time. 
-    Share your ideas and build on each other's thoughts
-  </div>
+  <div class="homepageContainer">
+    <div class="greybox">
+      <div class="aboutronymore">
+        <div style="font-weight: bold; margin-bottom: 15px">
+          Hey try this new feature
         </div>
-
-        <div class="collabwriting">
-            <textarea 
-            [(ngModel)]="text" 
-            (input)="onTextChange()" 
-            placeholder="Start collaborating here..."
-            ></textarea>
-          <div class="button-group">
-            <button class="btn-save" (click)="onSaveChanges()">💾 Save Changes</button>
-          </div>
+        <div>
+          The Collaborative writing <span style="font-size: 27px">🤝</span>
         </div>
-
-        <div class="aboutcollabwriting">
-          <div class="userimage">
-            <img [src]="postdata.imageUrl" alt="">
-          </div>
-          <div class="posttitle">
-            {{postdata.title}}
-          </div>
-          <div class="authorname">{{postdata.username}}</div> 
-          <div class="likes">
-            <div>
-              😘<span>{{postdata.loveitcount}}</span>
-            </div>
-            <div>
-              🤣<span>{{postdata.funnycount}}</span>
-            </div>
-            <div>
-              😕<span>{{postdata.sadcount}}</span>
-            </div>
-          </div>
+        <div>
+          Collaborative writing allows multiple users to contribute to a single
+          document in real-time. Share your ideas and build on each other's
+          thoughts
+        </div>
       </div>
-   </div>
 
+      <div class="collabwriting">
+        <textarea
+          [(ngModel)]="text"
+          (input)="onTextChange()"
+          placeholder="Start collaborating here..."
+        ></textarea>
+        <div class="button-group">
+          <button class="btn-save" (click)="onSaveChanges()">
+            💾 Save Changes
+          </button>
+        </div>
+      </div>
+
+      <div class="aboutcollabwriting">
+        <div class="userimage">
+          <img [src]="postdata.imageUrl" alt="" />
+        </div>
+        <div class="posttitle">
+          {{ postdata.title }}
+        </div>
+        <div class="authorname">{{ postdata.username }}</div>
+        <div class="likes">
+          <div>
+            😘<span>{{ postdata.loveitcount }}</span>
+          </div>
+          <div>
+            🤣<span>{{ postdata.funnycount }}</span>
+          </div>
+          <div>
+            😕<span>{{ postdata.sadcount }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  
+  <div class="useraddtreefeature">
+    <div class="useraddtreepresenting">
+      <div>
+        <br />
+        
+        Presenting BeRony Land 🌳 <br> <span>
+          <br>&quot; Plant Tree <br> Save Paper Write Here &quot;<br>
+        </span> 
+      </div>
+      <span style="font-size: 28px;">
+
+        <p>Wanna Plant?</p> <br>
+        Create Your BeRony Account and Plant Through Your Profile Dashboard
+      </span>
+
+    </div>
+    <div class="beronylandvisual">
+      <iframe src="https://beronyuseraddtree1234.web.app" loading="lazy"
+      frameborder="0"
+      allowfullscreen></iframe>
+    </div>
+  </div>
 </div>

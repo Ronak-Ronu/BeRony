@@ -36,6 +36,7 @@ export class UserdashboardComponent implements OnInit{
   isFollowing: boolean = false;
   followingtrue:boolean = false;
   follwingfalse: boolean = false;
+  isPlanting:boolean=false;
 
 
   constructor(private service:WriteserviceService,
@@ -222,5 +223,13 @@ unfollowUser(currentuserid: string,userid:string)
   )
 }
 
+plantTree() {
 
+  const userId = this.loggedinuserid; 
+  
+  window.location.href = `https://beronyuseraddtree1234.web.app/${userId}`;
+  
+  }
+  
 }
+  
