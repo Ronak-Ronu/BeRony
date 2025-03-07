@@ -224,12 +224,16 @@ unfollowUser(currentuserid: string,userid:string)
 }
 
 plantTree() {
-
   const userId = this.loggedinuserid; 
   
   window.location.href = `https://beronyuseraddtree1234.web.app/${userId}`;
+  // window.location.href = `http://localhost:5173/${userId}`;
   
   }
+
+unplantTree(){
+
+}
   
 }
   

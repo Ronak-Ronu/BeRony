@@ -123,9 +123,11 @@
         </button>
         <br />
         <button (click)="shareProfile()">Share Profile</button>
-        <button (click)="plantTree()">
-          {{ isPlanting ? "Planting..." : "Plant Tree 🌱" }}
-        </button>
+        <div *ngIf="isViewingOwnProfile">
+          <button (click)="plantTree()">
+            {{ isPlanting ? "Planting..." : "Plant Tree 🌱" }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
