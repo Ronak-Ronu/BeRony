@@ -6,7 +6,8 @@ import { account } from '../../lib/appwrite';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
-
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-read',
   templateUrl: './read.component.html',
@@ -32,6 +33,7 @@ export class ReadComponent implements OnInit{
   useremotion:string="🙂"
   recentsearch: string[] = [];
   showHistory: boolean=false;
+  private searchSubject = new Subject<string>();
 
 
 ngOnInit(): void {
@@ -40,6 +42,13 @@ ngOnInit(): void {
     this.mode=encodeURIComponent(environment.mode);    
     this.readblogdata()
     this.getloggedinuserdata()
+    this.searchSubject.pipe(
+      debounceTime(300), // Wait 300ms after last keystroke
+      distinctUntilChanged() // Only emit if the value has changed
+    ).subscribe(query => {
+      this.searchQuery = query;
+      this.onSearch();
+    });
   }
 
   constructor(private readsevice:WriteserviceService,
@@ -84,11 +93,13 @@ ngOnInit(): void {
         }
   }
 
-  onSearch()
-  {
-    this.blogs=[]
-    this.readqueryblogdata(); 
+  onSearchInput(query: string) {
+    this.searchSubject.next(query);
+  }
 
+  onSearch() {
+    this.blogs = [];
+    this.readqueryblogdata();
   }
   savesearchquery(query:string)
     {  let searches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
