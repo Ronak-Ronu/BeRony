@@ -58,6 +58,7 @@ export class WriteComponent implements OnInit,AfterViewInit {
   showstickerwindow:boolean=false
   isdrawing:boolean=false
   postScheduleTime:Date | undefined
+  brushtype:string='pencil'
 
   @ViewChild('titleTextarea') titleTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('bodyTextarea') bodyTextarea!: ElementRef<HTMLTextAreaElement>;
@@ -75,7 +76,7 @@ export class WriteComponent implements OnInit,AfterViewInit {
   ngAfterViewInit() {
   this.canvas = new fabric.Canvas('fabricCanvas')
   // this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
-  this.canvas.freeDrawingBrush = new fabric.SprayBrush(this.canvas)
+  this.canvas.freeDrawingBrush = new fabric.PatternBrush(this.canvas)
   this.canvas.freeDrawingBrush.color = this.pickedcolor;
   this.canvas.freeDrawingBrush.width = this.brushsize;
 
@@ -100,8 +101,33 @@ export class WriteComponent implements OnInit,AfterViewInit {
     
 
   }
+  selectBrush(type: string) {
+    this.brushtype = type;
+    switch (type) {
+      case 'pencil':
+        this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
+        this.canvas.isDrawingMode = !this.canvas.isDrawingMode
+        this.isdrawing=!this.isdrawing      
+        break;
+      case 'spray':
+        this.canvas.freeDrawingBrush = new fabric.SprayBrush(this.canvas);
+        this.canvas.isDrawingMode = !this.canvas.isDrawingMode
+        this.isdrawing=!this.isdrawing
+        break;
+        case 'circle':
+          this.canvas.freeDrawingBrush = new fabric.CircleBrush(this.canvas);
+          this.canvas.isDrawingMode = !this.canvas.isDrawingMode
+          this.isdrawing=!this.isdrawing
+          break;
+      default:
+        this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
 
-
+    }
+    // Apply current color and size to the new brush
+    this.canvas.freeDrawingBrush.color = this.pickedcolor;
+    this.canvas.freeDrawingBrush.width = this.brushsize;
+  }
+  
 
 publishblog(publishdata: WriteModel) {
   const formData = new FormData();

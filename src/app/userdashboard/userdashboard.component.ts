@@ -37,6 +37,8 @@ export class UserdashboardComponent implements OnInit{
   followingtrue:boolean = false;
   follwingfalse: boolean = false;
   isPlanting:boolean=false;
+  userBadges: any[] = [];
+
 
 
   constructor(private service:WriteserviceService,
@@ -130,6 +132,7 @@ export class UserdashboardComponent implements OnInit{
       }
     )
   }
+
   fetchUserData(userId: string ) {
     this.service.getUserData(userId).subscribe(
       (data) => {
@@ -138,6 +141,7 @@ export class UserdashboardComponent implements OnInit{
         this.username = data.user.username;
         this.userEmotion = data.user.userEmotion;
         this.userBio = data.user.userBio;
+        this.userBadges = data.user.badges || [];  
         this.fetchUserPosts();
       },
       (error) => {
@@ -230,9 +234,17 @@ plantTree() {
   // window.location.href = `http://localhost:5173/${userId}`;
   
   }
-
+  
 unplantTree(){
-
+  const userId = this.loggedinuserid; 
+  this.service.deleteTree(userId).subscribe(
+    (response)=>{
+      this.toastr.success("Tree Unplanted 😥")
+    },
+    (error)=>{
+      this.toastr.warning("Something went wrong!")
+    }
+  )
 }
   
 }

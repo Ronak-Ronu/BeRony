@@ -50,7 +50,9 @@ ngOnInit(): void {
       this.onSearch();
     });
   }
-
+  ngOnDestroy() {
+    this.searchSubject.complete();
+  }
   constructor(private readsevice:WriteserviceService,
     private toastr: ToastrService,
     private cdr: ChangeDetectorRef,

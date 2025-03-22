@@ -3,7 +3,7 @@ import { WriteserviceService } from '../writeservice.service';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
-
+import * as fabric from 'fabric';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -12,13 +12,15 @@ import { ToastrService } from 'ngx-toastr';
 export class HomeComponent implements OnInit{
   // https://berony.web.app/collab/67274249002493a5ec52/6736eaca42540998b25ca0a2
   @ViewChild('memeGif') memeGif!: ElementRef<HTMLImageElement>;
-
+  @ViewChild('myCanvas') canvasEl!: ElementRef<HTMLCanvasElement>;
+  canvas!: fabric.Canvas;
   private socket!: Socket;
   text: string = ''; 
   postId: string = '6736eaca42540998b25ca0a2'; 
   userId: string = '67274249002493a5ec52'; 
   postdata:any
   isHidden: boolean=true;
+
   memeGifSrc:string=""
   constructor(
     private service: WriteserviceService,
@@ -31,8 +33,8 @@ export class HomeComponent implements OnInit{
 
     this.socket = io(
       
-      environment.beronyAPI 
-      // "http://localhost:3000"
+      // environment.beronyAPI 
+      "http://localhost:3000"
       , {
       auth: {
           userId: this.userId,  
@@ -47,10 +49,41 @@ export class HomeComponent implements OnInit{
           this.text = newText;
       });
     }
+ 
+    ngAfterViewInit() {
+      this.canvas = new fabric.Canvas('myCanvas');
+      this.resizeCanvas()
+      this.canvas.freeDrawingBrush = new fabric.CircleBrush(this.canvas);
+      this.canvas.freeDrawingBrush.color = "#8b8beb";
+      this.canvas.freeDrawingBrush.width = 100;
+      this.canvas.isDrawingMode = true;
+      
+    }
+    
+    resizeCanvas() {
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const aspectRatio = 2100 / 1000; // Original aspect ratio
+    
+      let width, height;
+      if (windowWidth / windowHeight > aspectRatio) {
+        height = windowHeight;
+        width = height * aspectRatio;
+      } else {
+        width = windowWidth;
+        height = width / aspectRatio;
+      }
+      this.canvas.setWidth(width);
+      this.canvas.setHeight(height);
+      this.canvas.setZoom(1); 
+      this.canvas.renderAll();
+    
+    
+    }
     showMeme(event: MouseEvent,gif:string) {
       this.memeGifSrc=gif
       this.isHidden = false;
-      this.moveMeme(event); // Update position instantly
+      this.moveMeme(event); 
     }
   
     moveMeme(event: MouseEvent) {

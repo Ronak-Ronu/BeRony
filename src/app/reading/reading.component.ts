@@ -9,6 +9,8 @@ import { environment } from '../../environments/environment';
 import { DomSanitizer, Meta, SafeHtml, Title } from '@angular/platform-browser';
 import axios from 'axios';
 import jsPDF from 'jspdf';
+import sanitizeHtml from 'sanitize-html';
+
 
 @Component({
   selector: 'app-reading',
@@ -85,8 +87,6 @@ export class ReadingComponent implements OnInit {
     const url = this.post.imageUrl || this.post.videoUrl;
     this.filetype = url.split('.').pop()?.toLowerCase();
     this.addJsonLdSchema();
-
-
   }
 
   addJsonLdSchema() {
@@ -128,14 +128,105 @@ export class ReadingComponent implements OnInit {
         console.warn('No voices available. Check browser support for Speech Synthesis API.');
     }
 }
-getSanitizedHtml(text: string): SafeHtml {
-  return this.sanitizer.bypassSecurityTrustHtml(text);
-}
-  sanitizeBodyContent() {
-    this.sanitizedBodyContent = this.sanitizer.bypassSecurityTrustHtml(this.post.bodyofcontent);
-  }
+sanitizeContent(content: string): SafeHtml {
+  const unescapedContent = content
+    .replace(/\\u003C/g, '<')
+    .replace(/\\u003E/g, '>')
+    .replace(/\\r\\n/g, '\n');
 
-  async getloggedinuserdata (){
+  const sanitized = sanitizeHtml(unescapedContent, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'script', 'iframe']),
+    allowedAttributes: {
+      'img': ['src', 'alt', 'style', 'width', 'height'],
+      'script': ['src', 'type'],
+      'iframe': ['src', 'width', 'height', 'style', 'frameborder', 'class', 'allowfullscreen']
+    },
+    allowedIframeHostnames: ['www.youtube.com', 'giphy.com'],
+    selfClosing: ['img', 'br', 'hr'],
+    allowedSchemes: ['http', 'https'],
+    transformTags: {
+      'img': (tagName, attribs) => {
+        if (attribs['src'] && attribs['src'].includes('giphy.com')) {
+          return {
+            tagName,
+            attribs: {
+              ...attribs,
+              width: '100%', 
+              height: 'auto',
+              style: 'width:100%; height: auto;' 
+            }
+          };
+        }
+        return { tagName, attribs };
+      },
+      'script': (tagName, attribs) => {
+        if (attribs['src'] && attribs['src'].includes('gist.github.com')) {
+          return { tagName, attribs: { ...attribs, type: 'text/javascript' } };
+        }
+        return { tagName: '', attribs: {} };
+      },
+      'iframe': (tagName, attribs) => {
+        if (attribs['src'] && (attribs['src'].includes('youtube.com') || attribs['src'].includes('giphy.com'))) {
+          return {
+            tagName,
+            attribs: {
+              ...attribs,
+              width: '100%', 
+              height: 'auto', 
+              style: 'width:100%; height: auto;' 
+            }
+          };
+        }
+        return { tagName, attribs };
+      }
+    },
+    parseStyleAttributes: true
+  });
+  return this.sanitizer.bypassSecurityTrustHtml(sanitized);
+}
+sanitizeBodyContent() {
+  this.sanitizedBodyContent = this.sanitizeContent(this.post.bodyofcontent);
+}
+
+getSanitizedHtml(text: string): SafeHtml {
+  return this.sanitizeContent(text);
+}
+
+// Rest of your methods remain unchanged
+readblogdatabyid() {
+  this.router.paramMap.subscribe(params => {
+    this.postid = params.get('postid');
+    this.service.getpublishpostdatabyid(this.postid).subscribe({
+      next: (data: WriteModel) => {
+        this.post = data;
+        this.seotitle = this.stripHTML(data.title);
+        this.title.setTitle(this.seotitle);
+        this.meta.addTags([
+          { name: 'description', content: this.stripHTML(data.bodyofcontent) },
+          { name: 'keywords', content: data.tags.toLocaleString() },
+          { property: 'og:title', content: this.stripHTML(data.bodyofcontent) },
+          { property: 'og:description', content: data.bodyofcontent },
+          { name: 'keywords', content: `${data.tags.toLocaleString()}` },
+          { property: 'og:image', content: data.imageUrl },
+          { property: 'og:url', content: window.location.href },
+        ]);
+        this.tagsarray = this.post.tags;
+        this.collabos = this.post.collaborators;
+        this.collaboratorsUsernames = [];
+        this.collabos.forEach(collaboratorId => {
+          this.fetchUserData(collaboratorId);
+        });
+        this.sanitizeBodyContent();
+      },
+      error: (error) => {
+        console.error('Error fetching post data:', error);
+      }
+    });
+  });
+}
+
+
+async getloggedinuserdata (){
     this.loggedInUserAccount = await account.get();
     if (this.loggedInUserAccount) {
       this.username=this.loggedInUserAccount.name;
@@ -158,46 +249,46 @@ getSanitizedHtml(text: string): SafeHtml {
     );
   }
 
-  readblogdatabyid(){
+  // readblogdatabyid(){
 
-  this.router.paramMap.subscribe(params => {
-    this.postid = params.get('postid');
-    this.service.getpublishpostdatabyid(this.postid).subscribe({
-            next: (data: WriteModel) => {
-                this.post = data;
-                console.log(this.post);
-                this.seotitle=this.stripHTML(data.title);
-                this.title.setTitle(this.seotitle);
-                this.meta.addTags([
-                  { name: 'description', content: this.stripHTML(data.bodyofcontent) },
-                  { name: 'keywords', content: data.tags.toLocaleString() },
-                  { property: 'og:title', content: this.stripHTML(data.bodyofcontent) },
-                  { property: 'og:description', content: data.bodyofcontent },
-                  { name: 'keywords', content: `${data.tags.toLocaleString() }`},
-                  { property: 'og:image', content: data.imageUrl },
-                  { property: 'og:url', content:  window.location.href},
-                ]);
-                // this.filetype = this.post.imageUrl.split('.').pop();
-                this.tagsarray = this.post.tags;
-                this.collabos=this.post.collaborators
+  // this.router.paramMap.subscribe(params => {
+  //   this.postid = params.get('postid');
+  //   this.service.getpublishpostdatabyid(this.postid).subscribe({
+  //           next: (data: WriteModel) => {
+  //               this.post = data;
+  //               console.log(this.post);
+  //               this.seotitle=this.stripHTML(data.title);
+  //               this.title.setTitle(this.seotitle);
+  //               this.meta.addTags([
+  //                 { name: 'description', content: this.stripHTML(data.bodyofcontent) },
+  //                 { name: 'keywords', content: data.tags.toLocaleString() },
+  //                 { property: 'og:title', content: this.stripHTML(data.bodyofcontent) },
+  //                 { property: 'og:description', content: data.bodyofcontent },
+  //                 { name: 'keywords', content: `${data.tags.toLocaleString() }`},
+  //                 { property: 'og:image', content: data.imageUrl },
+  //                 { property: 'og:url', content:  window.location.href},
+  //               ]);
+  //               // this.filetype = this.post.imageUrl.split('.').pop();
+  //               this.tagsarray = this.post.tags;
+  //               this.collabos=this.post.collaborators
 
-                // console.log(this.filetype);
-                // console.log(this.tagsarray);
-                // console.log(this.collabos);
-                this.collaboratorsUsernames = []; // Reset collaborators' usernames
-                this.collabos.forEach(collaboratorId => {
-                  this.fetchUserData(collaboratorId);
-                });
+  //               // console.log(this.filetype);
+  //               // console.log(this.tagsarray);
+  //               // console.log(this.collabos);
+  //               this.collaboratorsUsernames = []; // Reset collaborators' usernames
+  //               this.collabos.forEach(collaboratorId => {
+  //                 this.fetchUserData(collaboratorId);
+  //               });
         
         
-                this.sanitizeBodyContent()
-            },
-            error: (error) => {
-                console.error('Error fetching post data:', error);
-            }
-        });
-    });
-  }
+  //               this.sanitizeBodyContent()
+  //           },
+  //           error: (error) => {
+  //               console.error('Error fetching post data:', error);
+  //           }
+  //       });
+  //   });
+  // }
 
 
   share() {

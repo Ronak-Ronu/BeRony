@@ -5,10 +5,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../environments/environment'
 // import { io } from 'socket.io-client';
 
- interface PromptRequest {
-  prompt: string;
-}
-
 @Injectable()
 export class WriteserviceService {
   url:string;
@@ -100,6 +96,11 @@ export class WriteserviceService {
     clearPostsCache(): Observable<any> {
       return this.http.delete(`${this.baseurl}/clear-posts`);
     }
+
+    deleteTree(userId:String):Observable<any>{
+      return this.http.delete(`${this.baseurl}/tree/${userId}`)
+    }
+    
     getsearchpostdata(tag: string | null=null,query:string='')
     {
       const params: any = {};

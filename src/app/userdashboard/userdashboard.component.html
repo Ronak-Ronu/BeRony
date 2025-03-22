@@ -127,7 +127,20 @@
           <button (click)="plantTree()">
             {{ isPlanting ? "Planting..." : "Plant Tree 🌱" }}
           </button>
+          <button (click)="unplantTree()">
+            UnPlant Tree 🌱
+          </button>
         </div>
+        <div class="user-info">
+          
+          <div *ngIf="userBadges.length > 0" class="badges">
+            <span *ngFor="let badge of userBadges" class="badge">
+              {{ badge.name }}
+            </span>
+          </div>
+        </div>
+        
+        
       </div>
     </div>
   </div>

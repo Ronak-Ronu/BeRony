@@ -1,240 +1,339 @@
 <div class="writemainbody">
-    <div class="generateimagepopup" *ngIf="openimagegeneratepopup" >
-        <div class="closeimagesign" style="cursor: pointer;" (click)="closeImagePopup()">
-            X
-        </div>
-        <input [(ngModel)]="prompt"  placeholder="Enter your prompt" />
-        <button (click)="generateImage()" class="toolbarbutton">Generate Image</button>
-    
+  <div class="generateimagepopup" *ngIf="openimagegeneratepopup">
+    <div
+      class="closeimagesign"
+      style="cursor: pointer"
+      (click)="closeImagePopup()"
+    >
+      X
+    </div>
+    <input [(ngModel)]="prompt" placeholder="Enter your prompt" />
+    <button (click)="generateImage()" class="toolbarbutton">
+      Generate Image
+    </button>
 
-        <div>
-            <div class="image-gallery">
-                <div *ngFor="let imageUrl of photos" class="image-item">
-                  <img [src]="imageUrl"(click)="selectThisImage(imageUrl)" alt="Unsplash Image" (click)="closeImagePopup()" />
-                </div>
-              </div>
+    <div>
+      <div class="image-gallery">
+        <div *ngFor="let imageUrl of photos" class="image-item">
+          <img
+            [src]="imageUrl"
+            (click)="selectThisImage(imageUrl)"
+            alt="Unsplash Image"
+            (click)="closeImagePopup()"
+          />
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="previewWindow" *ngIf="ispreview">
+    <div
+      style="cursor: pointer; font-size: 25px; color: blueviolet"
+      (click)="closepreview()"
+    >
+      <u>Close</u>
     </div>
 
-
-    <div class="previewWindow" *ngIf="ispreview">
-        <div style="cursor: pointer;font-size: 25px;color: blueviolet;" (click)="closepreview()"><u>Close</u> </div>
-        
-        <div class="previewcontentbody">
-
-            <div class="titleinpreview" [innerHTML]="previewTitle"></div>
-            <hr>
-            <div class="contentinpreview" [innerHTML]="previewBodyContent"></div>
-            <hr>
-            <div class="endnoteinpreview" [innerHTML]="previewEndNote"></div>
-             
-        </div>
-   
+    <div class="previewcontentbody">
+      <div class="titleinpreview" [innerHTML]="previewTitle"></div>
+      <hr />
+      <div class="contentinpreview" [innerHTML]="previewBodyContent"></div>
+      <hr />
+      <div class="endnoteinpreview" [innerHTML]="previewEndNote"></div>
     </div>
-    <div class="headingwrite">
-        <p>WRITE</p>
-    </div>
-   
-    <div class="bodyofwriting">
-     
+  </div>
+  <div class="headingwrite">
+    <p>WRITE</p>
+  </div>
+
+  <div class="bodyofwriting">
     <div class="container">
-       
-        <form #writecontentform="ngForm">
-        <div class="toolbar" > 
-            <button style="cursor: pointer;" class="toolbarbutton" (click)="toggleCodeEditor()">Code</button>
-            <div class="code-editor-popup" *ngIf="showCodeEditor">
-                <div style="cursor: pointer;" (click)="toggleCodeEditor()">Save & Close</div>
-                <textarea 
-                          placeholder="print('HAPPY CODING')"
-                          name="codecontent"
-                          #codecontent="ngModel"
-                          [(ngModel)]="editCodeContent">
-                </textarea>
+      <form #writecontentform="ngForm">
+        <div class="toolbar">
+          <button
+            style="cursor: pointer"
+            class="toolbarbutton"
+            (click)="toggleCodeEditor()"
+          >
+            Code
+          </button>
+          <div class="code-editor-popup" *ngIf="showCodeEditor">
+            <div style="cursor: pointer" (click)="toggleCodeEditor()">
+              Save & Close
             </div>
-            
-            <button style="cursor: pointer;" class="toolbarbutton" (click)="toggleImageUploadPopup()" >FILE</button>
-            <!-- <button style="cursor: pointer;" class="toolbarbutton" (click)="opencanvas()">Canvas</button> -->
+            <textarea
+              placeholder="print('HAPPY CODING')"
+              name="codecontent"
+              #codecontent="ngModel"
+              [(ngModel)]="editCodeContent"
+            >
+            </textarea>
+          </div>
 
-            <div class="popup-backdrop" *ngIf="showImageUploadPopup" (click)="closePopup()">
-                <div class="popup-modal" (click)="$event.stopPropagation()">
-                    <h3>Select Thumbnail</h3>
-                    <!-- <form (submit)="uploadBlogImage()"> -->
-                        <i>Image/Video size must be <b>less than 20MB</b> </i>
-                        <input type="file" (change)="handleImageUpload($event)" name="imageUrl">
-                        <!-- <button type="submit">Upload</button> -->
-                        <br><br>
-                    <!-- </form> -->
-                  <button (click)="closePopup()">Close</button>
-                </div>
-              </div>
-              
-            <button style="cursor: pointer;" class="toolbarbutton" (click)="generateimagewindow()">UnSplash</button>
-            <button style="cursor: pointer;" class="toolbarbutton" (click)="preview()" >PREVIEW</button>
+          <button
+            style="cursor: pointer"
+            class="toolbarbutton"
+            (click)="toggleImageUploadPopup()"
+          >
+            FILE
+          </button>
+          <!-- <button style="cursor: pointer;" class="toolbarbutton" (click)="opencanvas()">Canvas</button> -->
+
+          <div
+            class="popup-backdrop"
+            *ngIf="showImageUploadPopup"
+            (click)="closePopup()"
+          >
+            <div class="popup-modal" (click)="$event.stopPropagation()">
+              <h3>Select Thumbnail</h3>
+              <!-- <form (submit)="uploadBlogImage()"> -->
+              <i>Image/Video size must be <b>less than 20MB</b> </i>
+              <input
+                type="file"
+                (change)="handleImageUpload($event)"
+                name="imageUrl"
+              />
+              <!-- <button type="submit">Upload</button> -->
+              <br /><br />
+              <!-- </form> -->
+              <button (click)="closePopup()">Close</button>
+            </div>
+          </div>
+
+          <button
+            style="cursor: pointer"
+            class="toolbarbutton"
+            (click)="generateimagewindow()"
+          >
+            UnSplash
+          </button>
+          <button
+            style="cursor: pointer"
+            class="toolbarbutton"
+            (click)="preview()"
+          >
+            PREVIEW
+          </button>
         </div>
         <div *ngIf="selectedimagefile" class="selectedimagefilecss">
-            <img [src]="imageUrl" width="35%" height="35%" alt="">
-            <!-- <b>{{selectedimagefile.name}}</b> -->
+          <img [src]="imageUrl" width="35%" height="35%" alt="" />
+          <!-- <b>{{selectedimagefile.name}}</b> -->
         </div>
 
         <div class="canvasdiv">
-            <div *ngIf="showstickerwindow">
-                <div>
-                    <div style="display: flex;align-items: center; justify-content: space-between;">
-                        <div class="inputgif">
-
-                            <input class="inputgifstyle"
-                            type="text" 
-                            name="gifSearchQuery"
-                            [(ngModel)]="gifSearchQuery" 
-                            (input)="searchGifs()" 
-                            placeholder="Comment gif?" 
-                            style="font-size: 27px;"
-                            />
-                        </div>
-                        <div class="closebtn" style="cursor: pointer;font-size: 32px;">
-                            <span (click)="addSticker()">X</span>
-                        </div>
-                    </div>
-                    
-                    <div *ngIf="gifs.length">
-                      <div class="gif-container">
-                        <div  style="background-color: rgb(190, 190, 190);"
-                          class="gif" 
-                          *ngFor="let gif of gifs" 
-                          (click)="selectGif(gif)">
-                          <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title"/>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-            
-          
-            </div>
-            <div class="canvaseditbuttons" *ngIf="!showstickerwindow">
-                <!-- <button (click)="addRect()">addRect</button>  -->
-                <span style="font-size: 19px;">Brush Setting:</span>
-                <div style="display: flex;flex-direction: row;">
-                    <input type="color" [(ngModel)]="pickedcolor" name="pickedcolor" (change)="setBrushColor()" />
-                    <input type="range" [(ngModel)]="brushsize"  name="brushsize" placeholder="brush size" (change)="setBrushSize()"  />
-                </div>
-                <div>
-                    <input type="file" (change)="addImageToCanvas($event)" />
-                  </div>
-                <button (click)="clearcanvas()" [disabled]="isdrawing">Clear</button> 
-                <button (click)="draw()" >Draw</button>   
-                <button (click)="addText()" [disabled]="isdrawing">Text</button>   
-                <button (click)="addSticker()" [disabled]="isdrawing">Sticker</button>  
-                <button (click)="saveCanvas()" [disabled]="isdrawing">Save</button>
-
-            </div>
+          <div *ngIf="showstickerwindow">
             <div>
-                <canvas id="fabricCanvas" width="900" height="500" class="canvas" ></canvas>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                "
+              >
+                <div class="inputgif">
+                  <input
+                    class="inputgifstyle"
+                    type="text"
+                    name="gifSearchQuery"
+                    [(ngModel)]="gifSearchQuery"
+                    (input)="searchGifs()"
+                    placeholder="Comment gif?"
+                    style="font-size: 27px"
+                  />
+                </div>
+                <div class="closebtn" style="cursor: pointer; font-size: 32px">
+                  <span (click)="addSticker()">X</span>
+                </div>
+              </div>
+
+              <div *ngIf="gifs.length">
+                <div class="gif-container">
+                  <div
+                    style="background-color: rgb(190, 190, 190)"
+                    class="gif"
+                    *ngFor="let gif of gifs"
+                    (click)="selectGif(gif)"
+                  >
+                    <img
+                      [src]="gif.images.fixed_height_small.url"
+                      [alt]="gif.title"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        
+          <div class="canvaseditbuttons" *ngIf="!showstickerwindow">
+            <!-- <button (click)="addRect()">addRect</button>  -->
+            <span style="font-size: 19px">Brush Setting:</span>
+            <div style="display: flex; flex-direction: row">
+              <input
+                type="color"
+                [(ngModel)]="pickedcolor"
+                name="pickedcolor"
+                (change)="setBrushColor()"
+              />
+              <input
+                type="range"
+                [(ngModel)]="brushsize"
+                name="brushsize"
+                placeholder="brush size"
+                (change)="setBrushSize()"
+              />
+            </div>
+            <div>
+              <input type="file" (change)="addImageToCanvas($event)" />
+            </div>
+            <div style="margin-top: 5px;">
+                <span style="font-size: 14px;">Brush Type:</span>
+                <button (click)="selectBrush('pencil')" style="cursor: pointer;font-size: 17px;margin-right: 2px;" [disabled]="isdrawing">Pencil</button>
+                <button (click)="selectBrush('circle')" style="cursor: pointer;font-size: 17px;margin-right: 2px;" [disabled]="isdrawing">Circle</button>
+                <button (click)="selectBrush('spray')"  style="cursor: pointer;font-size: 17px;"[disabled]="isdrawing">Spray</button>
+            </div>
+            <button (click)="clearcanvas()" [disabled]="isdrawing">
+              Clear
+            </button>
+            <button (click)="draw()">Draw</button>
+            <button (click)="addText()" [disabled]="isdrawing">Text</button>
+            <button (click)="addSticker()" [disabled]="isdrawing">
+              Sticker
+            </button>
+            <button (click)="saveCanvas()" [disabled]="isdrawing">Save</button>
+          </div>
+          <div>
+            <canvas
+              id="fabricCanvas"
+              width="900"
+              height="500"
+              class="canvas"
+            ></canvas>
+          </div>
+        </div>
 
         <div class="writecontentarea paper-style">
+          <textarea
+            #titleTextarea
+            rows="2"
+            placeholder="Title Goes Here"
+            name="title"
+            #title="ngModel"
+            maxlength="300"
+            [(ngModel)]="edittitle"
+            required
+          >
+          </textarea>
 
-        
-                <textarea 
-                #titleTextarea
-                rows="2"
-                 placeholder="Title Goes Here"
-                 name="title" 
-                 #title="ngModel"
-                 maxlength="300"
-                 [(ngModel)]="edittitle"
-                 required
-                 >
-                
-                </textarea>
+          <textarea
+            #bodyTextarea
+            rows="17"
+            maxlength="3000"
+            placeholder="Write whatever you like! TRY: <h1>Hello World</h1>"
+            name="bodyofcontent"
+            #bodyofcontent="ngModel"
+            [(ngModel)]="editbodycontent"
+            required
+          ></textarea>
 
-                <textarea 
-                #bodyTextarea
-               rows="17"
-               maxlength="3000"
-               placeholder="Write whatever you like! TRY: <h1>Hello World</h1>"
-               name="bodyofcontent" 
-               #bodyofcontent="ngModel"
-               [(ngModel)]="editbodycontent"
-               required
-               ></textarea>          
+          <textarea
+            #endnoteTextarea
+            rows="2"
+            maxlength="300"
+            placeholder="Share your post script/ending note"
+            name="endnotecontent"
+            #endnotecontent="ngModel"
+            required
+            [(ngModel)]="editendnotecontent"
+          ></textarea>
 
-                <textarea 
-                #endnoteTextarea
-                rows="2" 
-                maxlength="300" 
-                placeholder="Share your post script/ending note"
-                name="endnotecontent"
-                #endnotecontent="ngModel"
-                required
-                [(ngModel)]="editendnotecontent"
-                ></textarea>
+          <div class="tagsinputarea">
+            <input
+              [(ngModel)]="tagInput"
+              name="tagInput"
+              (keydown)="onKeyDown($event)"
+              placeholder="Press Enter to add tag"
+            />
+          </div>
+          <label>Schedule Post (Optional):</label>
+          <input
+            type="datetime-local"
+            [(ngModel)]="postScheduleTime"
+            name="postScheduleTime"
+          />
 
-             <div class="tagsinputarea">
-                <input
-                    [(ngModel)]="tagInput"
-                    name="tagInput"
-                    (keydown)="onKeyDown($event)"
-                    placeholder="Press Enter to add tag"
-                />
-            </div>
-            <label>Schedule Post (Optional):</label>
-            <input type="datetime-local" [(ngModel)]="postScheduleTime"   name="postScheduleTime" />
-          
-            <div class="tags">
-                <span *ngFor="let tag of tags" class="tag">{{ tag }}
-                    <div style="cursor: pointer;color: blueviolet;font-weight: bolder;" [@tagAnimation] (click)="removeTag(tag)">X</div>
-                </span>
-            </div>
-            <!-- <label for="scheduleDate">Schedule Post</label>
+          <div class="tags">
+            <span *ngFor="let tag of tags" class="tag"
+              >{{ tag }}
+              <div
+                style="cursor: pointer; color: blueviolet; font-weight: bolder"
+                [@tagAnimation]
+                (click)="removeTag(tag)"
+              >
+                X
+              </div>
+            </span>
+          </div>
+          <!-- <label for="scheduleDate">Schedule Post</label>
             <input id="scheduleDate" type="datetime-local" [(ngModel)]="postScheduleInput" name="postScheduleInput" /> -->
-          
         </div>
 
         <div class="footerbuttons">
-            <button class="footerbutton" (click)="publishblog(writecontentform.value)" style="cursor: pointer;">PUBLISH</button>
-            <button class="footerbutton" (click)="saveasdraft(writecontentform.value)"style="cursor: pointer;" >DRAFT IT</button>
+          <button
+            class="footerbutton"
+            (click)="publishblog(writecontentform.value)"
+            style="cursor: pointer"
+          >
+            PUBLISH
+          </button>
+          <button
+            class="footerbutton"
+            (click)="saveasdraft(writecontentform.value)"
+            style="cursor: pointer"
+          >
+            DRAFT IT
+          </button>
         </div>
-
-    </form>
+      </form>
     </div>
-   
+
     <div class="draftcontainer">
-
-        <div class="headerofdraft">
-            <p>DRAFTS </p>
-            <div (click)="refreshcomponent()" class="refreshbtn" >⟳</div>
-        </div>
-        <div *ngIf="draftblogs && draftblogs.length > 0 ; else noDrafts">
-
-        <div *ngFor="let item of draftblogs ">
-            <div class="draftsbody">
-            
-                <div class="draft1">
-                    <!-- <p>TITLE OF THE DRAFT</p> -->
-                     <p [innerHTML]="item.title">
-                        <!-- {{item.title}} -->
-                    </p>
-                    <button class="continuewritingbutton" (click)="publishdraft(item)" style="cursor: pointer;">PUBLISH</button>
-                    <button class="continuewritingbutton" (click)="editdraft(item)" style="cursor: pointer;">EDIT</button>
-                </div>
-                
+      <div class="headerofdraft">
+        <p>DRAFTS</p>
+        <div (click)="refreshcomponent()" class="refreshbtn">⟳</div>
+      </div>
+      <div *ngIf="draftblogs && draftblogs.length > 0; else noDrafts">
+        <div *ngFor="let item of draftblogs">
+          <div class="draftsbody">
+            <div class="draft1">
+              <!-- <p>TITLE OF THE DRAFT</p> -->
+              <p [innerHTML]="item.title">
+                <!-- {{item.title}} -->
+              </p>
+              <button
+                class="continuewritingbutton"
+                (click)="publishdraft(item)"
+                style="cursor: pointer"
+              >
+                PUBLISH
+              </button>
+              <button
+                class="continuewritingbutton"
+                (click)="editdraft(item)"
+                style="cursor: pointer"
+              >
+                EDIT
+              </button>
             </div>
+          </div>
         </div>
+      </div>
+
+      <ng-template #noDrafts>
+        <div class="draftsbody">
+          <div class="draft1" style="text-align: center">
+            <p>NO DRAFTS</p>
+          </div>
+        </div>
+      </ng-template>
     </div>
-        
-        <ng-template #noDrafts>
-            <div class="draftsbody">
-                <div class="draft1" style="text-align: center;">
-                    <p>NO DRAFTS </p>
-                </div>
-            </div>
-        </ng-template>
-</div>
-
-</div>
-
-
-
+  </div>
 </div>
