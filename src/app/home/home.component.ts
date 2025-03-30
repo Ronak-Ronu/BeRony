@@ -16,11 +16,12 @@ export class HomeComponent implements OnInit{
   canvas!: fabric.Canvas;
   private socket!: Socket;
   text: string = ''; 
-  postId: string = '6736eaca42540998b25ca0a2'; 
-  userId: string = '67274249002493a5ec52'; 
+  postId: string = ''; 
+  userId: string = ''; 
   postdata:any
   isHidden: boolean=true;
-
+  username: string = '';
+  cursors: { [key: string]: { x: number; y: number; username: string } } = {};
   memeGifSrc:string=""
   constructor(
     private service: WriteserviceService,
@@ -30,15 +31,15 @@ export class HomeComponent implements OnInit{
   ngOnInit(): void {
 
     this.fetchPostContent();
+    this.username = this.userId ? 'UserFromAppwrite' : 'Guest';
 
     this.socket = io(
-      
-      // environment.beronyAPI 
-      "http://localhost:3000"
+      environment.beronyAPI 
+      // "http://localhost:3000"
       , {
       auth: {
           userId: this.userId,  
-          postId: this.postId   
+          postId: this.postId,
         }
       });
       this.service.text$.subscribe((newText: string) => {
@@ -47,6 +48,14 @@ export class HomeComponent implements OnInit{
       
       this.socket.on("textChange", (newText:string) => {
           this.text = newText;
+      });
+      this.socket.on("users", (users: { userId: string; username: string; x: number; y: number }[]) => {
+        this.cursors = {};
+        users.forEach((user) => {
+          if (user.userId !== this.userId) { // Don't show own cursor
+            this.cursors[user.userId || user.username] = { x: user.x, y: user.y, username: user.username };
+          }
+        });
       });
     }
  
@@ -63,7 +72,7 @@ export class HomeComponent implements OnInit{
     resizeCanvas() {
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
-      const aspectRatio = 2100 / 1000; // Original aspect ratio
+      const aspectRatio = 2100 / 1000; 
     
       let width, height;
       if (windowWidth / windowHeight > aspectRatio) {

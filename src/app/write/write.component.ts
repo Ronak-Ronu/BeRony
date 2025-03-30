@@ -59,6 +59,8 @@ export class WriteComponent implements OnInit,AfterViewInit {
   isdrawing:boolean=false
   postScheduleTime:Date | undefined
   brushtype:string='pencil'
+  showstickerwindow1:boolean=false
+  cursorPosition: number = 0;
 
   @ViewChild('titleTextarea') titleTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('bodyTextarea') bodyTextarea!: ElementRef<HTMLTextAreaElement>;
@@ -92,15 +94,37 @@ export class WriteComponent implements OnInit,AfterViewInit {
     bodyTextarea.addEventListener('input', () => {
       bodyTextarea.style.height = 'auto';
       bodyTextarea.style.height = `${bodyTextarea.scrollHeight}px`;
+      this.checkForGifKeyword(bodyTextarea);
     });
     endnoteTextarea.addEventListener('input', () => {
       endnoteTextarea.style.height = 'auto';
       endnoteTextarea.style.height = `${endnoteTextarea.scrollHeight}px`;
     });
 
+    bodyTextarea.addEventListener('keyup', () => {
+      this.cursorPosition = bodyTextarea.selectionStart;
+    });
+    bodyTextarea.addEventListener('click', () => {
+      this.cursorPosition = bodyTextarea.selectionStart;
+    });
+
     
 
   }
+
+  checkForGifKeyword(textarea: HTMLTextAreaElement) {
+    const value = textarea.value;
+    const cursorPos = textarea.selectionStart;
+    const textBeforeCursor = value.substring(0, cursorPos);
+    const lastWord = textBeforeCursor.split(/\s+/).pop();
+
+    if (lastWord === '@gif') {
+      this.showstickerwindow1 = true;
+      this.gifSearchQuery = ''; // Reset search query
+      this.searchGifs(); // Show initial GIFs
+    }
+  }
+
   selectBrush(type: string) {
     this.brushtype = type;
     switch (type) {
@@ -518,10 +542,13 @@ addImageToCanvas(event: Event): void {
 
   addSticker()
   {
-    this.showstickerwindow=!this.showstickerwindow
+    this.showstickerwindow = !this.showstickerwindow;
   }
 
-
+  addSticker1()
+  {
+    this.showstickerwindow1 = !this.showstickerwindow1;
+  }
   async searchGifs() {
     const apiKey = environment.giphyAPIKEY; // Replace with your Giphy API key
     try {
@@ -543,7 +570,20 @@ addImageToCanvas(event: Event): void {
   selectGif(gif: any) {
     // const gifUrl = gif.images.original.url
     const gifUrl=gif.images.fixed_height.url
-    
+    const imgTag = `<img src="${gifUrl}" alt="GIF" style="max-width: 200px; height: auto;">`;
+    const textarea = this.bodyTextarea.nativeElement;
+    const currentValue = textarea.value;
+    const textBefore = currentValue.substring(0, this.cursorPosition - 4);
+    const textAfter = currentValue.substring(this.cursorPosition);
+
+    this.editbodycontent = textBefore + imgTag + textAfter;
+    this.showstickerwindow = false;
+    this.cdr.detectChanges();
+
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+
+
     console.log('Click to send gif:', gifUrl);  
     const imageElement = document.createElement('img');
     imageElement.crossOrigin = 'anonymous'; 
@@ -554,10 +594,10 @@ addImageToCanvas(event: Event): void {
       this.canvas.add(image);
       this.canvas.setActiveObject(image);
       image.scale(0.7)
-
       this.canvas.renderAll();
   }
 }
+
   
 }
 

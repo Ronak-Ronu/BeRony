@@ -209,7 +209,24 @@
             ></canvas>
           </div>
         </div>
-
+        <div *ngIf="showstickerwindow1" class="gif-picker-popup">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <input
+              class="inputgifstyle"
+              type="text"
+              name="gifSearchQuery"
+              [(ngModel)]="gifSearchQuery"
+              (input)="searchGifs()"
+              placeholder="Search GIFs"
+            />
+            <span style="cursor: pointer; font-size: 32px;" (click)="addSticker1()">X</span>
+          </div>
+          <div class="gif-container" *ngIf="gifs.length">
+            <div class="gif" *ngFor="let gif of gifs" (click)="selectGif(gif)">
+              <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title" />
+            </div>
+          </div>
+        </div>
         <div class="writecontentarea paper-style">
           <textarea
             #titleTextarea
@@ -227,7 +244,7 @@
             #bodyTextarea
             rows="17"
             maxlength="3000"
-            placeholder="Write whatever you like! TRY: <h1>Hello World</h1>"
+            placeholder="Try @gif to add gifs"
             name="bodyofcontent"
             #bodyofcontent="ngModel"
             [(ngModel)]="editbodycontent"
