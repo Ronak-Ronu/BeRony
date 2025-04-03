@@ -84,8 +84,9 @@
         </div>
       </div>
 
-      <div class="collabwriting">
+      <div class="collabwriting" style="position: relative;">
         <textarea
+        #textarea
           [(ngModel)]="text"
           (input)="onTextChange()"
           placeholder="Start collaborating here..."

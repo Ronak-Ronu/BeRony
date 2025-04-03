@@ -15,7 +15,7 @@ export class WriteserviceService {
   baseurl:string
   
   // private socket = io(environment.beronyAPI); 
-  private textSubject = new BehaviorSubject<string>(''); 
+  textSubject = new BehaviorSubject<string>(''); 
   text$ = this.textSubject.asObservable();
 
   constructor(private http:HttpClient) {
