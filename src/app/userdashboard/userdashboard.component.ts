@@ -52,7 +52,6 @@ export class UserdashboardComponent implements OnInit{
     this.project = encodeURIComponent(environment.project);
     this.mode = encodeURIComponent(environment.mode);
   
-    // Fetch logged-in user details
     this.loggedInUserAccount = await account.get();
     this.loggedinuserid = this.loggedInUserAccount?.$id || '';
   
@@ -136,7 +135,7 @@ export class UserdashboardComponent implements OnInit{
   fetchUserData(userId: string ) {
     this.service.getUserData(userId).subscribe(
       (data) => {
-        console.log('Fetched user data:', data);  // Debugging log
+        console.log('Fetched user data:', data);  
         this.userData = data.user;
         this.username = data.user.username;
         this.userEmotion = data.user.userEmotion;
@@ -230,8 +229,8 @@ unfollowUser(currentuserid: string,userid:string)
 plantTree() {
   const userId = this.loggedinuserid; 
   
-  window.location.href = `https://beronyuseraddtree1234.web.app/${userId}`;
-  // window.location.href = `http://localhost:5173/${userId}`;
+  // window.location.href = `https://beronyuseraddtree1234.web.app/${userId}`;
+  window.location.href = `http://localhost:5173/${userId}`;
   
   }
   
