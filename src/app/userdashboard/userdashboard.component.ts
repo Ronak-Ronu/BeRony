@@ -39,8 +39,6 @@ export class UserdashboardComponent implements OnInit{
   isPlanting:boolean=false;
   userBadges: any[] = [];
 
-
-
   constructor(private service:WriteserviceService,
     private route: ActivatedRoute,
     private toastr: ToastrService
@@ -229,11 +227,32 @@ unfollowUser(currentuserid: string,userid:string)
 plantTree() {
   const userId = this.loggedinuserid; 
   
-  // window.location.href = `https://beronyuseraddtree1234.web.app/${userId}`;
-  window.location.href = `http://localhost:5173/${userId}`;
+  window.location.href = `https://beronyuseraddtree1234.web.app/${userId}`;
+  // window.location.href = `http://localhost:5173/${userId}`;
   
   }
   
+
+  // profilecard() {
+  //   const userId = this.loggedinuserid; 
+  //   window.location.href = `https://beronyuseraddtree1234.web.app/threedprofile/${userId}`;
+  //   // window.location.href = `http://localhost:5173/${userId}`;
+  //   }
+
+  profilecard() {
+    const userId = this.loggedinuserid;
+    const queryParams = new URLSearchParams({
+      username: this.username || "Unknown User",
+      userBio: this.userBio || "No bio",
+      userEmotion: this.userEmotion || "😊",
+      imageurl: this.imageurl || "",
+      totalPosts: this.posts.length.toString() || "0",
+    }).toString();
+  
+    window.location.href = `https://beronyuseraddtree1234.web.app/threedprofile/${userId}?${queryParams}`;
+    // For local testing:
+    // window.location.href = `http://localhost:5173/threedprofile/${userId}?${queryParams}`;
+  }
 unplantTree(){
   const userId = this.loggedinuserid; 
   this.service.deleteTree(userId).subscribe(
