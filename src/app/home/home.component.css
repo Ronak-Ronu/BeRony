@@ -107,8 +107,9 @@
   width: 290px;
   height: auto; 
   margin-bottom: 0%;
-  
 }
+
+
 
 .homepageContainer{
   isolation: isolate;
@@ -317,6 +318,46 @@ textarea:focus{
   width: 460px;
 }
 
+/* .userprofilecardfeature{
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 20px;
+  margin-top: 300px;
+  margin-left: 10px;
+  margin-bottom: 100px;
+  z-index: 500;
+  position: relative;
+} */
+.userprofilecardfeature {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  margin: 80px 10px;
+}
+
+.userprofilecardpresenting{
+  position: absolute;
+  margin-top: 200px;
+  margin-right: 800px;
+  color: white;
+  font-size: 50px;
+  font-weight: bolder;
+}
+
+.beronyusercardvisual{
+  margin-top: 200px;
+}
+
+
+.beronyusercardvisual iframe{
+  width: 70vw;
+  height: 690px;
+  border-radius: 50px;
+  z-index: 600;
+}
+
 
 @media (max-width: 600px) {
   .bodyelement {
@@ -513,6 +554,7 @@ textarea:focus{
   border-radius: 20px;
   transition: transform 0.3s ease-in-out;
 }
+
 .useraddtreepresenting
 {
   width: 90%;font-size: 28px;
