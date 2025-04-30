@@ -250,6 +250,7 @@ plantTree() {
     }).toString();
   
     window.location.href = `https://beronyuseraddtree1234.web.app/threedprofile/${userId}?${queryParams}`;
+   
     // For local testing:
     // window.location.href = `http://localhost:5173/threedprofile/${userId}?${queryParams}`;
   }
