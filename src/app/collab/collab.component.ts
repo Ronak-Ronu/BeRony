@@ -52,9 +52,9 @@ export class CollabComponent implements OnInit {
     initializeSocket(): void {
       this.socket = io(
         
-        environment.beronyAPI
+        // environment.beronyAPI
+        "http://localhost:3000"
         ,
-        // "http://localhost:3000",
         {
         auth: {
           userId: this.userId,

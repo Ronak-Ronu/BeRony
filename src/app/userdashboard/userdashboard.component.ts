@@ -38,6 +38,8 @@ export class UserdashboardComponent implements OnInit{
   follwingfalse: boolean = false;
   isPlanting:boolean=false;
   userBadges: any[] = [];
+  file: File | null = null;
+  uploading = false;
 
   constructor(private service:WriteserviceService,
     private route: ActivatedRoute,
@@ -254,17 +256,49 @@ plantTree() {
     // For local testing:
     // window.location.href = `http://localhost:5173/threedprofile/${userId}?${queryParams}`;
   }
-unplantTree(){
-  const userId = this.loggedinuserid; 
-  this.service.deleteTree(userId).subscribe(
-    (response)=>{
-      this.toastr.success("Tree Unplanted 😥")
-    },
-    (error)=>{
-      this.toastr.warning("Something went wrong!")
+  unplantTree(){
+      const userId = this.loggedinuserid; 
+      this.service.deleteTree(userId).subscribe(
+        (response)=>{
+          this.toastr.success("Tree Unplanted 😥")
+        },
+        (error)=>{
+          this.toastr.warning("Something went wrong!")
+        }
+      )
     }
-  )
-}
+
+    onFileSelected(event: Event): void {
+      const input = event.target as HTMLInputElement;
+      if (input.files && input.files.length > 0) {
+        this.file = input.files[0];
+      }
+    }
+  
+    uploadStory(): void {
+      if (!this.file || !this.userId) {
+        this.toastr.success("please select a file to add story!")
+        return;
+      }
+  
+      this.uploading = true;
+      this.service.uploadStory(this.userId, this.file).subscribe({
+        next: (response) => {
+          this.uploading = false;
+          this.toastr.success("Story uploaded, hurray!")
+          this.file = null;
+          console.log(response);
+          console.log(this.userId);
+          
+          
+        },
+        error: (error) => {
+          this.uploading = false;
+          this.toastr.error("something went wrong ")
+        }
+      });
+    }
+  
   
 }
   

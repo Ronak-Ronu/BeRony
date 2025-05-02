@@ -186,7 +186,7 @@
             class="gif" 
             *ngFor="let gif of gifs" 
             (click)="selectGif(gif)">
-            <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title"/>
+            <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title" loading="lazy" style="image-rendering: optimizeSpeed;"/>
           </div>
         </div>
       </div>

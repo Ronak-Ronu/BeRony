@@ -20,16 +20,16 @@ export class WriteserviceService {
 
   constructor(private http:HttpClient) {
 
-    this.url=`${environment.beronyAPI}/api/posts`
-    this.drafturl=`${environment.beronyAPI}/api/drafts`
-    this.findposturl=`${environment.beronyAPI}/api/findpost`
-    this.baseurl=`${environment.beronyAPI}/api`
+    // this.url=`${environment.beronyAPI}/api/posts`
+    // this.drafturl=`${environment.beronyAPI}/api/drafts`
+    // this.findposturl=`${environment.beronyAPI}/api/findpost`
+    // this.baseurl=`${environment.beronyAPI}/api`
     this.accessKey=environment.Unsplash_ACCESSKEY
     
-    // this.url='http://localhost:3000/api/posts'
-    // this.drafturl='http://localhost:3000/api/drafts'
-    // this.findposturl='http://localhost:3000/api/findpost'
-    // this.baseurl='http://localhost:3000/api'
+    this.url='http://localhost:3000/api/posts'
+    this.drafturl='http://localhost:3000/api/drafts'
+    this.findposturl='http://localhost:3000/api/findpost'
+    this.baseurl='http://localhost:3000/api'
    }
 
     publishblog(formData:FormData):Promise<any>
@@ -209,6 +209,17 @@ export class WriteserviceService {
     sendCollaborateInvite(userEmail:string, authorMail:string,authorName:string, postTitle:string, postDescription:string, workspaceLink:string): Observable<any>{
       const body={userEmail, authorMail,authorName, postTitle, postDescription, workspaceLink};
       return this.http.post(`${this.baseurl}/send-collab-invite`,body)
+    }
+
+    uploadStory(userId: string, file: File): Observable<any> {
+      const formData = new FormData();
+      formData.append('story', file);
+      formData.append('userId', userId);
+      return this.http.post(`${this.baseurl}/stories`, formData);
+    }
+  
+    getAllStories(): Observable<any[]> {
+      return this.http.get<any[]>(`${this.baseurl}/stories`);
     }
 
 

@@ -385,11 +385,10 @@
     background-color: rgb(161, 161, 255);
     color: white;
     border: none;
-    width: 70px;
-    height: 70px;
-    font-size: 240px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    font-size: 20px;
+    font-size: 55px;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background 0.3s;
@@ -401,7 +400,7 @@
   
   .rightcommentsection {
     position: fixed;
-    bottom: 10px;
+    bottom: 75px;
     right: 20px;
     width: auto;
     max-height: 80vh;

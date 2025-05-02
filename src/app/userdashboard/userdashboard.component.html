@@ -106,9 +106,7 @@
         {{ userData.userBio }}
       </div>
       <div class="followuserbutton">
-        <button (click)="profilecard()">
-          Profile Card
-        </button>
+        <button (click)="profilecard()">Profile Card</button>
         <button
           *ngIf="!isViewingOwnProfile"
           [disabled]="followingtrue"
@@ -125,25 +123,37 @@
           Unfollow
         </button>
         <br />
+       <div
+       *ngIf="isViewingOwnProfile"
+       
+       >
+
+         <input type="file" accept="image/*,video/*" (change)="onFileSelected($event)" [disabled]="uploading">
+         <br/>
+         
+        <button 
+        (click)="uploadStory()" [disabled]="uploading || !file">
+          <progress max="50" *ngIf="uploading"></progress>
+          <span *ngIf="!uploading">Add Story</span>
+        </button>    
+        <br/>
         <button (click)="shareProfile()">Share Profile</button>
+      </div>
+
         <div *ngIf="isViewingOwnProfile">
           <button (click)="plantTree()">
             {{ isPlanting ? "Planting..." : "Plant Tree 🌱" }}
           </button>
-          <button (click)="unplantTree()">
-            UnPlant Tree 🌱
-          </button>
+          <button (click)="unplantTree()">UnPlant Tree 🌱</button>
         </div>
+
         <div class="user-info">
-          
           <div *ngIf="userBadges.length > 0" class="badges">
             <span *ngFor="let badge of userBadges" class="badge">
               {{ badge.name }}
             </span>
           </div>
         </div>
-        
-        
       </div>
     </div>
   </div>

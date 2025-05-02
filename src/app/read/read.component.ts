@@ -8,10 +8,31 @@ import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+
 @Component({
   selector: 'app-read',
   templateUrl: './read.component.html',
-  styleUrls: ['./read.component.css']
+  styleUrls: ['./read.component.css'],
+  animations: [
+    trigger('popupAnimation', [
+      state('void', style({
+        opacity: 0,
+        transform: 'scale(0.8)'
+      })),
+      state('*', style({
+        opacity: 1,
+        transform: 'scale(1)'
+      })),
+      transition('void => *', [
+        animate('300ms ease-out')
+      ]),
+      transition('* => void', [
+        animate('200ms ease-in')
+      ])
+    ])
+  ]
+
 })
 
 export class ReadComponent implements OnInit{
@@ -34,6 +55,10 @@ export class ReadComponent implements OnInit{
   recentsearch: string[] = [];
   showHistory: boolean=false;
   private searchSubject = new Subject<string>();
+  stories: any[] = [];
+  selectedStory: any | null = null;
+  
+
 
 
 ngOnInit(): void {
@@ -49,6 +74,7 @@ ngOnInit(): void {
       this.searchQuery = query;
       this.onSearch();
     });
+    this.loadStories()
   }
   ngOnDestroy() {
     this.searchSubject.complete();
@@ -234,6 +260,29 @@ ngOnInit(): void {
     this.router.navigate(['/profile/',authorUserId])
     console.log(authorUserId);
     
+  }
+
+  loadStories(): void {
+    this.readsevice.getAllStories().subscribe({
+      next: (stories) => {
+        this.stories = stories;
+      },
+      error: (error) => {
+        console.error('Error fetching stories:', error);
+      }
+    });
+  }
+
+  openStory(story: any): void {
+    this.selectedStory = story;
+  }
+
+  closeStory(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    // Close only if clicking the overlay (not the story content)
+    if (target.classList.contains('fullscreen-overlay')) {
+      this.selectedStory = null;
+    }
   }
 
 }

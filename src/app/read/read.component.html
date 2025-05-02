@@ -60,10 +60,30 @@
 
 <div class="readcontainer">
 
+    
+
 <div class="blogscontainer" infiniteScroll 
 [infiniteScrollDistance]="4"
 [infiniteScrollThrottle]="30"
 (scrolled)="seemore()" >
+<div class="stories-container">
+    <div class="stories-scroll">
+      <div class="story-card" *ngFor="let story of stories" (click)="openStory(story)">
+        <h3>{{ story.username || "Guest"}}</h3>
+        <img *ngIf="story.fileType === 'image'" [src]="story.fileUrl" alt="Story" loading="lazy">
+        <video *ngIf="story.fileType === 'video'" [src]="story.fileUrl" muted></video>
+      </div>
+    </div>
+  
+    <div class="fullscreen-overlay" *ngIf="selectedStory" (click)="closeStory($event)" [@popupAnimation]>
+      <div class="fullscreen-content">
+        <h3>{{ selectedStory.username || 'Anonymous' }}</h3>
+        <img *ngIf="selectedStory.fileType === 'image'" [src]="selectedStory.fileUrl" alt="Story">
+        <video *ngIf="selectedStory.fileType === 'video'" [src]="selectedStory.fileUrl" controls autoplay muted></video>
+      </div>
+      
+    </div>
+  </div>
     <div *ngIf="isloadingblogs" class="loader"> 
         Loading beautiful blogs for {{username}} ♥️ 
     </div>
