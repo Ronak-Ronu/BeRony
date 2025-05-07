@@ -21,7 +21,6 @@
             Overview
           </li>
         </div>
-
         <div>
           <li
             (click)="setActiveSection('my-blogs')"
@@ -123,22 +122,28 @@
           Unfollow
         </button>
         <br />
-       <div
-       *ngIf="isViewingOwnProfile"
-       
-       >
-
-         <input type="file" accept="image/*,video/*" (change)="onFileSelected($event)" [disabled]="uploading">
-         <br/>
-         
-        <button 
-        (click)="uploadStory()" [disabled]="uploading || !file">
-          <progress max="50" *ngIf="uploading"></progress>
-          <span *ngIf="!uploading">Add Story</span>
-        </button>    
-        <br/>
-        <button (click)="shareProfile()">Share Profile</button>
-      </div>
+        <div *ngIf="isViewingOwnProfile">
+          <div
+          class="upload-container"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+          [ngClass]="{ 'drag-over': isDragging }"
+        >
+          <input
+            type="file"
+            accept="image/*,video/*"
+            (change)="onFileSelected($event)"
+            [disabled]="uploading"
+            id="story-upload"
+            style="display: none"
+          />
+          <label for="story-upload" class="upload-btn">
+            Add Story
+          </label>
+          <br />
+          <button (click)="shareProfile()">Share Profile</button>
+        </div>
 
         <div *ngIf="isViewingOwnProfile">
           <button (click)="plantTree()">
@@ -155,6 +160,100 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showEditor" class="story-editor-popup">
+  <div class="story-editor-content ">
+    <div class="editor-header">
+      <h3>Edit Your Story</h3>
+      <button class="close-btn" (click)="closeEditor()">✕</button>
+    </div>
+    <div class="editor-tools  ">
+      <div class="tool-section">
+        <span>Brush Type:</span>
+        <button
+          (click)="selectBrush('pencil')"
+          [ngClass]="{ 'active-brush': brushtype === 'pencil' }"
+          [disabled]="uploading"
+        >
+          Pencil
+        </button>
+        <button
+          (click)="selectBrush('circle')"
+          [ngClass]="{ 'active-brush': brushtype === 'circle' }"
+          [disabled]="uploading"
+        >
+          Circle
+        </button>
+        <button
+          (click)="selectBrush('spray')"
+          [ngClass]="{ 'active-brush': brushtype === 'spray' }"
+          [disabled]="uploading"
+        >
+          Spray
+        </button>
+        <button (click)="addText()" >Text</button>
+
+      </div>
+      <div class="tool-section">
+        <span>Color:</span>
+        <input
+          type="color"
+          [(ngModel)]="pickedcolor"
+          Frankenfood
+          name="pickedcolor"
+          (change)="setBrushColor()"
+          [disabled]="uploading"
+        />
+      </div>
+      <div class="tool-section">
+        <span>Brush Size:</span>
+        <input
+          type="range"
+          [(ngModel)]="brushsize"
+          name="brushsize"
+          min="1"
+          max="50"
+          (change)="setBrushSize()"
+          [disabled]="uploading"
+        />
+      </div>
+      <div class="tool-section" >
+        <span>Search GIFs:</span>
+        <input
+          type="text"
+          [(ngModel)]="gifSearchQuery"
+          (input)="searchGifs()"
+          placeholder="Search for GIFs..."
+        />
+        <div class="gif-grid">
+          <img
+            *ngFor="let gif of gifs"
+            [src]="gif.images.fixed_height.url"
+            (click)="selectGif(gif)"
+            class="gif-item"
+            alt="GIF"
+          />
+        </div>
+      </div>
+    </div>
+    <canvas
+      id="fabricCanvasdashboard"
+      width="500"
+      height="700"
+      class="story-canvas"
+    ></canvas>
+    <div class="editor-footer">
+      <button
+        (click)="uploadStory()"
+        [disabled]="uploading || !file"
+        class="upload-btn"
+      >
+        <progress max="50" *ngIf="uploading"></progress>
+        <span *ngIf="!uploading">Add Story</span>
+      </button>
     </div>
   </div>
 </div>

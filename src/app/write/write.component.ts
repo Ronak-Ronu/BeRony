@@ -68,8 +68,6 @@ export class WriteComponent implements OnInit,AfterViewInit {
 
   constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef,private toastr: ToastrService){  }
   ngOnInit(): void {
-    
-   
     this.readdraftblog()
     this.getloggedinuserdata()
   }
@@ -213,15 +211,15 @@ async getloggedinuserdata (){
     console.log('User added to DB:', response);
   }
 }
-setBrushColor()
-{
-    this.canvas.freeDrawingBrush!.color = this.pickedcolor;
-}
-setBrushSize()
-{
-  this.canvas.freeDrawingBrush!.width = this.brushsize;
+    setBrushColor()
+    {
+        this.canvas.freeDrawingBrush!.color = this.pickedcolor;
+    }
+    setBrushSize()
+    {
+      this.canvas.freeDrawingBrush!.width = this.brushsize;
 
-}
+    }
 
   publishdraft(draftdata:WriteModel)
   {
