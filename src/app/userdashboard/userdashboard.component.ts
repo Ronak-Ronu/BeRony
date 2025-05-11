@@ -180,7 +180,7 @@ export class UserdashboardComponent implements OnInit, AfterViewInit {
     }
     this.canvas.freeDrawingBrush.color = this.pickedcolor;
     this.canvas.freeDrawingBrush.width = this.brushsize;
-    this.canvas.isDrawingMode = true;
+    this.canvas.isDrawingMode = !this.canvas.isDrawingMode;
   }
 
   setBrushColor() {
@@ -389,6 +389,31 @@ export class UserdashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+
+  sendToBack() {
+    const activeObject = this.canvas.getActiveObject();
+    if (activeObject) {
+      // Remove and insert at index 0 (bottom of stack)
+      this.canvas.remove(activeObject);
+      this.canvas.insertAt(0,activeObject) // false to avoid automatic render
+      this.canvas.requestRenderAll();
+      // this.toastr.success('Object sent to back');
+    } else {
+      console.log('No selection');
+      this.toastr.warning('Please select an object first');
+    }
+  }
+  
+
+    
+    deleteSelected() {
+    const activeObject = this.canvas.getActiveObject();
+    if (activeObject) {
+    this.canvas.remove(activeObject);
+    this.canvas.renderAll();
+    }
+
+  }
   handleFile(file: File): void {
     if (file.type.startsWith('image/')) {
       const reader = new FileReader();

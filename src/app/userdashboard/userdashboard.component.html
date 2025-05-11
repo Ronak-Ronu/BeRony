@@ -163,46 +163,45 @@
     </div>
   </div>
 </div>
-
 <div *ngIf="showEditor" class="story-editor-popup">
-  <div class="story-editor-content ">
+  <div class="story-editor-content">
     <div class="editor-header">
       <h3>Edit Your Story</h3>
       <button class="close-btn" (click)="closeEditor()">✕</button>
     </div>
-    <div class="editor-tools  ">
+    <div class="editor-tools">
       <div class="tool-section">
         <span>Brush Type:</span>
-        <button
-          (click)="selectBrush('pencil')"
-          [ngClass]="{ 'active-brush': brushtype === 'pencil' }"
-          [disabled]="uploading"
-        >
-          Pencil
-        </button>
-        <button
-          (click)="selectBrush('circle')"
-          [ngClass]="{ 'active-brush': brushtype === 'circle' }"
-          [disabled]="uploading"
-        >
-          Circle
-        </button>
-        <button
-          (click)="selectBrush('spray')"
-          [ngClass]="{ 'active-brush': brushtype === 'spray' }"
-          [disabled]="uploading"
-        >
-          Spray
-        </button>
-        <button (click)="addText()" >Text</button>
-
+        <div class="brush-buttons">
+          <button
+            (click)="selectBrush('pencil')"
+            [ngClass]="{ 'active-brush': brushtype === 'pencil' }"
+            [disabled]="uploading"
+          >
+            Pencil
+          </button>
+          <button
+            (click)="selectBrush('circle')"
+            [ngClass]="{ 'active-brush': brushtype === 'circle' }"
+            [disabled]="uploading"
+          >
+            Circle
+          </button>
+          <button
+            (click)="selectBrush('spray')"
+            [ngClass]="{ 'active-brush': brushtype === 'spray' }"
+            [disabled]="uploading"
+          >
+            Spray
+          </button>
+          <button (click)="addText()">Text</button>
+        </div>
       </div>
       <div class="tool-section">
         <span>Color:</span>
         <input
           type="color"
           [(ngModel)]="pickedcolor"
-          Frankenfood
           name="pickedcolor"
           (change)="setBrushColor()"
           [disabled]="uploading"
@@ -220,7 +219,15 @@
           [disabled]="uploading"
         />
       </div>
-      <div class="tool-section" >
+      <div class="tool-section" *ngIf="canvas && canvas.getActiveObject()">
+        <span>Layer Control:</span>
+        <div class="layer-buttons">
+          <!-- <button (click)="bringToFront()">Bring to Front</button> -->
+          <button (click)="sendToBack()">Send to Back</button>
+          <button (click)="deleteSelected()">Delete</button>
+        </div>
+      </div>
+      <div class="tool-section">
         <span>Search GIFs:</span>
         <input
           type="text"
@@ -241,9 +248,9 @@
     </div>
     <canvas
       id="fabricCanvasdashboard"
-      width="500"
-      height="700"
       class="story-canvas"
+      height="600"
+      width="400"
     ></canvas>
     <div class="editor-footer">
       <button
@@ -256,4 +263,6 @@
       </button>
     </div>
   </div>
+</div>
+
 </div>
