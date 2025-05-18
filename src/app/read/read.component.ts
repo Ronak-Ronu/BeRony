@@ -1,14 +1,21 @@
-import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { WriteserviceService } from '../writeservice.service';
 import { WriteModel } from '../Models/writemodel';
 import { account } from '../../lib/appwrite';
-// import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+
+interface ChatRoom {
+  roomId: string;
+  title: string;
+  creatorId: string;
+  creatorUsername: string;
+  createdAt: string;
+}
 
 @Component({
   selector: 'app-read',
@@ -32,221 +39,262 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
       ])
     ])
   ]
-
 })
-
-export class ReadComponent implements OnInit{
+export class ReadComponent implements OnInit, OnDestroy {
   blogs: WriteModel[] = [];
-  userData:any
-  loggedInUserAccount:any=null
-  username!:string
-  searchQuery:string=''
+  userData: any;
+  loggedInUserAccount: any = null;
+  username: string = '';
+  searchQuery: string = '';
   searchResults: any[] = [];
   showFilters = false;
-  userId!:string
-  isloadingblogs:boolean=true
+  userId: string = '';
+  isloadingblogs: boolean = true;
   selectedTag: string | null = null;
-  bucketName:string | null = null;
-  project:string | null = null;
-  mode:string | null = null;
+  bucketName: string | null = null;
+  project: string | null = null;
+  mode: string | null = null;
   start = 0;
-  limit = 5; 
-  useremotion:string="🙂"
+  limit = 5;
+  useremotion: string = "🙂";
   recentsearch: string[] = [];
-  showHistory: boolean=false;
+  showHistory: boolean = false;
   private searchSubject = new Subject<string>();
   stories: any[] = [];
   selectedStory: any | null = null;
-  
+  rooms: ChatRoom[] = [];
+  newRoomId: string = '';
+  newRoomTitle: string = '';
+  error: string = '';
+  private subscriptions: Subscription = new Subscription();
 
-
-
-ngOnInit(): void {
-    this.bucketName=encodeURIComponent(environment.bucketName);
-    this.project=encodeURIComponent(environment.project);
-    this.mode=encodeURIComponent(environment.mode);    
-    this.readblogdata()
-    this.getloggedinuserdata()
-    this.searchSubject.pipe(
-      debounceTime(300), // Wait 300ms after last keystroke
-      distinctUntilChanged() // Only emit if the value has changed
-    ).subscribe(query => {
-      this.searchQuery = query;
-      this.onSearch();
-    });
-    this.loadStories()
-  }
-  ngOnDestroy() {
-    this.searchSubject.complete();
-  }
-  constructor(private readsevice:WriteserviceService,
+  constructor(
+    private readsevice: WriteserviceService,
     private toastr: ToastrService,
     private cdr: ChangeDetectorRef,
     private router: Router
-  ){}
+  ) {}
 
-  
-  readblogdata(){
-    try {
-    this.isloadingblogs = true;
-    this.readsevice.getpublishpostdata(this.start,this.limit).subscribe(
-      (data:WriteModel[])=>{
-          this.blogs=this.blogs.concat(data);
-          this.isloadingblogs=false
-          console.log(this.blogs);
-          this.addUserEmotion()
-      }
-    )
-      } catch (error) {
-          console.log(error);
-          this.isloadingblogs=false
-      } 
+  async ngOnInit(): Promise<void> {
+    this.bucketName = encodeURIComponent(environment.bucketName);
+    this.project = encodeURIComponent(environment.project);
+    this.mode = encodeURIComponent(environment.mode);
+
+    // Fetch user data first
+    await this.getloggedinuserdata();
+    
+    // Connect to Socket.io only after user data is set
+    if (this.userId && this.username) {
+      this.readsevice.connect(this.userId, this.username);
+      this.subscriptions.add(
+        this.readsevice.getRoomCreated().subscribe((room: ChatRoom) => {
+          console.log('New room created:', room);
+          this.rooms = [room, ...this.rooms];
+          this.cdr.detectChanges();
+        })
+      );
+      this.subscriptions.add(
+        this.readsevice.getErrors().subscribe((error: string) => {
+          this.error = error;
+          this.toastr.error(error);
+          setTimeout(() => (this.error = ''), 5000);
+          this.cdr.detectChanges();
+        })
+      );
+    } else {
+      console.warn('User ID or username not set, skipping Socket.io connection');
+      this.error = 'Please log in to create or join chat rooms';
+      setTimeout(() => (this.error = ''), 5000);
+    }
+
+    this.readblogdata();
+    this.loadStories();
+    this.loadRooms();
+
+    this.subscriptions.add(
+      this.searchSubject.pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      ).subscribe(query => {
+        this.searchQuery = query;
+        this.onSearch();
+      })
+    );
   }
 
-  readqueryblogdata()
-  {
+  ngOnDestroy(): void {
+    this.searchSubject.complete();
+    this.subscriptions.unsubscribe();
+  }
+
+  readblogdata(): void {
     try {
       this.isloadingblogs = true;
-      this.readsevice.getsearchpostdata(this.selectedTag,this.searchQuery).subscribe(
-        (  data:WriteModel[])=>{
-          this.blogs=data;
-          this.isloadingblogs=false
-          this.savesearchquery(this.searchQuery);
+      this.readsevice.getpublishpostdata(this.start, this.limit).subscribe(
+        (data: WriteModel[]) => {
+          this.blogs = this.blogs.concat(data);
+          this.isloadingblogs = false;
           this.addUserEmotion();
+          this.cdr.detectChanges();
+        },
+        (error) => {
+          console.error('Error fetching blogs:', error);
+          this.isloadingblogs = false;
+          this.toastr.error('Failed to load blogs');
+          this.cdr.detectChanges();
         }
-      )
-      } catch (error) {
-            // console.log(error);
-            this.isloadingblogs=false
-        }
+      );
+    } catch (error) {
+      console.error(error);
+      this.isloadingblogs = false;
+      this.cdr.detectChanges();
+    }
   }
 
-  onSearchInput(query: string) {
+  readqueryblogdata(): void {
+    try {
+      this.isloadingblogs = true;
+      this.readsevice.getsearchpostdata(this.selectedTag, this.searchQuery).subscribe(
+        (data: WriteModel[]) => {
+          this.blogs = data;
+          this.isloadingblogs = false;
+          this.savesearchquery(this.searchQuery);
+          this.addUserEmotion();
+          this.cdr.detectChanges();
+        },
+        (error) => {
+          console.error('Error searching blogs:', error);
+          this.isloadingblogs = false;
+          this.toastr.error('Failed to search blogs');
+          this.cdr.detectChanges();
+        }
+      );
+    } catch (error) {
+      console.error(error);
+      this.isloadingblogs = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  onSearchInput(query: string): void {
     this.searchSubject.next(query);
   }
 
-  onSearch() {
+  onSearch(): void {
     this.blogs = [];
     this.readqueryblogdata();
   }
-  savesearchquery(query:string)
-    {  let searches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
-    
-    // Remove duplicates and keep only latest 5 searches
+
+  savesearchquery(query: string): void {
+    let searches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
     searches = [query, ...searches.filter((q: string) => q !== query)].slice(0, 5);
-    
     localStorage.setItem('recentSearches', JSON.stringify(searches));
     this.recentsearch = searches;
   }
 
-  showRecentSearches() {
-    this.loadRecentSearch(); 
-    this.showHistory=true
+  showRecentSearches(): void {
+    this.loadRecentSearch();
+    this.showHistory = true;
   }
-  hideRecentSearches() {
-    setTimeout(() => {
-      this.showHistory = false; 
-    }, 200); 
-  }
-  loadRecentSearch()
-  {
-    this.recentsearch = JSON.parse(localStorage.getItem('recentSearches') || '[]')
 
+  hideRecentSearches(): void {
+    setTimeout(() => {
+      this.showHistory = false;
+    }, 200);
   }
-  selectSearch(query: string) {
+
+  loadRecentSearch(): void {
+    this.recentsearch = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+  }
+
+  selectSearch(query: string): void {
     this.searchQuery = query;
     this.onSearch();
   }
 
-  clearhistory()
-  {
+  clearhistory(): void {
     localStorage.removeItem('recentSearches');
-    this.recentsearch=[];
+    this.recentsearch = [];
   }
-  toggleFilters() {
+
+  toggleFilters(): void {
     this.showFilters = !this.showFilters;
   }
 
-  getid(item:WriteModel)
-  {
+  getid(item: WriteModel): void {
     console.log(item._id);
     console.log(item.title);
-
   }
 
-
-  async getloggedinuserdata (){
-    this.loggedInUserAccount = await account.get();
-    if (this.loggedInUserAccount) {
-      this.username=this.loggedInUserAccount.name;
-      this.userId=this.loggedInUserAccount.$id;
-     
-    }
-  }
-
-
-
- async deletepost(post:WriteModel)
-  {
+  async getloggedinuserdata(): Promise<void> {
     try {
-
-      if (post.userId===this.userId && this.loggedInUserAccount) {
-       await this.readsevice.deletepostbyid(post._id)
-       console.log("post deleted");
-       this.toastr.success("We will miss this post")
-       this.blogs = this.blogs.filter(b => b._id !== post._id);
+      this.loggedInUserAccount = await account.get();
+      if (this.loggedInUserAccount) {
+        this.username = this.loggedInUserAccount.name || 'Guest_' + Math.random().toString(36).substr(2, 5);
+        this.userId = this.loggedInUserAccount.$id;
+        console.log('Logged in user:', { userId: this.userId, username: this.username });
+        this.cdr.detectChanges();
+      } else {
+        console.warn('No logged-in user found');
+        this.username = 'Guest_' + Math.random().toString(36).substr(2, 5);
+        this.userId = 'user_' + Math.random().toString(36).substr(2, 9);
       }
-      else{
-        this.toastr.error("you are not author of this post");
-        console.log("you are not author of this post.");
-      }
-      
     } catch (error) {
-      console.log("cannot delete post",error); 
+      console.error('Error fetching user data:', error);
+      this.username = 'Guest_' + Math.random().toString(36).substr(2, 5);
+      this.userId = 'user_' + Math.random().toString(36).substr(2, 9);
     }
   }
 
+  async deletepost(post: WriteModel): Promise<void> {
+    try {
+      if (post.userId === this.userId && this.loggedInUserAccount) {
+        await this.readsevice.deletepostbyid(post._id);
+        this.toastr.success("We will miss this post");
+        this.blogs = this.blogs.filter(b => b._id !== post._id);
+        this.cdr.detectChanges();
+      } else {
+        this.toastr.error("You are not the author of this post");
+      }
+    } catch (error) {
+      console.error("Cannot delete post:", error);
+      this.toastr.error("Failed to delete post");
+    }
+  }
 
   getBackgroundImage(item: WriteModel): string {
     return `url(${item.imageUrl})`;
   }
 
-
-  filterByTag(usersselectedtag:string)
-  {
-    this.blogs=[]
-    this.selectedTag = this.selectedTag === usersselectedtag ? null : usersselectedtag
-    console.log(this.selectedTag);
-    this.readqueryblogdata()
+  filterByTag(usersselectedtag: string): void {
+    this.blogs = [];
+    this.selectedTag = this.selectedTag === usersselectedtag ? null : usersselectedtag;
+    this.readqueryblogdata();
   }
-  seemore()
-  {
-    this.start+=this.limit;
+
+  seemore(): void {
+    this.start += this.limit;
     this.readblogdata();
   }
-  addPostBookmark(savepostid:string)
-  {
+
+  addPostBookmark(savepostid: string): void {
     this.readsevice.addPostBookmark(this.userId, savepostid).subscribe(
       () => {
-        console.log(savepostid);
-        
-          console.log("Bookmark added successfully");
-          this.toastr.success("Bookmarked")
+        this.toastr.success("Bookmarked");
       },
-      (error) => { 
-          console.error("Error adding bookmark:", error.error.message);
-          this.toastr.error(error.error.message)
+      (error) => {
+        console.error("Error adding bookmark:", error.error.message);
+        this.toastr.error(error.error.message);
       }
-  );
+    );
   }
 
-  addUserEmotion(){
+  addUserEmotion(): void {
     this.blogs.forEach((blog, index) => {
       this.readsevice.getUserData(blog.userId).subscribe(
         (data) => {
-          // Add the `useremotion` to the corresponding blog item
           this.blogs[index] = { ...blog, userEmotion: data.user.userEmotion };
-          this.cdr.detectChanges(); // Update the view with the new data
+          this.cdr.detectChanges();
         },
         (error) => {
           console.error(`Error fetching emotion for user ${blog.userId}:`, error);
@@ -255,20 +303,19 @@ ngOnInit(): void {
     });
   }
 
-  goToAuthorProfile(authorUserId:string)
-  {
-    this.router.navigate(['/profile/',authorUserId])
-    console.log(authorUserId);
-    
+  goToAuthorProfile(authorUserId: string): void {
+    this.router.navigate(['/profile/', authorUserId]);
   }
 
   loadStories(): void {
     this.readsevice.getAllStories().subscribe({
       next: (stories) => {
         this.stories = stories;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error fetching stories:', error);
+        this.toastr.error('Failed to load stories');
       }
     });
   }
@@ -279,10 +326,84 @@ ngOnInit(): void {
 
   closeStory(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    // Close only if clicking the overlay (not the story content)
     if (target.classList.contains('fullscreen-overlay')) {
       this.selectedStory = null;
     }
   }
 
+  loadRooms(): void {
+    console.log('Loading rooms...');
+    this.readsevice.getRooms().subscribe({
+      next: (rooms: ChatRoom[]) => {
+        console.log('Rooms loaded:', rooms);
+        this.rooms = rooms;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Error loading rooms:', {
+          status: err.status,
+          statusText: err.statusText,
+          url: err.url,
+          message: err.message,
+          error: err.error
+        });
+        const errorMessage = err.error?.message || err.message || 'Failed to load chat rooms';
+        this.error = errorMessage;
+        this.toastr.error(errorMessage);
+        setTimeout(() => (this.error = ''), 5000);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+
+
+  createRoom(): void {
+    console.log('Attempting to create room:', { roomId: this.newRoomId, title: this.newRoomTitle, userId: this.userId, username: this.username });
+    if (!this.newRoomId || !this.newRoomTitle) {
+      this.error = 'Please enter both Room ID and Title';
+      this.toastr.error(this.error);
+      setTimeout(() => (this.error = ''), 5000);
+      this.cdr.detectChanges();
+      return;
+    }
+    const roomIdRegex = /^[a-z0-9-]+$/;
+    if (!roomIdRegex.test(this.newRoomId)) {
+      this.error = 'Room ID must be lowercase, alphanumeric, with hyphens only';
+      this.toastr.error(this.error);
+      setTimeout(() => (this.error = ''), 5000);
+      this.cdr.detectChanges();
+      return;
+    }
+    if (!this.userId || !this.username) {
+      this.error = 'User not logged in. Please log in to create a room';
+      this.toastr.error(this.error);
+      setTimeout(() => (this.error = ''), 5000);
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.readsevice.createRoom(this.newRoomId, this.newRoomTitle, this.userId, this.username).subscribe({
+      next: (room: ChatRoom) => {
+        console.log('Room created successfully:', room);
+        this.toastr.success(`Room "${room.title}" created!`);
+        this.router.navigate([`/chat/${room.roomId}`]);
+        this.newRoomId = '';
+        this.newRoomTitle = '';
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Error creating room:', err);
+        this.error = err.error?.message || 'Failed to create room';
+        this.toastr.error(this.error);
+        setTimeout(() => (this.error = ''), 5000);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  joinRoom(roomId: string,roomtitle:string): void {
+    // console.log('Joining room:', roomId);
+    this.router.navigate([`/chat/${roomId}/${roomtitle}`]);
+  }
 }

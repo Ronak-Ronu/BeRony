@@ -506,10 +506,206 @@ input:focus{
     max-height: 80vh;
     border-radius: 8px;
   }
+  .chat-rooms-wrapper {
+    min-height: 100vh;
+    /* background: linear-gradient(135deg, #f5f2e9 0%, #e8e6f0 100%); Textured cream to soft purple */
+    padding: 30px;
+    font-family: 'Roboto', sans-serif;
+  }
   
-
-
-
+  /* Main title */
+  .chat-rooms-title {
+    font-family: 'Caveat', cursive;
+    font-size: 30px;
+    font-weight: 700;
+    color: #7d87f3;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Create room panel */
+  .create-room-panel {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.15);
+    margin-bottom: 40px;
+    transform: rotate(-2deg); /* Slight tilt for organic feel */
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2px solid #d8d3f0;
+  }
+  
+  /* Create room heading */
+  .create-room-heading {
+    font-family: 'Caveat', cursive;
+    font-size: 24px;
+    font-weight: 700;
+    color: #333333;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  /* Form container */
+  .create-room-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  /* Input fields */
+  .form-input {
+    padding: 10px 14px;
+    border: 2px solid #d8d3f0;
+    border-radius: 6px;
+    font-size: 16px;
+    background: #fefefe;
+    transition: border-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: #6e7af9;
+    transform: scale(1.02);
+  }
+  
+  /* Create button */
+  .create-button {
+    background: linear-gradient(45deg, #7d87f3, #cbcef9);
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .create-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(110, 122, 249, 0.3);
+  }
+  
+  /* Error message */
+  .error-note {
+    background: #ffe6e6;
+    color: #a11b1b;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+    border: 1px dashed #d88;
+  }
+  
+  /* Rooms list heading */
+  .rooms-list-heading {
+    font-family: 'Caveat', cursive;
+    font-size: 28px;
+    font-weight: 700;
+    color: #333333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* No rooms message */
+  .no-rooms-note {
+    font-size: 16px;
+    color: #666666;
+    text-align: center;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  
+  /* Rooms grid */
+  .rooms-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  /* Room card */
+  .room-card {
+    background: #f5f2e9 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAAXNSR0IArs4c6QAAAB9JREFUGFdjZGBgYJj79+8/YWBgYGCYkZGBAQ0NDQN+/gH8eyJ/xgAAAABJRU5ErkJggg==') repeat; /* Subtle paper texture */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    width: 280px;
+    transform: rotate(1deg); /* Slight rotation for organic feel */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e0dcdc;
+  }
+  
+  .room-card:nth-child(even) {
+    transform: rotate(-1deg); /* Alternate rotation for variety */
+  }
+  
+  .room-card:hover {
+    transform: rotate(0deg) scale(1.05);
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Room name */
+  .room-name {
+    font-family: 'Caveat', cursive;
+    font-size: 20px;
+    font-weight: 700;
+    color: #6e7af9;
+    margin-bottom: 10px;
+  }
+  
+  /* Room info */
+  .room-info {
+    font-size: 14px;
+    color: #555555;
+    margin-bottom: 6px;
+  }
+  
+  /* Room date */
+  .room-date {
+    font-size: 12px;
+    color: #888888;
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+  
+  /* Join button */
+  .join-button {
+    background: linear-gradient(45deg, #7d87f3, #cbcef9);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .join-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 154, 158, 0.3);
+  }
+  
+  /* Responsive styles */
+  @media (min-width: 768px) {
+    .rooms-grid {
+      justify-content: flex-start;
+    }
+  
+    .room-card {
+      width: 300px;
+    }
+  }
+  
+    
 @media (max-width: 600px) {
     .readmainbody{
         width: 100%;
@@ -696,8 +892,7 @@ input:focus{
         .footerbutton img{
             height: 50%;
         }
-        
-        
+
 }
 @media (min-width: 601px) and (max-width: 1000px) {
     .readmainbody {
@@ -917,4 +1112,5 @@ input:focus{
         justify-content: space-between; 
         padding: 15px; 
     }
+    
 }

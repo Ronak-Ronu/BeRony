@@ -33,6 +33,7 @@ import { HammerModule } from '@angular/platform-browser';
 import { CollabComponent } from './collab/collab.component';
 import { SearchCollabComponent } from './search-collab/search-collab.component';
 import { NumberAbbrPipe } from './number-abbr.pipe';
+import { ChatRoomComponent } from './chat-room/chat-room.component';
 
 const routes  = [
 
@@ -48,6 +49,7 @@ const routes  = [
   { path: 'profile/:userId', component: UserdashboardComponent },
   { path: 'collab/:userId/:postId', component: CollabComponent,canActivate:[routeauthguardGuard] },
   { path: 'search-add-collab/:postId', component: SearchCollabComponent},
+  { path: 'chat/:roomId/:roomtitle', component: ChatRoomComponent },
   {path: '**', component: WrongpageComponent}
 ];
 
@@ -72,7 +74,7 @@ const routes  = [
     CollabComponent,
     SearchCollabComponent,
     NumberAbbrPipe,
-
+    ChatRoomComponent,
   ],
   imports: [
     BrowserModule,

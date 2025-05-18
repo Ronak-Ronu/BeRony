@@ -1,143 +1,217 @@
 <div class="readmainbody">
-<div class="topitems">
-
+  <div class="topitems">
     <div class="headingread">
-        <p>READ</p>
+      <p>READ</p>
     </div>
     <div class="searchelement">
-        <div class="searchitems">
-          <div class="searchbar">
-            <input 
-              type="text" 
-              placeholder="Wanna Search?" 
-              [(ngModel)]="searchQuery" 
-              (focus)="showRecentSearches()"  
-              (blur)="hideRecentSearches()" 
-              (keyup)="onSearchInput(searchQuery)"
-              (keydown.enter)="onSearch()">
-            
-            <!-- Recent Searches Dropdown -->
-            <div *ngIf="recentsearch.length && showHistory" class="search-history">
-              <div class="clearbtn">
-                <button (click)="clearhistory()">Clear</button>
-              </div>
-              <ul>
-                <li *ngFor="let search of recentsearch" (click)="selectSearch(search)">
-                  {{ search }}
-                </li>
-              </ul>
+      <div class="searchitems">
+        <div class="searchbar">
+          <input
+            type="text"
+            placeholder="Wanna Search?"
+            [(ngModel)]="searchQuery"
+            (focus)="showRecentSearches()"
+            (blur)="hideRecentSearches()"
+            (keyup)="onSearchInput(searchQuery)"
+            (keydown.enter)="onSearch()"
+          />
+
+          <!-- Recent Searches Dropdown -->
+          <div
+            *ngIf="recentsearch.length && showHistory"
+            class="search-history"
+          >
+            <div class="clearbtn">
+              <button (click)="clearhistory()">Clear</button>
             </div>
+            <ul>
+              <li
+                *ngFor="let search of recentsearch"
+                (click)="selectSearch(search)"
+              >
+                {{ search }}
+              </li>
+            </ul>
           </div>
-          <button class="searchbutton" (click)="onSearch()">YUP <span style="font-size: 40px;">↵</span></button>
         </div>
+        <button class="searchbutton" (click)="onSearch()">
+          YUP <span style="font-size: 40px">↵</span>
+        </button>
       </div>
-    
-</div>
-
-<!-- endoftopitems -->
-
-<div class="filters">
-    <button class="filterbutton" (click)="toggleFilters()" style="width: auto ;">
-        <div *ngIf="!showFilters" >
-                Filter <span class="filteremoji">👉</span>
-        </div>
-        <div *ngIf="showFilters">
-            Filter <span class="filteremoji">👈</span>
-        </div>
-    </button>
-    <button class="filterbutton1" *ngIf="showFilters" [ngClass]="{'enter': showFilters, 'exit': !showFilters}"  (click)="filterByTag('Gadgets')">Gadgets</button>
-    <button class="filterbutton1" *ngIf="showFilters" (click)="filterByTag('DBMS')">DBMS</button>
-    
-    <button class="filterbutton1" *ngIf="showFilters"  (click)="filterByTag('Self Improvement')" >Self Improvement</button>
-    <button class="filterbutton1" *ngIf="showFilters" (click)="filterByTag('Games')">Games</button>
-
-</div>
-<a routerLink="/blogreel">
-
-    <button class="reelitbtn">Reel it</button>
-</a>
-<!-- endoffilteritems -->
-
-<div class="readcontainer">
-
-    
-
-<div class="blogscontainer" infiniteScroll 
-[infiniteScrollDistance]="4"
-[infiniteScrollThrottle]="30"
-(scrolled)="seemore()" >
-<div class="stories-container">
-    <div class="stories-scroll">
-      <div class="story-card" *ngFor="let story of stories" (click)="openStory(story)">
-        <h3>{{ story.username || "Guest"}}</h3>
-        <img *ngIf="story.fileType === 'image'" [src]="story.fileUrl" alt="Story" loading="lazy">
-        <video *ngIf="story.fileType === 'video'" [src]="story.fileUrl" muted></video>
-      </div>
-    </div>
-  
-    <div class="fullscreen-overlay" *ngIf="selectedStory" (click)="closeStory($event)" [@popupAnimation]>
-      <div class="fullscreen-content">
-        <h3>{{ selectedStory.username || 'Anonymous' }}</h3>
-        <img *ngIf="selectedStory.fileType === 'image'" [src]="selectedStory.fileUrl" alt="Story">
-        <video *ngIf="selectedStory.fileType === 'video'" [src]="selectedStory.fileUrl" controls autoplay muted></video>
-      </div>
-      
     </div>
   </div>
-    <div *ngIf="isloadingblogs" class="loader"> 
-        Loading beautiful blogs for {{username}} ♥️ 
-    </div>
 
-<div *ngFor="let item of blogs">
-            
-        <div class="contentdivs" >
-        <div [routerLink]="'/reading/' + item._id" (click)="getid(item)" class="thumbnail" [ngStyle]="{'background-image': getBackgroundImage(item)}">
+  <!-- endoftopitems -->
 
+  <div class="filters">
+    <button class="filterbutton" (click)="toggleFilters()" style="width: auto">
+      <div *ngIf="!showFilters">Filter <span class="filteremoji">👉</span></div>
+      <div *ngIf="showFilters">Filter <span class="filteremoji">👈</span></div>
+    </button>
+    <button
+      class="filterbutton1"
+      *ngIf="showFilters"
+      [ngClass]="{ enter: showFilters, exit: !showFilters }"
+      (click)="filterByTag('Gadgets')"
+    >
+      Gadgets
+    </button>
+    <button
+      class="filterbutton1"
+      *ngIf="showFilters"
+      (click)="filterByTag('DBMS')"
+    >
+      DBMS
+    </button>
+
+    <button
+      class="filterbutton1"
+      *ngIf="showFilters"
+      (click)="filterByTag('Self Improvement')"
+    >
+      Self Improvement
+    </button>
+    <button
+      class="filterbutton1"
+      *ngIf="showFilters"
+      (click)="filterByTag('Games')"
+    >
+      Games
+    </button>
+  </div>
+  <a routerLink="/blogreel">
+    <button class="reelitbtn">Reel it</button>
+  </a>
+  <!-- endoffilteritems -->
+
+  <div class="readcontainer">
+    <div
+      class="blogscontainer"
+      infiniteScroll
+      [infiniteScrollDistance]="4"
+      [infiniteScrollThrottle]="30"
+      (scrolled)="seemore()"
+    >
+      <div class="stories-container">
+        <div class="stories-scroll">
+          <div
+            class="story-card"
+            *ngFor="let story of stories"
+            (click)="openStory(story)"
+          >
+            <h3>{{ story.username || "Guest" }}</h3>
+            <img
+              *ngIf="story.fileType === 'image'"
+              [src]="story.fileUrl"
+              alt="Story"
+              loading="lazy"
+            />
+            <video
+              *ngIf="story.fileType === 'video'"
+              [src]="story.fileUrl"
+              muted
+            ></video>
+          </div>
         </div>
 
-        <div class="rightcontentthumbnail">
-            
-            <div class="thumbnailname" [routerLink]="'/reading/' + item._id" (click)="getid(item)">
+        <div
+          class="fullscreen-overlay"
+          *ngIf="selectedStory"
+          (click)="closeStory($event)"
+          [@popupAnimation]
+        >
+          <div class="fullscreen-content">
+            <h3>{{ selectedStory.username || "Anonymous" }}</h3>
+            <img
+              *ngIf="selectedStory.fileType === 'image'"
+              [src]="selectedStory.fileUrl"
+              alt="Story"
+            />
+            <video
+              *ngIf="selectedStory.fileType === 'video'"
+              [src]="selectedStory.fileUrl"
+              controls
+              autoplay
+              muted
+            ></video>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="isloadingblogs" class="loader">
+        Loading beautiful blogs for {{ username }} ♥️
+      </div>
+
+      <div *ngFor="let item of blogs">
+        <div class="contentdivs">
+          <div
+            [routerLink]="'/reading/' + item._id"
+            (click)="getid(item)"
+            class="thumbnail"
+            [ngStyle]="{ 'background-image': getBackgroundImage(item) }"
+          ></div>
+
+          <div class="rightcontentthumbnail">
+            <div
+              class="thumbnailname"
+              [routerLink]="'/reading/' + item._id"
+              (click)="getid(item)"
+            >
+              <div>
+                <b [innerHTML]="item.title">
+                  <!-- {{item.title}} -->
+                </b>
+                <p [innerHTML]="item.endnotecontent.slice(0, 150) + ' ...'">
+                  <!-- {{item.endnotecontent}} -->
+                </p>
+              </div>
+
+              <div class="profilenameimg">
+                <div class="pickprofileblog">
+                  <img
+                    [src]="
+                      'https://cloud.appwrite.io/v1/storage/buckets/' +
+                      bucketName +
+                      '/files/' +
+                      item.userId +
+                      '/view?project=' +
+                      project +
+                      '&mode=' +
+                      mode +
+                      ''
+                    "
+                  />
+                </div>
                 <div>
-
-                    <b [innerHTML]="item.title">
-                        <!-- {{item.title}} -->
-                    </b>
-                    <p [innerHTML]="item.endnotecontent.slice(0,150)+' ...'">
-                        <!-- {{item.endnotecontent}} -->
-                    </p>
-            
-                </div>
-                
-                <div class="profilenameimg">
-
-                    <div class="pickprofileblog" >
-                        
-                        <img [src]="'https://cloud.appwrite.io/v1/storage/buckets/'+bucketName+'/files/' + item.userId + '/view?project='+project+'&mode='+mode+''" />
-
+                  <div>
+                    <div class="hoverusernameofuser">
+                      <u (click)="goToAuthorProfile(item.userId)"
+                        >{{ item.username }} {{ item.userEmotion }}
+                      </u>
+                      <div class="hoverdiv">{{ item.username }}</div>
                     </div>
-                    <div>
-                        <div>
-                            <div class="hoverusernameofuser">
-                                <u  (click)="goToAuthorProfile(item.userId)">{{item.username}} {{item.userEmotion}} </u>
-                                <div class="hoverdiv">{{item.username}}</div>
-                            </div>
-
-                        </div>
-                    </div> 
-                    
-                </div> 
-                <div style="font-size: 15px;margin-right: auto; color: #777; white-space: nowrap;margin-top:20px;"> 
-                    {{item.pageviews | numberAbbr}} views  
-                      <p class="post-date">{{ item.createdAt | date:'mediumDate' }}</p>
-
-               </div> 
-               <div class="tags">
-                   <div *ngFor="let tag of item.tags" >
-                       <span class="tag">{{tag}}</span>
-                    </div>
+                  </div>
                 </div>
-<!--            
+              </div>
+              <div
+                style="
+                  font-size: 15px;
+                  margin-right: auto;
+                  color: #777;
+                  white-space: nowrap;
+                  margin-top: 20px;
+                "
+              >
+                {{ item.pageviews | numberAbbr }} views
+                <p class="post-date">
+                  {{ item.createdAt | date : "mediumDate" }}
+                </p>
+              </div>
+              <div class="tags">
+                <div *ngFor="let tag of item.tags">
+                  <span class="tag">{{ tag }}</span>
+                </div>
+              </div>
+              <!--            
 
                <div class="tags" *ngIf="if tagsarray.length">
                 <span *ngFor="let tag of tagsarray">{{tag}}</span>
@@ -146,76 +220,139 @@
             </div>
 
             <div class="footerbuttons">
-                <button *ngIf="this.loggedInUserAccount" class="footerbutton" (click)="addPostBookmark(item._id)">
-                    <img style="cursor: pointer;transform: rotate(180deg);" src="../../assets/img/bookmark.png" alt=""  /> 
-                  </button>
-                <!-- <button style="cursor: pointer;" class="footerbuttoncls" (click)="addPostBookmark(item._id)">SAVE</button> -->
-                <div *ngIf="item.userId===this.userId && this.loggedInUserAccount" >
-                    <button class="footerbutton">
-                        <img style="cursor: pointer;" (click)="deletepost(item)" src="../../assets/img/binicon.png" alt=""  /> 
-                      </button>
-                    <!-- <button style="cursor: pointer;" >DEL</button> -->
-                </div>
-                <div *ngIf="item.userId===this.userId && this.loggedInUserAccount" >
-                        <img style="cursor: pointer;width: 47px;height: auto;" [routerLink]="'/collab/'+userId+'/'+item._id" src="../../assets/img/editiconberony.png" alt=""  /> 
-                    <!-- <button style="cursor: pointer;" >DEL</button> -->
-                </div>
-
+              <button
+                *ngIf="this.loggedInUserAccount"
+                class="footerbutton"
+                (click)="addPostBookmark(item._id)"
+              >
+                <img
+                  style="cursor: pointer; transform: rotate(180deg)"
+                  src="../../assets/img/bookmark.png"
+                  alt=""
+                />
+              </button>
+              <!-- <button style="cursor: pointer;" class="footerbuttoncls" (click)="addPostBookmark(item._id)">SAVE</button> -->
+              <div
+                *ngIf="item.userId === this.userId && this.loggedInUserAccount"
+              >
+                <button class="footerbutton">
+                  <img
+                    style="cursor: pointer"
+                    (click)="deletepost(item)"
+                    src="../../assets/img/binicon.png"
+                    alt=""
+                  />
+                </button>
+                <!-- <button style="cursor: pointer;" >DEL</button> -->
+              </div>
+              <div
+                *ngIf="item.userId === this.userId && this.loggedInUserAccount"
+              >
+                <img
+                  style="cursor: pointer; width: 47px; height: auto"
+                  [routerLink]="'/collab/' + userId + '/' + item._id"
+                  src="../../assets/img/editiconberony.png"
+                  alt=""
+                />
+                <!-- <button style="cursor: pointer;" >DEL</button> -->
+              </div>
             </div>
-
-          
+          </div>
         </div>
-
-        </div>
+      </div>
     </div>
-</div>
 
-
-<div class="leftshowcontainer"> 
-    <div class="recommendations">
-       <div>
-           <span class="recommendationtitle">Recommeded Topics</span>
-        </div>
-        <br>
-       <div>
-           <button class="recommendationsbutton" (click)="filterByTag('Anime')">Anime</button>
-           <button class="recommendationsbutton" (click)="filterByTag('Self Improvement')">Self Improvement</button>
-           <button class="recommendationsbutton" (click)="filterByTag('Music')">Music</button>
-           <button class="recommendationsbutton" (click)="filterByTag('Lifestyle')">Lifestyle</button>
-           <button class="recommendationsbutton" (click)="filterByTag('Games')">Games</button>
-           <button class="recommendationsbutton" (click)="filterByTag('Comedy')">Comedy</button>
-           <button class="recommendationsbutton" (click)="filterByTag('Movie')">Movie</button>
-           <button class="recommendationsbutton" (click)="filterByTag('Toppers')">Toppers</button>
-           <button class="recommendationsbutton" (click)="filterByTag('CSBS')">CSBS</button>
-        </div>
-    </div>
-    <hr>
-    <div class="toppicks">
+    <div class="leftshowcontainer">
+      <div class="recommendations">
         <div>
-            <span class="toppicktitle">Top Picks</span>
-         </div>
-            <div class="pick1">
-                <div class="pickinfo">
-                    <div class="pickprofile"></div>
-                    <p><u style="cursor: pointer;">Michle</u> from BeRony</p>
-                </div>
-                <div class="pickbrief">
-                    <b>This is the best page to showcase your life and journey .&hearts; </b>
-                </div>
-                <div class="readtime">
-                    Jan 21, 2024 · 6 min read
-                </div>
-            </div>
+          <span class="recommendationtitle">Recommeded Topics</span>
+        </div>
+        <br />
+        <div>
+          <button class="recommendationsbutton" (click)="filterByTag('Anime')">
+            Anime
+          </button>
+          <button
+            class="recommendationsbutton"
+            (click)="filterByTag('Self Improvement')"
+          >
+            Self Improvement
+          </button>
+          <button class="recommendationsbutton" (click)="filterByTag('Music')">
+            Music
+          </button>
+          <button
+            class="recommendationsbutton"
+            (click)="filterByTag('Lifestyle')"
+          >
+            Lifestyle
+          </button>
+          <button class="recommendationsbutton" (click)="filterByTag('Games')">
+            Games
+          </button>
+          <button class="recommendationsbutton" (click)="filterByTag('Comedy')">
+            Comedy
+          </button>
+          <button class="recommendationsbutton" (click)="filterByTag('Movie')">
+            Movie
+          </button>
+          <button
+            class="recommendationsbutton"
+            (click)="filterByTag('Toppers')"
+          >
+            Toppers
+          </button>
+          <button class="recommendationsbutton" (click)="filterByTag('CSBS')">
+            CSBS
+          </button>
+        </div>
+      </div>
+      <hr />
+      <div class="toppicks">
+        <div>
+          <span class="toppicktitle">Top Picks</span>
+        </div>
+        <div class="pick1">
+          <div class="pickinfo">
+            <div class="pickprofile"></div>
+            <p><u style="cursor: pointer">Michle</u> from BeRony</p>
+          </div>
+          <div class="pickbrief">
+            <b
+              >This is the best page to showcase your life and journey .&hearts;
+            </b>
+          </div>
+          <div class="readtime">Jan 21, 2024 · 6 min read</div>
+        </div>
 
-            <div class="seeall">
-                See all (12)
-            </div>
+        <div class="seeall">See all (12)</div><hr><br>
 
+        <div class="chat-rooms-wrapper">
+          <h1 class="chat-rooms-title">CHAT ROOMS</h1>
+          <div class="create-room-panel">
+            <h2 class="create-room-heading">New Chat Room</h2>
+            <div class="create-room-form">
+              <input type="text" [(ngModel)]="newRoomId" placeholder="Room ID (e.g., my-room)" class="form-input">
+              <input type="text" [(ngModel)]="newRoomTitle" placeholder="Room Title (e.g., My Chat Room)" class="form-input">
+              <button (click)="createRoom()" class="create-button">Create Room</button>
+              <div *ngIf="error" class="error-note">{{ error }}</div>
+            </div>
+          </div>
+          <hr><br>
+          <div *ngIf="rooms.length === 0" class="no-rooms-note">No chat rooms yet. Create one to get started!</div>
+          <div class="rooms-grid">
+            <div *ngFor="let room of rooms" class="room-card">
+              <h3 class="room-name">{{ room.title }}</h3>
+              <p class="room-info">ID: {{ room.roomId }}</p>
+              <p class="room-info">Created by: {{ room.creatorUsername }}</p>
+              <p class="room-date">{{ room.createdAt | date:'medium' }}</p>
+              <button (click)="joinRoom(room.roomId,room.title)" class="join-button">Join Room</button>
+            </div>
+          </div>
+        </div>
     </div>
-</div>
+  </div>
 </div>
 <div class="seemorebutton">
-    <button (click)="seemore()">Whats Next?</button>
-</div>
-
+  <button (click)="seemore()">Whats Next?</button>
 </div>

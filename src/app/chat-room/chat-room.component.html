@@ -1,0 +1,78 @@
+<div class="chat-container" id="chat-container">
+    <div class="bg-indigo-600 text-white p-4 flex justify-between items-center">
+      <div>
+        <h1 class="text-xl font-bold">Chat Room: {{ roomtitle  }}</h1>
+        <h3>{{ roomId }}</h3>
+      </div>
+      <button class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded" (click)="leaveRoom()">Leave Room</button>
+    </div>
+    <div class="chat-messages">
+        <div *ngFor="let msg of messages" class="mb-4">
+          <div class="flex items-start">
+            <span class="font-semibold" [style.color]="msg.color">{{ msg.username }}:</span>
+            <div class="ml-2 message-bubble" >
+              <p *ngIf="msg.message" [style.backgroundColor]="msg.backgroundColor" class="text-gray-800">{{ msg.message }}</p>
+              <img
+                *ngIf="msg.mediaType === 'image' || msg.mediaType === 'gif'"
+                [src]="msg.mediaUrl"
+                alt="Chat media"
+                class="max-w-xs mt-2 rounded cursor-pointer"
+                (click)="openMedia(msg)"
+                loading="lazy"
+              >
+              <video
+                *ngIf="msg.mediaType === 'video'"
+                [src]="msg.mediaUrl"
+                controls
+                class="max-w-xs mt-2 rounded cursor-pointer"
+                (click)="openMedia(msg)"
+              ></video>
+              <span class="text-xs text-gray-500">{{ msg.createdAt | date:'short' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div *ngIf="error" class="bg-red-100 text-red-700 p-2 m-4 rounded">{{ error }}</div>
+    <div class="chat-input">
+      <div class="flex items-center space-x-2">
+        <input
+          type="text"
+          [(ngModel)]="message"
+          (keyup.enter)="sendMessage()"
+          placeholder="Type a message..."
+          class="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+        <input
+          type="file"
+          id="mediaInput"
+          accept="image/jpeg,image/png,image/gif,video/mp4"
+          (change)="onFileSelected($event)"
+          class="p-2"
+        >
+        <button (click)="sendMessage()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Send</button>
+      </div>
+      
+    <div
+      *ngIf="selectedMedia"
+      class="media-overlay"
+      (click)="closeMedia($event)"
+      [@mediaOverlayAnimation]
+    >
+      <div class="media-content">
+        <img
+          *ngIf="selectedMedia.type === 'image' || selectedMedia.type === 'gif'"
+          [src]="selectedMedia.url"
+          alt="Full-screen media"
+          class="max-w-full max-h-full"
+        >
+        <video
+          *ngIf="selectedMedia.type === 'video'"
+          [src]="selectedMedia.url"
+          controls
+          autoplay
+          muted
+          class="max-w-full max-h-full"
+        ></video>
+      </div>
+    </div>
+  </div>
