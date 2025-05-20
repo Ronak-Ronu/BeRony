@@ -387,7 +387,7 @@ export class ReadComponent implements OnInit, OnDestroy {
       next: (room: ChatRoom) => {
         console.log('Room created successfully:', room);
         this.toastr.success(`Room "${room.title}" created!`);
-        this.router.navigate([`/chat/${room.roomId}`]);
+        this.router.navigate([`/chat/${room.roomId}/${this.newRoomTitle}`]);
         this.newRoomId = '';
         this.newRoomTitle = '';
         this.cdr.detectChanges();

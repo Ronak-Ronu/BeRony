@@ -50,6 +50,7 @@ export class HomeComponent implements OnInit{
       
       this.socket.on('connect', () => {
         console.log('Connected to Socket.IO server');
+        this.socket.emit('joinPostRoom', this.postId);
         this.fetchPostContent();
       });
 

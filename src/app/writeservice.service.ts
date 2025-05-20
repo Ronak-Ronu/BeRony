@@ -45,19 +45,27 @@ export class WriteserviceService {
     this.url = 'http://localhost:3000/api/posts';
     this.drafturl = 'http://localhost:3000/api/drafts';
     this.findposturl = 'http://localhost:3000/api/findpost';
-    this.baseurl = 'http://localhost:3000'; // Base URL without /api
+    this.baseurl = 'http://localhost:3000'; 
+
+
+    // this.url=`${environment.beronyAPI}/api/posts`
+    // this.drafturl=`${environment.beronyAPI}/api/drafts`
+    // this.findposturl=`${environment.beronyAPI}/api/findpost`
+    // this.baseurl=`${environment.beronyAPI}`
+
     this.accessKey = environment.Unsplash_ACCESSKEY;
 
     console.log('Initializing Socket.io client to:', this.baseurl);
-    this.socket = io(this.baseurl, {
-      transports: ['websocket'],
-      reconnection: true,
-      path: '/socket.io' // Explicitly set the default Socket.io path
-    });
+    this.socket = io(this.baseurl);
   }
 
   connect(userId: string, username: string): void {
     console.log('Connecting Socket.io with:', { userId, username });
+    if (!userId || !username) {
+      console.error('Cannot connect: userId and username are required');
+      this.errorSubject.next('Please provide userId and username');
+      return;
+    }
     this.socket.auth = { userId, username };
     this.socket.connect();
 
@@ -98,6 +106,13 @@ export class WriteserviceService {
       console.error('Room error:', error.message);
       this.errorSubject.next(error.message);
     });
+    this.socket.on('disconnect', (reason) => {
+      console.warn('Socket disconnected:', reason);
+      if (reason === 'io server disconnect') {
+        this.socket.connect(); // Try reconnect
+      }
+    });
+    
   }
 
   joinRoom(roomId: string, userId: string, username: string): void {
@@ -108,6 +123,7 @@ export class WriteserviceService {
     }
     this.socket.emit('joinChatRoom', roomId);
   }
+  
 
   leaveRoom(roomId: string): void {
     console.log('Leaving room:', roomId);
@@ -304,4 +320,12 @@ export class WriteserviceService {
   getAllStories(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseurl}/api/stories`);
   }
+
+  ngOnDestroy() {
+  this.messagesSubject.complete();
+  this.chatHistorySubject.complete();
+  this.errorSubject.complete();
+  this.roomCreatedSubject.complete();
+}
+
 }

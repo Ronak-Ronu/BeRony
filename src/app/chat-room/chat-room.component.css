@@ -209,6 +209,13 @@ button:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+.scrollToBottom{
+  position: absolute;bottom:10%;left: 95%;cursor: pointer;font-size: 30px;
+}
+.scrollToBottom:hover{
+  font-size: 31px;
+  opacity: 0.9;
+}
 @media (max-width: 600px) {
   .chat-container {
     margin: 60px 16px 16px;

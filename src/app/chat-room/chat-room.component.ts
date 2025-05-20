@@ -87,6 +87,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
         this.scrollToBottom();
       })
     );
+
     this.subscriptions.add(
       this.readsevice.getChatHistory().subscribe((history: ChatMessage[]) => {
         this.messages = history.map(msg => ({
@@ -123,7 +124,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     }
     return hash;
   }
-
   joinRoom(): void {
     this.readsevice.joinRoom(this.roomId, this.userId, this.username);
   }
@@ -165,7 +165,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  private scrollToBottom(): void {
+  scrollToBottom(): void {
     setTimeout(() => {
       const chatContainer = document.querySelector('.chat-messages');
       if (chatContainer) {
