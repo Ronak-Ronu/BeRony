@@ -244,6 +244,13 @@
             alt="GIF"
           />
         </div>
+        <span>Description:</span>
+        <textarea
+          [(ngModel)]="description"
+          placeholder="Add a description (optional)"
+          rows="3"
+          style="width: 100%; resize: none;"
+        ></textarea>
       </div>
     </div>
     <canvas
@@ -265,4 +272,45 @@
   </div>
 </div>
 
+</div>
+<!-- Previous template content remains unchanged until the video description popup -->
+<div *ngIf="showVideoDescriptionPopup" class="video-description-popup">
+  <div class="video-description-content">
+    <div class="popup-header">
+      <h3>Add Video Story</h3>
+      <button class="close-btn" (click)="cancelVideoUpload()">✕</button>
+    </div>
+    <div class="popup-body">
+      <div class="tool-section">
+        <span>Video Preview:</span>
+        <video
+          *ngIf="videoPreviewUrl"
+          [src]="videoPreviewUrl"
+          controls
+          class="video-preview"
+          style="width: 100%; max-height: 300px;"
+        ></video>
+      </div>
+      <div class="tool-section">
+        <span>Description (optional):</span>
+        <textarea
+          [(ngModel)]="description"
+          placeholder="Add a description for your video story"
+          rows="3"
+          style="width: 100%; resize: none;"
+          maxlength="500"
+        ></textarea>
+      </div>
+    </div>
+    <div class="popup-footer">
+      <button
+        (click)="confirmVideoUpload()"
+        [disabled]="uploading || !file"
+        class="upload-btn"
+      >
+        <progress max="50" *ngIf="uploading"></progress>
+        <span *ngIf="!uploading">Upload Video Story</span>
+      </button>
+    </div>
+  </div>
 </div>

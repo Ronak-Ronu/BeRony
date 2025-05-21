@@ -60,11 +60,12 @@
 }
 .story-media {
   width: 100%;
-  height: auto;
+  height: 100%;
   min-height: 70vh; /* Reduced height for smaller card */
   object-fit: cover;
   transition: transform 0.3s ease;
   aspect-ratio: 4 / 3; /* Compact aspect ratio */
+  image-rendering: optimizeSpeed;
 }
 
 .story-media:hover {
@@ -94,7 +95,10 @@
   min-width: 40px; /* Smaller touch target */
   font-weight: bolder;
 }
-
+.story-description{
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.85);
+}
 .back-button:hover,
 .share-button:hover {
   background: rgba(0, 0, 0, 0.05);

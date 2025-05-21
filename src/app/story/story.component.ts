@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 export class StoryComponent implements OnInit {
   story: any | null = null;
   isLoading: boolean = true;
+  isTruncated:boolean=false
 
   constructor(
     private route: ActivatedRoute,
@@ -55,7 +56,9 @@ export class StoryComponent implements OnInit {
     }
   }
 
-
+  toggleTruncate() {
+    this.isTruncated = !this.isTruncated;
+  }
   shareStory() {
     if (navigator.share) {
         navigator.share({

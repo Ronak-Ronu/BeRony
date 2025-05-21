@@ -159,6 +159,12 @@
               autoplay
               muted
             ></video>
+            <div class="story-description" *ngIf="selectedStory.description">
+              <p [class.truncated]="isTruncated">{{ selectedStory.description }}</p>
+              <button *ngIf="selectedStory.description.length > 100" (click)="toggleTruncate()" class="see-more-btn">
+                {{ isTruncated ? 'See More' : 'See Less' }}
+              </button>
+            </div>
           </div>
         </div>
       </div>

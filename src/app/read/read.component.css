@@ -710,20 +710,19 @@ input:focus{
   }
 
 
-  /* Room card */
   .room-card {
     background: #f5f2e9 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAAXNSR0IArs4c6QAAAB9JREFUGFdjZGBgYJj79+8/YWBgYGCYkZGBAQ0NDQN+/gH8eyJ/xgAAAABJRU5ErkJggg==') repeat; /* Subtle paper texture */
     padding: 20px;
     border-radius: 8px;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
     width: 280px;
-    transform: rotate(1deg); /* Slight rotation for organic feel */
+    transform: rotate(1deg); 
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid #e0dcdc;
   }
   
   .room-card:nth-child(even) {
-    transform: rotate(-1deg); /* Alternate rotation for variety */
+    transform: rotate(-1deg); 
   }
   
   .room-card:hover {
@@ -754,7 +753,6 @@ input:focus{
 }
 .storyinfo{
     display: flex;
-    /* justify-content: flex-start; */
     flex-direction: row;
     align-items: center;
 }
@@ -782,14 +780,13 @@ input:focus{
     margin-bottom: 10px;
   }
   
-  /* Room info */
+
   .room-info {
     font-size: 14px;
     color: #555555;
     margin-bottom: 6px;
   }
   
-  /* Room date */
   .room-date {
     font-size: 12px;
     color: #888888;
@@ -797,7 +794,28 @@ input:focus{
     font-style: italic;
   }
   
-  /* Join button */
+  .truncated {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .see-more-btn {
+    background: none;
+    border: none;
+    color: #c6caf9;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 5px;
+  }
+
+  .story-description p {
+    color: white;
+    font-size: 25px;
+
+  }
+
+  
   .join-button {
     background: linear-gradient(45deg, #7d87f3, #cbcef9);
     color: white;

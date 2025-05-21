@@ -12,7 +12,7 @@ import axios from 'axios';
   templateUrl: './userdashboard.component.html',
   styleUrls: ['./userdashboard.component.css'],
 })
-export class UserdashboardComponent implements OnInit, AfterViewInit {
+export class UserdashboardComponent implements OnInit {
   username: string = 'Guest 🫣';
   loggedInUserAccount: any = null;
   userId!: string;
@@ -49,6 +49,9 @@ export class UserdashboardComponent implements OnInit, AfterViewInit {
   gifSearchQuery: string = '';
   gifs: any[] = [];
   showStickerWindow: boolean = false;
+  description: string = ''; 
+  showVideoDescriptionPopup: boolean = false; 
+  videoPreviewUrl: string | null = null; 
 
   constructor(
     private service: WriteserviceService,
@@ -80,9 +83,6 @@ export class UserdashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    // Canvas initialization is handled in openEditor
-  }
 
   openEditor() {
     this.showEditor = true;
@@ -102,6 +102,7 @@ export class UserdashboardComponent implements OnInit, AfterViewInit {
     this.isDragging = false;
     this.showStickerWindow = false;
     this.gifSearchQuery = '';
+    this.description = ''; 
     this.gifs = [];
     if (this.canvas) {
       this.canvas.clear();
@@ -439,8 +440,30 @@ export class UserdashboardComponent implements OnInit, AfterViewInit {
         }
       };
     } else if (file.type.startsWith('video/')) {
-      this.uploadStory(file);
+      this.showVideoDescriptionPopup = true;
+      this.videoPreviewUrl = URL.createObjectURL(file);
+      // this.uploadStory(file);
     }
+  }
+  confirmVideoUpload() {
+    if (this.file) {
+      this.uploadStory(this.file);
+      this.showVideoDescriptionPopup = false;
+      this.videoPreviewUrl = null; 
+    } else {
+      this.toastr.error('No video file selected.');
+    }
+  }
+
+  cancelVideoUpload() {
+    this.showVideoDescriptionPopup = false;
+    this.description = '';
+    this.file = null;
+    if (this.videoPreviewUrl) {
+      URL.revokeObjectURL(this.videoPreviewUrl);
+      this.videoPreviewUrl = null;
+    }
+
   }
 
   uploadStory(file?: File): void {
@@ -470,11 +493,22 @@ export class UserdashboardComponent implements OnInit, AfterViewInit {
   }
 
   private uploadToServer(file: File): void {
-    this.service.uploadStory(this.userId, file).subscribe({
+    const formData = new FormData();
+    formData.append('story', file);
+    formData.append('userId', this.userId);
+    formData.append('description', this.description); 
+
+    this.service.uploadStory(this.userId, formData).subscribe({
       next: (response) => {
         this.uploading = false;
         this.toastr.success('Story uploaded, hurray!');
         this.closeEditor();
+        this.showVideoDescriptionPopup = false;
+        this.description = '';
+        if (this.videoPreviewUrl) {
+          URL.revokeObjectURL(this.videoPreviewUrl); 
+          this.videoPreviewUrl = null;
+        }
       },
       error: (error) => {
         this.uploading = false;

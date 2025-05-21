@@ -18,6 +18,12 @@
         <h3 class="username">{{ story.username || 'Guest' }}</h3>
       </div>
     </header>
+    <div class="story-description" *ngIf="story.description">
+      <p [class.truncated]="isTruncated">{{ story.description }}</p>
+      <button *ngIf="story.description.length > 100" (click)="toggleTruncate()" class="see-more-btn">
+        {{ isTruncated ? 'See More' : 'See Less' }}
+      </button>
+    </div>
 
     <div class="media-container">
       <img *ngIf="story.fileType === 'image'" [src]="story.fileUrl" alt="Story" class="story-media" />

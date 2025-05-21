@@ -68,13 +68,14 @@ export class ReadComponent implements OnInit, OnDestroy {
   newRoomTitle: string = '';
   error: string = '';
   private subscriptions: Subscription = new Subscription();
+  isTruncated: boolean = true;
+
 
   constructor(
     private readsevice: WriteserviceService,
     private toastr: ToastrService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private renderer: Renderer2
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -138,7 +139,9 @@ export class ReadComponent implements OnInit, OnDestroy {
     element.style.setProperty('--x', `${x}px`);
     element.style.setProperty('--y', `${y}px`);
   }
-  
+  toggleTruncate() {
+    this.isTruncated = !this.isTruncated;
+  }
   onMouseLeave(element: EventTarget | null) {
     if (!(element instanceof HTMLElement)) return;
     element.style.setProperty('--x', '50%');
