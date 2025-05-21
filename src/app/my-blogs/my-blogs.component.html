@@ -24,8 +24,8 @@
 <div class="post-cards-container" >
   <div *ngFor="let post of posts">
     <div class="post-card" style="--post-height: 350px;"
-    (mousemove)="onCardMouseMove($event)"
-    (mouseleave)="onCardMouseLeave()"
+    (mousemove)="onMouseMove($event, $event.currentTarget)"
+    (mouseleave)="onMouseLeave($event.currentTarget)"
     [ngStyle]="{'--x': cursorX, '--y': cursorY}"
   >
       <h2 [innerHTML]="post.title"></h2>
@@ -62,7 +62,10 @@
     <!-- <p>My Saved Posts</p> -->
     <div  class="post-cards-container" >
     <div *ngFor="let post of bookmarkposts">
-  <div class="post-card"   (mousemove)="onCardMouseMove($event)"
+  <div class="post-card"   
+  
+  (mousemove)="onMouseMove($event, $event.currentTarget)"
+  (mouseleave)="onMouseLeave($event.currentTarget)"
   [ngStyle]="{'--x': cursorX, '--y': cursorY}">
     <h2 [innerHTML]="post.title"></h2>
     <p class="post-admin-name">{{ post.username }}</p>

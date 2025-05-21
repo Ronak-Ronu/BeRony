@@ -27,20 +27,21 @@ ngOnInit(): void {
 }
 
 
-onCardMouseMove(event: MouseEvent) {
-  const target = event.target as HTMLElement;
-  const rect = target.getBoundingClientRect();
-  this.cursorX = `${event.clientX - rect.left}px`;
-  this.cursorY = `${event.clientY- rect.left}px`;
+onMouseMove(event: MouseEvent, element: EventTarget | null) {
+  if (!(element instanceof HTMLElement)) return;
+  const rect = element.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+
+  element.style.setProperty('--x', `${x}px`);
+  element.style.setProperty('--y', `${y}px`);
 }
 
-onCardMouseLeave() {
-  this.cursorX = "50%";
-  this.cursorY = "50%";
+onMouseLeave(element: EventTarget | null) {
+  if (!(element instanceof HTMLElement)) return;
+  element.style.setProperty('--x', '50%');
+  element.style.setProperty('--y', '50%');
 }
-
-
-
 
   setActiveSection(section: string)
   {

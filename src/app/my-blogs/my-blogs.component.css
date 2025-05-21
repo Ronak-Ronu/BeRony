@@ -29,8 +29,8 @@
   position: absolute;
   top: var(--y);
   left: var(--x);
-  width: 250px;
-  height: 250px;
+  width: 300px;
+  height: 300px;
   background: radial-gradient(circle, rgba(81, 91, 194, 0.5) 0%, transparent 70%);
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
@@ -46,10 +46,9 @@
 }
 .post-card button {
   position: relative;
-  z-index: 2; /* Make the button clickable by positioning it above the pseudo-element */
+  z-index: 2;
 }
 
-/* Ensure .post-card on hover doesn’t affect the button */
 .post-card:hover {
   transform: scale(1.02); 
   z-index: 3;
