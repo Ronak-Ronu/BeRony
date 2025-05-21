@@ -413,7 +413,9 @@ input:focus{
     font-size: 18px;
     border-radius: 5px;
 }
-
+.chatroombutton{
+    display: none;
+}
 
 /* Search List */
 .search-history ul {
@@ -663,7 +665,51 @@ input:focus{
     gap: 20px;
     justify-content: center;
   }
+  .chat-rooms-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow-y: auto;
+  }
   
+  .chat-rooms-popup-content {
+    background: #ffffff;
+    padding: clamp(15px, 3vw, 20px);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    width: clamp(280px, 90vw, 350px);
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+  
+  .close-popup-button {
+    background: #f56565;
+    color: #ffffff;
+    padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2.5vw, 16px);
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: clamp(14px, 2.5vw, 16px);
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .close-popup-button:hover {
+    background: #e53e3e;
+    transform: scale(1.05);
+  }
+
+
   /* Room card */
   .room-card {
     background: #f5f2e9 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAAXNSR0IArs4c6QAAAB9JREFUGFdjZGBgYJj79+8/YWBgYGCYkZGBAQ0NDQN+/gH8eyJ/xgAAAABJRU5ErkJggg==') repeat; /* Subtle paper texture */
@@ -771,6 +817,9 @@ input:focus{
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(255, 154, 158, 0.3);
   }
+  .showchatroom {
+    display: none;
+  }
   
   /* Responsive styles */
   @media (min-width: 768px) {
@@ -781,6 +830,11 @@ input:focus{
     .room-card {
       width: 300px;
     }
+    .chatroombutton{
+        display: block;
+    }
+
+      
   }
   
     
@@ -788,6 +842,10 @@ input:focus{
     .readmainbody{
         width: 100%;
     }
+    .showchatroom{
+        display: block;
+      }
+      
     .headingread{
         font-size: 25px;
         padding: 10px;
@@ -796,7 +854,9 @@ input:focus{
         text-align: left;
         width: 90vw;
     }
-    
+    .chat-rooms-wrapper{
+        display: none;
+    }    
 
     .searchbar, .searchbar input{
         width:100%;
@@ -970,6 +1030,9 @@ input:focus{
         .footerbutton img{
             height: 50%;
         }
+        .chatroombutton{
+            display: block;
+        }
 
 }
 @media (min-width: 601px) and (max-width: 1000px) {
@@ -978,6 +1041,10 @@ input:focus{
         margin: auto; 
         margin-top: 5%;
     }
+    .chatroombutton{
+        display: block;
+    }
+
     
     .headingread {
 
@@ -1190,5 +1257,9 @@ input:focus{
         justify-content: space-between; 
         padding: 15px; 
     }
+    .showchatroom{
+        display: block;
+      }
+      
     
 }

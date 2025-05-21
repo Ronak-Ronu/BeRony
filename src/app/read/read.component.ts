@@ -59,6 +59,7 @@ export class ReadComponent implements OnInit, OnDestroy {
   useremotion: string = "🙂";
   recentsearch: string[] = [];
   showHistory: boolean = false;
+  ischatroomvisible: boolean = false;
   private searchSubject = new Subject<string>();
   stories: any[] = [];
   selectedStory: any | null = null;
@@ -422,5 +423,8 @@ export class ReadComponent implements OnInit, OnDestroy {
   joinRoom(roomId: string,roomtitle:string): void {
     // console.log('Joining room:', roomId);
     this.router.navigate([`/chat/${roomId}/${roomtitle}`]);
+  }
+  showChatRoom(){
+    this.ischatroomvisible=!this.ischatroomvisible
   }
 }

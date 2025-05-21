@@ -339,8 +339,40 @@
         </div>
 
         <div class="seeall">See all (12)</div><hr><br>
+        <div class="chatroombutton">
 
-        <div class="chat-rooms-wrapper">
+          <button (click)="showChatRoom()" class="create-button showchatroom">CHAT ROOM 🚪</button>
+        </div>
+
+        <div *ngIf="ischatroomvisible" class="chat-rooms-popup" [@popupAnimation] (click)="showChatRoom()">
+          <div class="chat-rooms-popup-content" (click)="$event.stopPropagation()">
+            <button class="close-popup-button" (click)="showChatRoom()" style="position: fixed;margin-top: 10%;z-index: 10;">Close</button>
+            <h1 class="chat-rooms-title">CHAT ROOMS</h1>
+            <div class="create-room-panel">
+              <h2 class="create-room-heading">New Chat Room</h2>
+              <div class="create-room-form">
+                <input type="text" [(ngModel)]="newRoomId" placeholder="Room ID (e.g., my-room)" class="form-input">
+                <input type="text" [(ngModel)]="newRoomTitle" placeholder="Room Title (e.g., My Chat Room)" class="form-input">
+                <button (click)="createRoom()" class="create-button">Create Room</button>
+                <div *ngIf="error" class="error-note">{{ error }}</div>
+              </div>
+            </div>
+            <hr><br>
+            <div *ngIf="rooms.length === 0" class="no-rooms-note">No chat rooms yet. Create one to get started!</div>
+            <div class="rooms-grid">
+              <div *ngFor="let room of rooms" class="room-card"
+                (mousemove)="onMouseMove($event, $event.currentTarget)"
+                (mouseleave)="onMouseLeave($event.currentTarget)">
+                <h3 class="room-name">{{ room.title }}</h3>
+                <p class="room-info">ID: {{ room.roomId }}</p>
+                <p class="room-info">Created by: {{ room.creatorUsername }}</p>
+                <p class="room-date">{{ room.createdAt | date:'medium' }}</p>
+                <button (click)="joinRoom(room.roomId, room.title)" class="join-button">Join Room</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-rooms-wrapper" >
           <h1 class="chat-rooms-title">CHAT ROOMS</h1>
           <div class="create-room-panel">
             <h2 class="create-room-heading">New Chat Room</h2>
