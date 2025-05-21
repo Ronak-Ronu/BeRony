@@ -1,4 +1,4 @@
-import { Component ,ElementRef,OnInit, ViewChild} from '@angular/core';
+import { ChangeDetectorRef, Component ,ElementRef,OnInit, ViewChild} from '@angular/core';
 import { WriteserviceService } from '../writeservice.service';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../environments/environment';
@@ -28,7 +28,8 @@ export class HomeComponent implements OnInit{
   usedColors: { [userId: string]: string } = {};
   constructor(
     private service: WriteserviceService,
-    private toaster:ToastrService
+    private toaster:ToastrService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -37,8 +38,8 @@ export class HomeComponent implements OnInit{
     this.username = this.userId ? 'UserFromAppwrite' : 'Guest';
 
     this.socket = io(
-      // environment.beronyAPI 
-      "http://localhost:3000"
+      environment.beronyAPI 
+      // "http://localhost:3000"
       , 
       {
       auth: {
@@ -75,6 +76,7 @@ export class HomeComponent implements OnInit{
       this.socket.on("textChange", (newText:string) => {
           this.text = newText;
           this.service.textSubject.next(newText);
+          this.cdr.detectChanges();
       });
     
     }
