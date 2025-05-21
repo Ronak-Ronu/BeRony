@@ -315,6 +315,7 @@ button:hover{
     border: 1px solid black;
     margin-left: 20%;
     margin-top: 6%;
+    z-index: 999;
  
     padding: 50px;
     background-color: rgba(255, 255, 255, 0.9);
@@ -340,7 +341,22 @@ button:hover{
     margin-bottom: 5%;
 }
 
-
+.previewcontentbody pre {
+    background: #f6f8fa;
+    padding: 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #24292e;
+    margin: 1em 0;
+  }
+  
+  .previewcontentbody code {
+    font-family: inherit;
+    white-space: pre-wrap;
+  }
 
 
 
@@ -471,6 +487,7 @@ input {
    height: 50vh;
    width: 70vw;
 }
+
 
 
   @media (max-width: 600px) {

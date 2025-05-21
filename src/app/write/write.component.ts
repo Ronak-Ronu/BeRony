@@ -411,9 +411,9 @@ addTag(tag: string) {
 formatCode(code: string): string {
   const lines = code.split('\n');
   const styledLines = lines.map(line => {
-      return `<font color="grey" size="4">${this.escapeHtml(line)}</font>`;
+      return `<font color="grey" size="3">${this.escapeHtml(line)}</font>`;
   });
-  return `<hr/><div bgcolor="#f0f0f0"><pre><code>${styledLines.join('\n')}</code></pre><div><hr/>`;
+  return `<div class="code-block" bgcolor="#f0f0f0"><pre><code>${styledLines.join('\n')}</code></pre><div>`;
 }
 escapeHtml(unsafe: string): string {
   return unsafe
@@ -558,9 +558,9 @@ addImageToCanvas(event: Event): void {
         }
       });
       this.gifs = response.data.data; 
-      console.log(this.gifs);
-      console.log(response);
-      console.log(this.gifSearchQuery);
+      // console.log(this.gifs);
+      // console.log(response);
+      // console.log(this.gifSearchQuery);
     } catch (error) {
       console.error('Error fetching GIFs', error);
     }
@@ -568,7 +568,7 @@ addImageToCanvas(event: Event): void {
   selectGif(gif: any) {
     // const gifUrl = gif.images.original.url
     const gifUrl=gif.images.fixed_height.url
-    const imgTag = `<img src="${gifUrl}" alt="GIF" style="max-width: 200px; height: auto;">`;
+    const imgTag = `<img src="${gifUrl}" alt="GIF" style="max-width: 150px; height: auto;">`;
     const textarea = this.bodyTextarea.nativeElement;
     const currentValue = textarea.value;
     const textBefore = currentValue.substring(0, this.cursorPosition - 4);
