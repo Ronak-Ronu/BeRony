@@ -26,7 +26,13 @@
   font-weight: 700;
   letter-spacing: 0.5px;
 }
-
+canvas {
+  border: 5px solid white; /* Already in your code */
+  width: 600px;
+  height: 400px;
+  touch-action: none; /* Prevent default touch behavior */
+  z-index: 10; /* Ensure canvas is above other elements */
+}
 .bg-red-500 {
   background-color: #f56565;
   color: #ffffff;
