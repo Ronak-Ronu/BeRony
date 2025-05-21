@@ -42,16 +42,16 @@ export class WriteserviceService {
   private roomCreatedSubject = new Subject<ChatRoom>();
 
   constructor(private http: HttpClient) {
-    // this.url = 'http://localhost:3000/api/posts';
-    // this.drafturl = 'http://localhost:3000/api/drafts';
-    // this.findposturl = 'http://localhost:3000/api/findpost';
-    // this.baseurl = 'http://localhost:3000'; 
+    this.url = 'http://localhost:3000/api/posts';
+    this.drafturl = 'http://localhost:3000/api/drafts';
+    this.findposturl = 'http://localhost:3000/api/findpost';
+    this.baseurl = 'http://localhost:3000'; 
 
 
-    this.url=`${environment.beronyAPI}/api/posts`
-    this.drafturl=`${environment.beronyAPI}/api/drafts`
-    this.findposturl=`${environment.beronyAPI}/api/findpost`
-    this.baseurl=`${environment.beronyAPI}`
+    // this.url=`${environment.beronyAPI}/api/posts`
+    // this.drafturl=`${environment.beronyAPI}/api/drafts`
+    // this.findposturl=`${environment.beronyAPI}/api/findpost`
+    // this.baseurl=`${environment.beronyAPI}`
 
     this.accessKey = environment.Unsplash_ACCESSKEY;
 
@@ -187,7 +187,6 @@ export class WriteserviceService {
     return this.roomCreatedSubject.asObservable();
   }
 
-  // Other methods remain unchanged
   publishblog(formData: FormData): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.url, formData).subscribe({
@@ -326,6 +325,11 @@ export class WriteserviceService {
   getAllStories(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseurl}/api/stories`);
   }
+
+  getStoryById(storyId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseurl}/api/stories/${storyId}`);
+  }
+
 
   ngOnDestroy() {
   this.messagesSubject.complete();

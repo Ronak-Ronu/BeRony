@@ -299,7 +299,7 @@ export class UserdashboardComponent implements OnInit, AfterViewInit {
     } else {
       const url = window.location.href;
       navigator.clipboard.writeText(url).then(() => {
-        alert('URL copied to clipboard! 📋');
+        this.toastr.success('URL copied to clipboard! 📋');
       });
     }
   }
