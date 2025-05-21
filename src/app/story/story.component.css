@@ -1,0 +1,327 @@
+/* Global container with gradient background */
+.page-container {
+  height: 89vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(10px, 2vw, 16px); /* Reduced padding */
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
+
+/* Story Container */
+.story-container {
+  width: clamp(240px, 80vw, 480px); /* Smaller width: 240px min, 480px max */
+  max-width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px; /* Slightly smaller radius */
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1); /* Subtler shadow */
+  backdrop-filter: blur(8px);
+  padding: clamp(12px, 2.5vw, 18px); /* Reduced padding */
+  animation: fadeIn 0.5s ease-out;
+  box-sizing: border-box;
+}
+
+/* Header */
+.story-header {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 1.5vw, 10px);
+  margin-bottom: clamp(10px, 2.5vw, 16px);
+}
+
+/* Username */
+.username {
+  font-size: clamp(1rem, 3.5vw, 1.25rem); /* Smaller font */
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Media */
+.media-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px; /* Smaller radius */
+  margin-bottom: clamp(10px, 2.5vw, 16px);
+}
+.userstoryname{
+  cursor: pointer;
+  padding: 5px;
+
+  border-radius: 10px;
+
+}
+.userstoryname:hover{
+    color: grey;
+    text-decoration: underline;
+    background-color: rgb(143, 159, 233,0.4);
+}
+.story-media {
+  width: 100%;
+  height: auto;
+  min-height: 70vh; /* Reduced height for smaller card */
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  aspect-ratio: 4 / 3; /* Compact aspect ratio */
+}
+
+.story-media:hover {
+  transform: scale(1.02);
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Buttons */
+.back-button,
+.share-button {
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 1vw, 6px);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: clamp(0.85rem, 2vw, 0.875rem); /* Smaller font */
+  color: #555;
+  padding: clamp(6px, 1.5vw, 8px);
+  border-radius: 6px;
+  transition: background 0.2s, transform 0.2s, color 0.2s;
+  min-width: 40px; /* Smaller touch target */
+  font-weight: bolder;
+}
+
+.back-button:hover,
+.share-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #007bff;
+  transform: translateY(-2px);
+}
+
+.back-button svg,
+.share-button svg {
+  width: clamp(14px, 2.5vw, 16px); /* Smaller icons */
+  height: clamp(14px, 2.5vw, 16px);
+  stroke: currentColor;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.5vw, 10px);
+  color: #666;
+  animation: fadeIn 0.3s ease-out;
+  width: clamp(180px, 75vw, 360px); /* Smaller container */
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: clamp(12px, 2.5vw, 18px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+}
+
+.spinner {
+  width: clamp(28px, 5vw, 36px); /* Smaller spinner */
+  height: clamp(28px, 5vw, 36px);
+  animation: spin 1s linear infinite;
+}
+
+.spinner .path {
+  stroke: #007bff;
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+/* Error State */
+.error-container {
+  text-align: center;
+  color: #666;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: clamp(12px, 2.5vw, 18px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-out;
+  width: clamp(180px, 75vw, 360px);
+}
+
+.error-icon {
+  width: clamp(36px, 7vw, 44px);
+  height: clamp(36px, 7vw, 44px);
+  stroke: #e63946;
+  margin-bottom: clamp(6px, 1.5vw, 10px);
+}
+
+.back-to-read {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2.5vw, 16px);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+  transition: background 0.2s, transform 0.2s;
+  min-width: 100px;
+}
+
+.back-to-read:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 480px) {
+  .page-container {
+    padding: 8px;
+  }
+
+  .story-container {
+    width: 92vw;
+    padding: 10px;
+  }
+
+  .story-header {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .username {
+    font-size: 0.875rem;
+  }
+
+  .media-container {
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+
+  .story-media {
+    max-height: 40vh; /* Further reduced for mobile */
+  }
+
+  .back-button,
+  .share-button {
+    padding: 5px;
+    font-size: 0.625rem;
+  }
+
+  .back-button svg,
+  .share-button svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .loading-container,
+  .error-container {
+    padding: 10px;
+    width: 88vw;
+  }
+
+  .spinner {
+    width: 24px;
+    height: 24px;
+  }
+
+  .error-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .back-to-read {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 768px) {
+  .story-container {
+    width: 85vw;
+    max-width: 400px;
+    padding: 14px;
+  }
+
+  .username {
+    font-size: 1rem;
+  }
+
+  .story-media {
+    max-height: 45vh;
+  }
+
+  .back-button,
+  .share-button {
+    padding: 6px;
+    font-size: 0.75rem;
+  }
+
+  .back-button svg,
+  .share-button svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .story-container {
+    width: 80vw;
+    max-width: 450px;
+  }
+
+  .username {
+    font-size: 1.125rem;
+  }
+
+  .story-media {
+    max-height: 48vh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .story-container {
+    width: 75vw;
+    max-width: 480px;
+  }
+
+  .username {
+    font-size: 1.25rem;
+  }
+
+  .story-media {
+    max-height: 50vh;
+  }
+}

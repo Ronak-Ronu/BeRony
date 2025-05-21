@@ -1,0 +1,42 @@
+<div class="page-container">
+  <div *ngIf="isLoading" class="loading-container">
+    <svg class="spinner" viewBox="0 0 50 50">
+      <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+    </svg>
+    <p>Loading story...</p>
+  </div>
+
+
+  <div *ngIf="story" class="story-container">
+    <header class="story-header">
+      <button class="back-button" (click)="goBack()" aria-label="Back to read page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"></path>
+        </svg>
+      </button>
+      <div (click)="goToAuthorProfile(story.userId)" class="userstoryname" >
+        <h3 class="username">{{ story.username || 'Guest' }}</h3>
+      </div>
+    </header>
+
+    <div class="media-container">
+      <img *ngIf="story.fileType === 'image'" [src]="story.fileUrl" alt="Story" class="story-media" />
+      <video *ngIf="story.fileType === 'video'"  [src]="story.fileUrl" controls autoplay muted class="story-media">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div class="actions">
+      <button class="share-button" (click)="shareStory()" aria-label="Share story">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+        Share
+      </button>
+    </div>
+  </div>
+</div>
