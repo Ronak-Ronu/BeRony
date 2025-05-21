@@ -122,6 +122,7 @@ export class WriteserviceService {
       this.socket.connect();
     }
     this.socket.emit('joinChatRoom', roomId);
+    this.socket.emit('getChatHistory', roomId);
   }
   
 
@@ -171,6 +172,11 @@ export class WriteserviceService {
 
   getChatHistory(): Observable<ChatMessage[]> {
     return this.chatHistorySubject.asObservable();
+  }
+  getChatHistoryHttp(roomId: string): Observable<ChatMessage[]> {
+    const url = `${this.baseurl}/api/chat/messages/${roomId}`;
+    console.log('Fetching chat history from:', url);
+    return this.http.get<ChatMessage[]>(url);
   }
 
   getErrors(): Observable<string> {

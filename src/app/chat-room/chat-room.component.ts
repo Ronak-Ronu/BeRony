@@ -89,6 +89,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
     this.username = sessionStorage.getItem('username') || 'Guest_' + Math.random().toString(36).substr(2, 5);
     sessionStorage.setItem('userId', this.userId);
     sessionStorage.setItem('username', this.username);
+    this.readsevice.connect(this.userId, this.username);
     this.joinRoom();
     this.subscriptions.add(
       this.readsevice.getMessages().subscribe((message: ChatMessage) => {
