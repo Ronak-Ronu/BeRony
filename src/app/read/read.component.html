@@ -16,7 +16,6 @@
             (keydown.enter)="onSearch()"
           />
 
-          <!-- Recent Searches Dropdown -->
           <div
             *ngIf="recentsearch.length && showHistory"
             class="search-history"
@@ -100,6 +99,9 @@
             (click)="openStory(story)"
           >
             <h3>{{ story.username || "Guest" }}</h3>
+
+            <!-- (click)="goToAuthorProfile(item.userId) -->
+
             <img
               *ngIf="story.fileType === 'image'"
               [src]="story.fileUrl"
@@ -121,7 +123,15 @@
           [@popupAnimation]
         >
           <div class="fullscreen-content">
-            <h3>{{ selectedStory.username || "Anonymous" }}</h3>
+            <div class="storyinfo">
+              <div (click)="goToAuthorProfile(selectedStory.userId)" class="userstoryname" >
+                {{ selectedStory.username || "Guest" }}
+              </div>
+              <div class="datecreatedstory"> 
+                {{selectedStory.createdAt | date:'mediumDate'}}  
+              </div>
+
+            </div>
             <img
               *ngIf="selectedStory.fileType === 'image'"
               [src]="selectedStory.fileUrl"
@@ -142,7 +152,10 @@
       </div>
 
       <div *ngFor="let item of blogs">
-        <div class="contentdivs">
+        <div class="contentdivs"
+        (mousemove)="onMouseMove($event, $event.currentTarget)"
+        (mouseleave)="onMouseLeave($event.currentTarget)"
+        >
           <div
             [routerLink]="'/reading/' + item._id"
             (click)="getid(item)"
@@ -157,7 +170,7 @@
               (click)="getid(item)"
             >
               <div>
-                <b [innerHTML]="item.title">
+                <b [innerHTML]="item.title" style="line-clamp: 1;">
                   <!-- {{item.title}} -->
                 </b>
                 <p [innerHTML]="item.endnotecontent.slice(0, 150) + ' ...'">
@@ -341,7 +354,10 @@
           <hr><br>
           <div *ngIf="rooms.length === 0" class="no-rooms-note">No chat rooms yet. Create one to get started!</div>
           <div class="rooms-grid">
-            <div *ngFor="let room of rooms" class="room-card">
+            <div *ngFor="let room of rooms" class="room-card"
+            (mousemove)="onMouseMove($event, $event.currentTarget)"
+            (mouseleave)="onMouseLeave($event.currentTarget)"
+            >
               <h3 class="room-name">{{ room.title }}</h3>
               <p class="room-info">ID: {{ room.roomId }}</p>
               <p class="room-info">Created by: {{ room.creatorUsername }}</p>

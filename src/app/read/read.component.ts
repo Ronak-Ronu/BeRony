@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Renderer2 } from '@angular/core';
 import { WriteserviceService } from '../writeservice.service';
 import { WriteModel } from '../Models/writemodel';
 import { account } from '../../lib/appwrite';
@@ -47,7 +47,7 @@ export class ReadComponent implements OnInit, OnDestroy {
   username: string = '';
   searchQuery: string = '';
   searchResults: any[] = [];
-  showFilters = false;
+  showFilters = true;
   userId: string = '';
   isloadingblogs: boolean = true;
   selectedTag: string | null = null;
@@ -72,7 +72,8 @@ export class ReadComponent implements OnInit, OnDestroy {
     private readsevice: WriteserviceService,
     private toastr: ToastrService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private renderer: Renderer2
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -127,6 +128,22 @@ export class ReadComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  onMouseMove(event: MouseEvent, element: EventTarget | null) {
+    if (!(element instanceof HTMLElement)) return;
+    const rect = element.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+  
+    element.style.setProperty('--x', `${x}px`);
+    element.style.setProperty('--y', `${y}px`);
+  }
+  
+  onMouseLeave(element: EventTarget | null) {
+    if (!(element instanceof HTMLElement)) return;
+    element.style.setProperty('--x', '50%');
+    element.style.setProperty('--y', '50%');
+  }
+  
   readblogdata(): void {
     try {
       this.isloadingblogs = true;
