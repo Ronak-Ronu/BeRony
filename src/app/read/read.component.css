@@ -436,7 +436,7 @@ input:focus{
 .stories-container {
     margin: 20px 0;
     text-align: left;
-    padding-left: 30px;
+    padding-left: 10px;
     width: 57vw;
 }
 
@@ -820,7 +820,30 @@ input:focus{
   .showchatroom {
     display: none;
   }
-  
+
+.share-button {
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 1vw, 6px);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: clamp(0.75rem, 2vw, 0.875rem); 
+  padding: 10px;
+  border-radius: 20px;
+  transition: background 0.2s, transform 0.2s, color 0.2s;
+  min-width: 40px; 
+  border: black;
+  background-color: #adb4f9;
+  margin-left: 20px;
+  font-size: 17px;
+  font-weight: bolder;
+}
+.share-button:hover{
+  background-color: #727bc8;
+
+}
+
   /* Responsive styles */
   @media (min-width: 768px) {
     .rooms-grid {
@@ -853,6 +876,7 @@ input:focus{
     .stories-container {
         text-align: left;
         width: 90vw;
+        padding: 5px;
     }
     .chat-rooms-wrapper{
         display: none;

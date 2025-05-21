@@ -92,6 +92,10 @@
       (scrolled)="seemore()"
     >
       <div class="stories-container">
+        <div class="chatroombutton">
+          <button (click)="showChatRoom()" class="create-button showchatroom">CHAT ROOM 🚪</button>
+        </div>
+
         <div class="stories-scroll">
           <div
             class="story-card"
@@ -130,6 +134,17 @@
               <div class="datecreatedstory"> 
                 {{selectedStory.createdAt | date:'mediumDate'}}  
               </div>
+      
+              <button class="share-button" (click)="share(selectedStory)" aria-label="Share story" >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                Share
+              </button>
 
             </div>
             <img
@@ -339,11 +354,7 @@
         </div>
 
         <div class="seeall">See all (12)</div><hr><br>
-        <div class="chatroombutton">
-
-          <button (click)="showChatRoom()" class="create-button showchatroom">CHAT ROOM 🚪</button>
-        </div>
-
+    
         <div *ngIf="ischatroomvisible" class="chat-rooms-popup" [@popupAnimation] (click)="showChatRoom()">
           <div class="chat-rooms-popup-content" (click)="$event.stopPropagation()">
             <button class="close-popup-button" (click)="showChatRoom()" style="position: fixed;margin-top: 10%;z-index: 10;">Close</button>

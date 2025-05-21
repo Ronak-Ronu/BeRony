@@ -427,4 +427,47 @@ export class ReadComponent implements OnInit, OnDestroy {
   showChatRoom(){
     this.ischatroomvisible=!this.ischatroomvisible
   }
+
+
+  getStoryShareUrl(story: any): string {
+    const baseUrl = window.location.origin;
+    // Assuming stories have a unique ID; adjust based on your story model
+    return `${baseUrl}/story/${story._id}`;
+  }
+  private copyToClipboard(text: string, successMessage: string): void {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        this.toastr.success(successMessage);
+      })
+      .catch((error) => {
+        console.error('Error copying to clipboard:', error);
+        this.toastr.error('Failed to copy link');
+      });
+  }
+
+  share(story: string) {
+    const shareUrl = this.getStoryShareUrl(story);
+    if (navigator.share) {
+
+        navigator.share({
+            title: '#ShareStoryFromBeRony',
+            text: '👋 check out this story on berony',
+            url: shareUrl,
+        })
+        .then(() => console.log('Share successful'))
+        .catch((error) => console.error('Error sharing:', error));
+    } else {
+        const url = shareUrl;
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                this.toastr.success('URL copied to clipboard! 📋');
+            })
+            .catch((error) => {
+                console.error('Error copying to clipboard:', error);
+                this.toastr.error('Failed to copy the URL.');
+            });
+    }
+}
+
+
 }

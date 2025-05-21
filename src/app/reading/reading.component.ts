@@ -305,11 +305,11 @@ async getloggedinuserdata (){
         const url = window.location.href;
         navigator.clipboard.writeText(url)
             .then(() => {
-                alert('URL copied to clipboard! 📋');
+                this.toastr.success('URL copied to clipboard! 📋');
             })
             .catch((error) => {
                 console.error('Error copying to clipboard:', error);
-                alert('Failed to copy the URL.');
+                this.toastr.success('Failed to copy the URL.');
             });
     }
 }
