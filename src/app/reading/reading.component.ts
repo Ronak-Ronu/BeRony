@@ -569,6 +569,7 @@ downloadBlog() {
 
     pdf.addImage(blogImage, 'PNG', 10, 10, 80, 40); // Blog image
 
+    // Title
     pdf.setFont('helvetica', 'bold');
     pdf.setFontSize(24);
     pdf.setTextColor(...primaryColor);
@@ -596,15 +597,18 @@ downloadBlog() {
     splitContent.forEach((line: string, index: number) => {
       if (yPosition > 270) {
         pdf.addPage();
+        // pdf.setFillColor(...backgroundColor);
+        // pdf.rect(0, 0, 210, 20, 'F'); // Header on new page
         pdf.setFontSize(12);
         pdf.setTextColor(...primaryColor);
-        pdf.text(`Continued: ${this.stripHTML(this.post.title)}`, 10, 15);
+        pdf.text(`Continued: ${this.post.title}`, 10, 15);
         yPosition = 30;
       }
       pdf.text(line, 10, yPosition);
-      yPosition += 7; 
+      yPosition += 7; // Line spacing
     });
 
+    // Collaborators (if any)
     if (this.collaboratorsUsernames && this.collaboratorsUsernames.length > 0) {
       if (yPosition > 250) {
         pdf.addPage();

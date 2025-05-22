@@ -38,8 +38,8 @@ export class HomeComponent implements OnInit{
     this.username = this.userId ? 'UserFromAppwrite' : 'Guest';
 
     this.socket = io(
-      // environment.beronyAPI 
-      "http://localhost:3000"
+      environment.beronyAPI 
+      // "http://localhost:3000"
       , 
       {
       auth: {

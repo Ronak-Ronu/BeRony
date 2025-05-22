@@ -42,16 +42,16 @@ export class WriteserviceService {
   private roomCreatedSubject = new Subject<ChatRoom>();
 
   constructor(private http: HttpClient) {
-    this.url = 'http://localhost:3000/api/posts';
-    this.drafturl = 'http://localhost:3000/api/drafts';
-    this.findposturl = 'http://localhost:3000/api/findpost';
-    this.baseurl = 'http://localhost:3000'; 
+    // this.url = 'http://localhost:3000/api/posts';
+    // this.drafturl = 'http://localhost:3000/api/drafts';
+    // this.findposturl = 'http://localhost:3000/api/findpost';
+    // this.baseurl = 'http://localhost:3000'; 
 
 
-    // this.url=`${environment.beronyAPI}/api/posts`
-    // this.drafturl=`${environment.beronyAPI}/api/drafts`
-    // this.findposturl=`${environment.beronyAPI}/api/findpost`
-    // this.baseurl=`${environment.beronyAPI}`
+    this.url=`${environment.beronyAPI}/api/posts`
+    this.drafturl=`${environment.beronyAPI}/api/drafts`
+    this.findposturl=`${environment.beronyAPI}/api/findpost`
+    this.baseurl=`${environment.beronyAPI}`
 
     this.accessKey = environment.Unsplash_ACCESSKEY;
 
@@ -315,13 +315,9 @@ export class WriteserviceService {
     return this.http.post(`${this.baseurl}/api/send-collab-invite`, body);
   }
 
-  uploadStory(userId: string, file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('story', file);
-    formData.append('userId', userId);
+  uploadStory(userId: string, formData: FormData): Observable<any> {
     return this.http.post(`${this.baseurl}/api/stories`, formData);
   }
-
   getAllStories(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseurl}/api/stories`);
   }
