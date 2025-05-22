@@ -9,18 +9,50 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+
       - name: Install Dependencies
         run: npm ci
+
+      - name: Create environment.ts
+        run: |
+          mkdir -p src/environments
+          cat <<EOT > src/environments/environment.ts
+          export const environment = {
+            production: true,
+            appwriteProjectId: '${{ secrets.APPWRITE_PROJECT_ID }}',
+            appwriteEndpoint: '${{ secrets.APPWRITE_ENDPOINT }}',
+            databaseId: '${{ secrets.DATABASE_ID }}',
+            collectionId: '${{ secrets.COLLECTION_ID }}',
+            giphyAPIKEY: '${{ secrets.GIPHY_API_KEY }}',
+            beronyAPI: '${{ secrets.BERONY_API }}',
+            bucketName: '${{ secrets.BUCKET_NAME }}',
+            project: '${{ secrets.PROJECT }}',
+            mode: '${{ secrets.MODE }}',
+            Unsplash_ACCESSKEY: '${{ secrets.UNSPLASH_ACCESS_KEY }}',
+            firebaseConfig: {
+              projectId: '${{ secrets.FIREBASE_PROJECT_ID }}',
+              appId: '${{ secrets.FIREBASE_APP_ID }}',
+              storageBucket: '${{ secrets.FIREBASE_STORAGE_BUCKET }}',
+              apiKey: '${{ secrets.FIREBASE_API_KEY }}',
+              authDomain: '${{ secrets.FIREBASE_AUTH_DOMAIN }}',
+              messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}'
+            }
+          };
+          EOT
+
       - name: Build Angular App
         run: npm run build -- --configuration production
+
       - name: Move Files from dist/browser to dist
         run: |
           mv dist/browser/* dist/
           rm -rf dist/browser
+
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
