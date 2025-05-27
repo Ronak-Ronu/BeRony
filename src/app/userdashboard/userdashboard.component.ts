@@ -348,6 +348,8 @@ export class UserdashboardComponent implements OnInit {
 
   unplantTree() {
     const userId = this.loggedinuserid;
+    console.log(userId);
+    
     this.service.deleteTree(userId).subscribe(
       (response) => {
         this.toastr.success('Tree Unplanted 😥');

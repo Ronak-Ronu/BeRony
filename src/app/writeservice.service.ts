@@ -220,7 +220,7 @@ export class WriteserviceService {
   }
 
   deleteTree(userId: String): Observable<any> {
-    return this.http.delete(`${this.baseurl}/api/tree/${userId}`);
+    return this.http.delete(`${this.baseurl}/api/items/${userId}`);
   }
 
   getsearchpostdata(tag: string | null = null, query: string = '') {
