@@ -239,6 +239,11 @@
   }
 }
 
+#google_translate_element {
+  transition: opacity 0.3s ease;
+}
+
+
 /* Tablet styles */
 @media (min-width: 601px) and (max-width: 1000px) {
 

@@ -25,7 +25,7 @@
       <p><a routerLink="/write" (click)="toggleMenu()">WRITE</a></p>
       <p><a routerLink="/userdashboard" (click)="toggleMenu()">PROFILE</a></p>
       <p><a routerLink="/whosrony" (click)="toggleMenu()">WHO'S RONY</a></p>
-      <p *ngIf="loggedInUser" (click)="logout()" id="logoutbutton" (click)="toggleMenu()">LOG OUT</p>
+      <p *ngIf="loggedInUser" id="logoutbutton" (click)="logout(); toggleMenu()">LOG OUT</p>
       <p *ngIf="!loggedInUser" (click)="login()" id="loginbutton" (click)="toggleMenu()">LOG IN</p>
       <div (click)="toggleTranslate()" class="translate-icon">
         <div class="translatelogo" *ngIf="!showTranslate">
@@ -44,8 +44,9 @@
           </svg>
         </div>
       </div>
-      <div id="google_translate_element" [hidden]="!showTranslate"></div>
+      <div id="google_translate_element" *ngIf="showTranslate"></div>
       
+      <!-- <div id="google_translate_element"></div>  -->
 
 
     </div>
