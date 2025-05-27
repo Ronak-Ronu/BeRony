@@ -1,5 +1,5 @@
 # BeRony
-![alt text](src/assets/img/logo.png)
+<img src="src/assets/img/logo.png" alt="logo" width="150" style="border-radius: 10px;"/>
 
 
 The virtual place where you can bring your stories to life. Whether you want to:
