@@ -66,6 +66,14 @@ export class WriteserviceService {
       this.errorSubject.next('Please provide userId and username');
       return;
     }
+    this.socket.removeAllListeners('chatMessage');
+    this.socket.removeAllListeners('chatHistory');
+    this.socket.removeAllListeners('connect_error');
+    this.socket.removeAllListeners('chatError');
+    this.socket.removeAllListeners('roomCreated');
+    this.socket.removeAllListeners('roomError');
+    this.socket.removeAllListeners('disconnect');
+
     this.socket.auth = { userId, username };
     this.socket.connect();
 
@@ -120,11 +128,14 @@ export class WriteserviceService {
     this.socket.auth = { userId, username };
     if (!this.socket.connected) {
       this.socket.connect();
+      this.socket.on('connect', () => {
+        console.log('Socket connected, joining room:', roomId);
+        this.socket.emit('joinChatRoom', roomId);
+      });
+    } else {
+      this.socket.emit('joinChatRoom', roomId);
     }
-    this.socket.emit('joinChatRoom', roomId);
-    this.socket.emit('getChatHistory', roomId);
   }
-  
 
   leaveRoom(roomId: string): void {
     console.log('Leaving room:', roomId);
@@ -174,7 +185,7 @@ export class WriteserviceService {
     return this.chatHistorySubject.asObservable();
   }
   getChatHistoryHttp(roomId: string): Observable<ChatMessage[]> {
-    const url = `${this.baseurl}/api/chat/messages/${roomId}`;
+    const url = `${this.baseurl}/api/chat/${roomId}`;
     console.log('Fetching chat history from:', url);
     return this.http.get<ChatMessage[]>(url);
   }
@@ -325,13 +336,12 @@ export class WriteserviceService {
   getStoryById(storyId: string): Observable<any> {
     return this.http.get<any>(`${this.baseurl}/api/stories/${storyId}`);
   }
-
-
-  ngOnDestroy() {
-  this.messagesSubject.complete();
-  this.chatHistorySubject.complete();
-  this.errorSubject.complete();
-  this.roomCreatedSubject.complete();
-}
+  ngOnDestroy(): void {
+    this.socket.disconnect();
+    this.messagesSubject.complete();
+    this.chatHistorySubject.complete();
+    this.errorSubject.complete();
+    this.roomCreatedSubject.complete();
+  }
 
 }

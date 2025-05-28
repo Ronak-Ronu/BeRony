@@ -6,8 +6,10 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { environment } from '../../environments/environment';
 import axios from 'axios';
 import * as fabric from 'fabric';
+import { ToastrService } from 'ngx-toastr';
 
 interface ChatMessage {
+  _id?: string; 
   roomId: string;
   userId: string;
   username: string;
@@ -79,7 +81,9 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
     private readsevice: WriteserviceService,
     private route: ActivatedRoute,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastr: ToastrService,
+
   ) {}
 
   ngOnInit(): void {
@@ -91,17 +95,38 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
     sessionStorage.setItem('userId', this.userId);
     sessionStorage.setItem('username', this.username);
     this.readsevice.connect(this.userId, this.username);
-   
-    this.joinRoom();
-   
+
     this.subscriptions.add(
-      this.readsevice.getMessages().subscribe((message: ChatMessage) => {
-        message.color = this.getUserTextColor(message.userId);
-        message.backgroundColor = this.getUserBackgroundColor(message.userId);
-        this.messages.push(message);
-        setTimeout(() => this.scrollToBottom(), 0); 
+      this.readsevice.getChatHistoryHttp(this.roomId).subscribe({
+        next: (history: ChatMessage[]) => {
+          this.messages = history.map(msg => ({
+            ...msg,
+            color: this.getUserTextColor(msg.userId),
+            backgroundColor: this.getUserBackgroundColor(msg.userId)
+          }));
+          this.scrollToBottom();
+        },
+        error: (err) => {
+          console.error('Error fetching chat history:', err);
+          this.error = 'Failed to load chat history';
+          setTimeout(() => (this.error = ''), 5000);
+        }
       })
     );
+    this.joinRoom();
+    
+    this.subscriptions.add(
+      this.readsevice.getMessages().subscribe((message: ChatMessage) => {
+        if (!this.messages.find(m => m._id === message._id)) {
+          message.color = this.getUserTextColor(message.userId);
+          message.backgroundColor = this.getUserBackgroundColor(message.userId);
+          this.messages.push(message);
+          setTimeout(() => this.scrollToBottom(), 0);
+        }
+      })
+    );
+
+
     this.subscriptions.add(
       this.readsevice.getChatHistory().subscribe((history: ChatMessage[]) => {
         this.messages = history.map(msg => ({
@@ -118,6 +143,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(() => (this.error = ''), 5000);
       })
     );
+    // this.readsevice.ngOnDestroy();
   }
 
   ngAfterViewInit(): void {
@@ -132,6 +158,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
     this.leaveRoom();
     this.subscriptions.unsubscribe();
   }
+
 
   private getUserTextColor(userId: string): string {
     const index = Math.abs(this.hashString(userId) % this.textColorPalette.length);
@@ -317,5 +344,28 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
         console.error('Error fetching GIF:', error);
       });
   }
+
+  share() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Check this out!',
+            text: '👋 I found this amazing chat room you might like. 👉',
+            url: window.location.href,
+        })
+        .catch((error) => console.error('Error sharing:', error));
+    } else {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                this.toastr.success('Invitation copied to clipboard! 📋');
+            })
+            .catch((error) => {
+                console.error('Error copying to clipboard:', error);
+                this.toastr.success('Failed to copy the URL.');
+            });
+    }
+}
+
+
   
 }

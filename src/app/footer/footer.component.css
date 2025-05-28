@@ -119,3 +119,45 @@
   position: relative;
   z-index: 1;
 }
+@media (max-width: 768px) {
+  .hero-text {
+    font-size: 3rem; 
+  }
+
+  .hero-subtext {
+    font-size: 1rem;
+    max-width: 90%; 
+  }
+
+  .footer-content p {
+    font-size: 12px;
+  }
+
+  .footer-content a {
+    font-size: 14px; 
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-text {
+    font-size: 2.5rem;
+    flex-wrap: wrap; 
+  }
+
+  .hero-subtext {
+    font-size: 0.9rem; 
+    margin-top: 5px; 
+  }
+
+  .footer-content {
+    margin-top: 10px; 
+  }
+
+  .footer-content p {
+    font-size: 10px; 
+  }
+
+  .footer-content a {
+    font-size: 12px;
+  }
+}
