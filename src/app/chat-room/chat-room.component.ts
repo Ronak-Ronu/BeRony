@@ -87,16 +87,19 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
     this.roomtitle = this.route.snapshot.paramMap.get('roomtitle') || 'default-room';
     this.userId = sessionStorage.getItem('userId') || 'user_' + Math.random().toString(36).substr(2, 9);
     this.username = sessionStorage.getItem('username') || 'Guest_' + Math.random().toString(36).substr(2, 5);
+   
     sessionStorage.setItem('userId', this.userId);
     sessionStorage.setItem('username', this.username);
     this.readsevice.connect(this.userId, this.username);
+   
     this.joinRoom();
+   
     this.subscriptions.add(
       this.readsevice.getMessages().subscribe((message: ChatMessage) => {
         message.color = this.getUserTextColor(message.userId);
         message.backgroundColor = this.getUserBackgroundColor(message.userId);
         this.messages.push(message);
-        this.scrollToBottom();
+        setTimeout(() => this.scrollToBottom(), 0); 
       })
     );
     this.subscriptions.add(
@@ -314,4 +317,5 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
         console.error('Error fetching GIF:', error);
       });
   }
+  
 }

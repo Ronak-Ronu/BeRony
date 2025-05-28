@@ -35,6 +35,7 @@ import { SearchCollabComponent } from './search-collab/search-collab.component';
 import { NumberAbbrPipe } from './number-abbr.pipe';
 import { ChatRoomComponent } from './chat-room/chat-room.component';
 import { StoryComponent } from './story/story.component';
+import { FooterComponent } from './footer/footer.component';
 
 const routes  = [
 
@@ -78,6 +79,7 @@ const routes  = [
     NumberAbbrPipe,
     ChatRoomComponent,
     StoryComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
