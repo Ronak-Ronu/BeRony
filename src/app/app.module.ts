@@ -88,7 +88,12 @@ const routes  = [
     InfiniteScrollModule,
     NgxChartsModule,
     HammerModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 3000, 
+      positionClass: 'toast-top-right', 
+      preventDuplicates: true, 
+      progressBar: true, 
+    }),
     RouterModule.forRoot(routes),
   ],
   providers: [WriteserviceService,  provideFirebaseApp(() => initializeApp(environment.firebaseConfig)), 

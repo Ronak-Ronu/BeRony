@@ -179,12 +179,14 @@ publishblog(publishdata: WriteModel) {
       console.log(`${key}:`, value);
     });
     if (this.username!=="") {
+      this.toastr.info("Publishing your blog ...");
     this.writeservice.publishblog(formData).then(
       res=>{
-        console.log(res); 
+        // console.log(res); 
         if (res){
           console.log("blog published");
           this.toastr.success("blog published 🥳")
+          this.toastr.info("Informing your followers about your new blog ...");
           }
         else{
           this.toastr.error("failed to publish blog")
