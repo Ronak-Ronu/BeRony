@@ -1,7 +1,10 @@
 <div class="chat-container" id="chat-container">
   <div class="bg-indigo-600 text-white p-4 flex justify-between items-center">
     <div>
-      <h1 class="text-xl font-bold">Chat Room: {{ roomtitle }}</h1>
+      <h1 class="text-xl font-bold">Chat Room: {{ roomtitle }}
+      <span style="background-color: rgba(69, 63, 117, 0.81);padding: 10px; border-radius: 20px;font-size: 18px;cursor: pointer;" (click)="share()">
+        Invite 
+      </span></h1>
       <h3>{{ roomId }}</h3>
     </div>
     <button class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded" (click)="leaveRoom()">Leave Room</button>
