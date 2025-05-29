@@ -15,9 +15,8 @@
       <h2>Collaborative Editor for: <span [innerHTML]="postdata.title"></span></h2>
     <p>Author: <b>{{postdata.username}}</b></p>
   </header>
-  <div style="align-items: start; color: rgb(112, 112, 179); padding: 10px;">
-
-    {{editingUser}} is editing...
+  <div style="align-items: start; color: rgb(85, 85, 164); padding: 10px; background-color: rgba(128, 128, 202, 0.295); border-radius: 10px ; width: fit-content;margin-left: 40px;">
+    {{ editingUser ? editingUser + ' is editing...' : 'No one is editing' }}
   </div>
   <div class="editor-container">
     

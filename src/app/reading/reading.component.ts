@@ -128,22 +128,40 @@ export class ReadingComponent implements OnInit {
         console.warn('No voices available. Check browser support for Speech Synthesis API.');
     }
 }
+
+
 sanitizeContent(content: string): SafeHtml {
+  // Unescape HTML entities to preserve user-provided HTML
   const unescapedContent = content
     .replace(/\\u003C/g, '<')
     .replace(/\\u003E/g, '>')
     .replace(/\\r\\n/g, '\n');
 
+  // Sanitize the content while allowing a broader set of tags and attributes
   const sanitized = sanitizeHtml(unescapedContent, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'script', 'iframe']),
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat([
+      'img', 'iframe', 'pre', 'code', 'table', 'tr', 'td', 'th', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'div', 'p', 'b', 'i', 'u', 'strong', 'em', 'font', 'br', 'hr', 'center'
+    ]),
     allowedAttributes: {
+      '*': ['style', 'align', 'bgcolor', 'width', 'height', 'border', 'cellpadding', 'cellspacing'], // Allow common styling attributes on all tags
       'img': ['src', 'alt', 'style', 'width', 'height'],
-      'script': ['src', 'type'],
-      'iframe': ['src', 'width', 'height', 'style', 'frameborder', 'class', 'allowfullscreen']
+      'iframe': ['src', 'width', 'height', 'style', 'frameborder', 'allowfullscreen'],
+      'font': ['color', 'size', 'face'],
+      'table': ['bgcolor', 'border', 'width', 'style', 'align'],
+      'td': ['bgcolor', 'width', 'height', 'style', 'align'],
+      'tr': ['bgcolor', 'style', 'align'],
+      'div': ['style', 'align', 'bgcolor', 'width', 'height'],
+      'p': ['style', 'align'],
+      'h1': ['style', 'align'],
+      'h2': ['style', 'align'],
+      'pre': ['style'],
+      'code': ['style']
     },
     allowedIframeHostnames: ['www.youtube.com', 'giphy.com'],
-    selfClosing: ['img', 'br', 'hr'],
     allowedSchemes: ['http', 'https'],
+    selfClosing: ['img', 'br', 'hr'],
+    parseStyleAttributes: true,
     transformTags: {
       'img': (tagName, attribs) => {
         if (attribs['src'] && attribs['src'].includes('giphy.com')) {
@@ -151,19 +169,13 @@ sanitizeContent(content: string): SafeHtml {
             tagName,
             attribs: {
               ...attribs,
-              width: '100%', 
-              height: 'auto',
-              style: 'width:100%; height: auto;' 
+              width: attribs['width'] || '100%',
+              height: attribs['height'] || 'auto',
+              style: attribs['style'] || 'width:100%; height:auto;'
             }
           };
         }
         return { tagName, attribs };
-      },
-      'script': (tagName, attribs) => {
-        if (attribs['src'] && attribs['src'].includes('gist.github.com')) {
-          return { tagName, attribs: { ...attribs, type: 'text/javascript' } };
-        }
-        return { tagName: '', attribs: {} };
       },
       'iframe': (tagName, attribs) => {
         if (attribs['src'] && (attribs['src'].includes('youtube.com') || attribs['src'].includes('giphy.com'))) {
@@ -171,19 +183,21 @@ sanitizeContent(content: string): SafeHtml {
             tagName,
             attribs: {
               ...attribs,
-              width: '100%', 
-              height: 'auto', 
-              style: 'width:100%; height: auto;' 
+              width: attribs['width'] || '100%',
+              height: attribs['height'] || 'auto',
+              style: attribs['style'] || 'width:100%; height:auto;'
             }
           };
         }
         return { tagName, attribs };
       }
     },
-    parseStyleAttributes: true
   });
+
   return this.sanitizer.bypassSecurityTrustHtml(sanitized);
 }
+
+
 sanitizeBodyContent() {
   this.sanitizedBodyContent = this.sanitizeContent(this.post.bodyofcontent);
 }

@@ -1,3 +1,4 @@
+// writeservice.service.ts
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { WriteModel } from './Models/writemodel';
@@ -33,118 +34,159 @@ export class WriteserviceService {
   postid: any;
   accessKey: string;
   baseurl: string;
-  private socket: Socket;
+  private socket1: Socket;
   textSubject = new BehaviorSubject<string>('');
   text$ = this.textSubject.asObservable();
   private messagesSubject = new Subject<ChatMessage>();
   private chatHistorySubject = new Subject<ChatMessage[]>();
   private errorSubject = new Subject<string>();
   private roomCreatedSubject = new Subject<ChatRoom>();
+  private textChangeSubject = new Subject<string>();
+  private startEditingSubject = new Subject<string>();
 
   constructor(private http: HttpClient) {
     // this.url = 'http://localhost:3000/api/posts';
     // this.drafturl = 'http://localhost:3000/api/drafts';
     // this.findposturl = 'http://localhost:3000/api/findpost';
-    // this.baseurl = 'http://localhost:3000'; 
-
-
-    this.url=`${environment.beronyAPI}/api/posts`
-    this.drafturl=`${environment.beronyAPI}/api/drafts`
-    this.findposturl=`${environment.beronyAPI}/api/findpost`
-    this.baseurl=`${environment.beronyAPI}`
-
+    // this.baseurl = 'http://localhost:3000';
     this.accessKey = environment.Unsplash_ACCESSKEY;
 
-    console.log('Initializing Socket.io client to:', this.baseurl);
-    this.socket = io(this.baseurl);
+
+    this.url = `${environment.beronyAPI}/api/posts`;
+    this.drafturl = `${environment.beronyAPI}/api/drafts`;
+    this.findposturl = `${environment.beronyAPI}/api/findpost`;
+    this.baseurl = environment.beronyAPI;
+
+    // console.log('Initializing Socket.io client to:', this.baseurl);
+    this.socket1 = io(this.baseurl, { autoConnect: false });
   }
 
-  connect(userId: string, username: string): void {
-    console.log('Connecting Socket.io with:', { userId, username });
+  connect(userId: string, username: string, postId?: string): void {
+    // console.log('Connecting Socket.io with:', { userId, username, postId });
     if (!userId || !username) {
-      console.error('Cannot connect: userId and username are required');
+      // console.error('Cannot connect: userId and username are required');
       this.errorSubject.next('Please provide userId and username');
       return;
     }
-    this.socket.removeAllListeners('chatMessage');
-    this.socket.removeAllListeners('chatHistory');
-    this.socket.removeAllListeners('connect_error');
-    this.socket.removeAllListeners('chatError');
-    this.socket.removeAllListeners('roomCreated');
-    this.socket.removeAllListeners('roomError');
-    this.socket.removeAllListeners('disconnect');
+    if (this.socket1.connected) {
+      // console.log('Socket already connected, skipping reconnect');
+      return;
+    }
+    this.socket1.removeAllListeners();
+    this.socket1.auth = { userId, username, postId };
+    this.socket1.connect();
 
-    this.socket.auth = { userId, username };
-    this.socket.connect();
-
-    this.socket.on('connect', () => {
-      console.log('Socket.io connected successfully');
+    this.socket1.on('connect', () => {
+      // console.log('Socket.io connected successfully');
     });
 
-    this.socket.on('connect_error', (error) => {
-      console.error('Socket.io connection error:', {
-        message: error.message,
-        name: error.name,
-        stack: error.stack
-      });
+    this.socket1.on('connect_error', (error) => {
+      console.error('Socket.io connection error:', error);
       this.errorSubject.next('Failed to connect to chat server');
     });
 
-    this.socket.on('chatMessage', (message: ChatMessage) => {
-      console.log('Received chat message:', message);
+    this.socket1.on('chatMessage', (message: ChatMessage) => {
+      // console.log('Received chat message:', message);
       this.messagesSubject.next(message);
     });
 
-    this.socket.on('chatHistory', (history: ChatMessage[]) => {
-      console.log('Received chat history:', history);
+    this.socket1.on('chatHistory', (history: ChatMessage[]) => {
+      // console.log('Received chat history:', history);
       this.chatHistorySubject.next(history);
     });
 
-    this.socket.on('chatError', (error: { message: string }) => {
+    this.socket1.on('chatError', (error: { message: string }) => {
       console.error('Chat error:', error.message);
       this.errorSubject.next(error.message);
     });
 
-    this.socket.on('roomCreated', (room: ChatRoom) => {
-      console.log('Room created event received:', room);
+    this.socket1.on('roomCreated', (room: ChatRoom) => {
+      // console.log('Room created event received:', room);
       this.roomCreatedSubject.next(room);
     });
 
-    this.socket.on('roomError', (error: { message: string }) => {
-      console.error('Room error:', error.message);
+    this.socket1.on('roomError', (error: { message: string }) => {
+      // console.error('Room error:', error.message);
       this.errorSubject.next(error.message);
     });
-    this.socket.on('disconnect', (reason) => {
-      console.warn('Socket disconnected:', reason);
+
+    this.socket1.on('textChange', (newText: string) => {
+      // console.log('Received textChange:', newText);
+      this.textChangeSubject.next(newText);
+    });
+
+    this.socket1.on('startEditing', (username: string) => {
+      // console.log('Received startEditing:', username);
+      this.startEditingSubject.next(username);
+    });
+
+    this.socket1.on('error', (error: { message: string }) => {
+      // console.error('Socket error:', error.message);
+      this.errorSubject.next(error.message);
+    });
+
+    this.socket1.on('disconnect', (reason) => {
+      // console.warn('Socket disconnected:', reason);
       if (reason === 'io server disconnect') {
-        this.socket.connect(); // Try reconnect
+        this.socket1.connect();
       }
     });
-    
+  }
+
+  joinPostRoom(postId: string): void {
+    // console.log('Joining post room:', postId);
+    this.socket1.emit('joinPostRoom', postId);
+  }
+
+  onTextChange(text: string): void {
+    // console.log('Emitting textChange:', text);
+    this.socket1.emit('textChange', text);
+  }
+
+  startEditing(username: string): void {
+    // console.log('Emitting startEditing for user:', username);
+    this.socket1.emit('startEditing', username);
+  }
+
+  saveChanges(text: string): void {
+    // console.log('Emitting saveChanges:', text);
+    this.socket1.emit('saveChanges', text);
+  }
+
+  listenForTextChange(): Observable<string> {
+    return this.textChangeSubject.asObservable();
+  }
+
+  listenForStartEditing(): Observable<string> {
+    return this.startEditingSubject.asObservable();
+  }
+
+  listenForSocketError(): Observable<string> {
+    return this.errorSubject.asObservable();
   }
 
   joinRoom(roomId: string, userId: string, username: string): void {
-    console.log('Joining room:', { roomId, userId, username });
-    this.socket.auth = { userId, username };
-    if (!this.socket.connected) {
-      this.socket.connect();
-      this.socket.on('connect', () => {
+    // console.log('Joining room:', { roomId, userId, username });
+    this.socket1.auth = { userId, username };
+    if (!this.socket1.connected) {
+      this.socket1.connect();
+      this.socket1.on('connect', () => {
         console.log('Socket connected, joining room:', roomId);
-        this.socket.emit('joinChatRoom', roomId);
+        this.socket1.emit('joinChatRoom', roomId);
       });
     } else {
-      this.socket.emit('joinChatRoom', roomId);
+      this.socket1.emit('joinChatRoom', roomId);
     }
   }
 
   leaveRoom(roomId: string): void {
-    console.log('Leaving room:', roomId);
-    this.socket.emit('leaveChatRoom', roomId);
-    this.socket.disconnect();
+    // console.log('Leaving room:', roomId);
+    this.socket1.emit('leaveChatRoom', roomId);
+    this.socket1.disconnect();
   }
 
   sendMessage(roomId: string, message: string, mediaFile: File | null): void {
-    console.log('Sending message:', { roomId, message, mediaFile: mediaFile ? mediaFile.name : null });
+    // console.log('Sending message:', { roomId, message, mediaFile: mediaFile ? mediaFile.name : null });
     if (mediaFile) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -152,7 +194,7 @@ export class WriteserviceService {
           buffer: reader.result as string,
           mimetype: mediaFile.type
         };
-        this.socket.emit('sendChatMessage', { roomId, message, media });
+        this.socket1.emit('sendChatMessage', { roomId, message, media });
       };
       reader.onerror = () => {
         console.error('Error reading file:', reader.error);
@@ -160,20 +202,20 @@ export class WriteserviceService {
       };
       reader.readAsDataURL(mediaFile);
     } else {
-      this.socket.emit('sendChatMessage', { roomId, message });
+      this.socket1.emit('sendChatMessage', { roomId, message });
     }
   }
 
   createRoom(roomId: string, title: string, creatorId: string, creatorUsername: string): Observable<ChatRoom> {
     const url = `${this.baseurl}/api/chat/rooms`;
-    console.log('Sending create room request to:', url, { roomId, title, creatorId, creatorUsername });
+    // console.log('Sending create room request to:', url, { roomId, title, creatorId, creatorUsername });
     const requestBody = { roomId, title, creatorId, creatorUsername };
     return this.http.post<ChatRoom>(url, requestBody);
   }
 
   getRooms(): Observable<ChatRoom[]> {
     const url = `${this.baseurl}/api/chat/rooms`;
-    console.log('Fetching rooms from:', url);
+    // console.log('Fetching rooms from:', url);
     return this.http.get<ChatRoom[]>(url);
   }
 
@@ -184,9 +226,10 @@ export class WriteserviceService {
   getChatHistory(): Observable<ChatMessage[]> {
     return this.chatHistorySubject.asObservable();
   }
+
   getChatHistoryHttp(roomId: string): Observable<ChatMessage[]> {
     const url = `${this.baseurl}/api/chat/${roomId}`;
-    console.log('Fetching chat history from:', url);
+    // console.log('Fetching chat history from:', url);
     return this.http.get<ChatMessage[]>(url);
   }
 
@@ -208,9 +251,9 @@ export class WriteserviceService {
   }
 
   draftblog(draftdata: WriteModel) {
-    console.log("this is publish blog service");
+    // console.log("this is publish blog service");
     this.http.post<WriteModel>(this.drafturl, draftdata).subscribe((res: any) => {
-      console.log("blog saved to draft");
+      // console.log("blog saved to draft");
     });
   }
 
@@ -222,7 +265,7 @@ export class WriteserviceService {
     const params: any = {};
     if (start) params.start = start;
     if (limit) params.limit = limit;
-    console.log("Fetching posts with params:", params);
+    // console.log("Fetching posts with params:", params);
     return this.http.get<WriteModel[]>(this.url, { params });
   }
 
@@ -238,7 +281,7 @@ export class WriteserviceService {
     const params: any = {};
     if (tag) params.tags = tag;
     if (query) params.q = query;
-    console.log("querying", params);
+    // console.log("querying", params);
     return this.http.get<WriteModel[]>(this.findposturl, { params });
   }
 
@@ -248,12 +291,12 @@ export class WriteserviceService {
 
   deletepostbyid(id: string) {
     this.http.delete<WriteModel>(this.url + "/" + id).subscribe();
-    console.log("deleted" + id);
+    // console.log("deleted" + id);
   }
 
   deletedraft(id: string) {
     this.http.delete<WriteModel>(this.drafturl + "/" + id).subscribe();
-    console.log("draft deleted");
+    // console.log("draft deleted");
   }
 
   updateReaction(postId: string, emoji: string, increment: boolean) {
@@ -262,7 +305,7 @@ export class WriteserviceService {
 
   searchPhotos(query: string, page: number = 1, perPage: number = 10): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Client-ID ${this.accessKey}`);
-    console.log(query);
+    // console.log(query);
     return this.http.get(`https://api.unsplash.com/search/photos?query=${query}&page=${page}&per_page=${perPage}`, { headers });
   }
 
@@ -273,7 +316,7 @@ export class WriteserviceService {
 
   addUserToDB(userId: string, username: string, userEmail: string): Observable<any> {
     const body = { userId, username, userEmail };
-    console.log('Request Body:', body);
+    // console.log('Request Body:', body);
     return this.http.post(`${this.baseurl}/api/user/register`, body);
   }
 
@@ -329,6 +372,7 @@ export class WriteserviceService {
   uploadStory(userId: string, formData: FormData): Observable<any> {
     return this.http.post(`${this.baseurl}/api/stories`, formData);
   }
+
   getAllStories(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseurl}/api/stories`);
   }
@@ -336,12 +380,14 @@ export class WriteserviceService {
   getStoryById(storyId: string): Observable<any> {
     return this.http.get<any>(`${this.baseurl}/api/stories/${storyId}`);
   }
+
   ngOnDestroy(): void {
-    this.socket.disconnect();
+    this.socket1.disconnect();
     this.messagesSubject.complete();
     this.chatHistorySubject.complete();
     this.errorSubject.complete();
     this.roomCreatedSubject.complete();
+    this.textChangeSubject.complete();
+    this.startEditingSubject.complete();
   }
-
 }

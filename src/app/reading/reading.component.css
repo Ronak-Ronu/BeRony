@@ -418,7 +418,47 @@
     font-size: 18px;
     float: right;
   }
-  
+[align="center"] {
+  text-align: center;
+}
+[align="left"] {
+  text-align: left;
+}
+[align="right"] {
+  text-align: right;
+}
+[align="justify"] {
+  text-align: justify;
+}
+
+[bgcolor] {
+  background-color: attr(bgcolor);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table[border="1"] {
+  border: 1px solid black;
+}
+td, th {
+  padding: 5px;
+}
+
+font[color] {
+  color: attr(color);
+}
+font[size] {
+  font-size: attr(size);
+}
+
+pre, code {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 4px;
+  font-family: monospace;
+}
   
   @media (max-width: 600px) {
 
