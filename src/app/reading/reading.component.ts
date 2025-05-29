@@ -131,20 +131,13 @@ export class ReadingComponent implements OnInit {
 
 
 sanitizeContent(content: string): SafeHtml {
-  // Unescape HTML entities to preserve user-provided HTML
-  const unescapedContent = content
-    .replace(/\\u003C/g, '<')
-    .replace(/\\u003E/g, '>')
-    .replace(/\\r\\n/g, '\n');
-
-  // Sanitize the content while allowing a broader set of tags and attributes
-  const sanitized = sanitizeHtml(unescapedContent, {
+  const sanitized = sanitizeHtml(content, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat([
       'img', 'iframe', 'pre', 'code', 'table', 'tr', 'td', 'th', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
       'div', 'p', 'b', 'i', 'u', 'strong', 'em', 'font', 'br', 'hr', 'center'
     ]),
     allowedAttributes: {
-      '*': ['style', 'align', 'bgcolor', 'width', 'height', 'border', 'cellpadding', 'cellspacing'], // Allow common styling attributes on all tags
+      '*': ['style', 'align', 'bgcolor', 'width', 'height', 'border', 'cellpadding', 'cellspacing'],
       'img': ['src', 'alt', 'style', 'width', 'height'],
       'iframe': ['src', 'width', 'height', 'style', 'frameborder', 'allowfullscreen'],
       'font': ['color', 'size', 'face'],
@@ -162,42 +155,10 @@ sanitizeContent(content: string): SafeHtml {
     allowedSchemes: ['http', 'https'],
     selfClosing: ['img', 'br', 'hr'],
     parseStyleAttributes: true,
-    transformTags: {
-      'img': (tagName, attribs) => {
-        if (attribs['src'] && attribs['src'].includes('giphy.com')) {
-          return {
-            tagName,
-            attribs: {
-              ...attribs,
-              width: attribs['width'] || '100%',
-              height: attribs['height'] || 'auto',
-              style: attribs['style'] || 'width:100%; height:auto;'
-            }
-          };
-        }
-        return { tagName, attribs };
-      },
-      'iframe': (tagName, attribs) => {
-        if (attribs['src'] && (attribs['src'].includes('youtube.com') || attribs['src'].includes('giphy.com'))) {
-          return {
-            tagName,
-            attribs: {
-              ...attribs,
-              width: attribs['width'] || '100%',
-              height: attribs['height'] || 'auto',
-              style: attribs['style'] || 'width:100%; height:auto;'
-            }
-          };
-        }
-        return { tagName, attribs };
-      }
-    },
   });
 
   return this.sanitizer.bypassSecurityTrustHtml(sanitized);
 }
-
-
 sanitizeBodyContent() {
   this.sanitizedBodyContent = this.sanitizeContent(this.post.bodyofcontent);
 }
