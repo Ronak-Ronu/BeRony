@@ -71,9 +71,10 @@ export class ReadingComponent implements OnInit {
     .setProject(environment.appwriteProjectId);
     this.databases = new Databases(client);
     this.utterance.lang = 'en-US'; 
-    this.utterance.rate = 1;       
-    this.utterance.pitch = 1;      
-  }
+    this.utterance.rate = 0.95; 
+    this.utterance.pitch = 1.1;  
+    this.utterance.volume = 1;
+      }
 
 
   ngOnInit(): void {
@@ -122,12 +123,17 @@ export class ReadingComponent implements OnInit {
 
   private setVoice(): void {
     const voices = this.synth.getVoices();
-    if (voices.length > 0) {
-        this.utterance.voice = voices.find(voice => voice.lang === 'en-US') || voices[0];
+    const preferredVoice = voices.find(v => v.name.includes('Google US English')) 
+                         || voices.find(v => v.lang === 'en-US') 
+                         || voices[0];
+  
+    if (preferredVoice) {
+      this.utterance.voice = preferredVoice;
     } else {
-        console.warn('No voices available. Check browser support for Speech Synthesis API.');
+      console.warn('No suitable voice found');
     }
-}
+  }
+  
 
 
 sanitizeContent(content: string): SafeHtml {
@@ -167,13 +173,27 @@ getSanitizedHtml(text: string): SafeHtml {
   return this.sanitizeContent(text);
 }
 
-// Rest of your methods remain unchanged
+speakInChunks(text: string) {
+  const sentences = text.split(/(?<=[.!?])\s+/);
+  for (let sentence of sentences) {
+    const chunk = new SpeechSynthesisUtterance(sentence);
+    chunk.voice = this.utterance.voice;
+    chunk.rate = this.utterance.rate;
+    chunk.pitch = this.utterance.pitch;
+    chunk.volume = this.utterance.volume;
+    this.synth.speak(chunk);
+  }
+}
+
+
 readblogdatabyid() {
   this.router.paramMap.subscribe(params => {
     this.postid = params.get('postid');
     this.service.getpublishpostdatabyid(this.postid).subscribe({
       next: (data: WriteModel) => {
         this.post = data;
+        this.addJsonLdSchema();
+
         this.seotitle = this.stripHTML(data.title);
         this.title.setTitle(this.seotitle);
         this.meta.addTags([
@@ -206,15 +226,15 @@ async getloggedinuserdata (){
     if (this.loggedInUserAccount) {
       this.username=this.loggedInUserAccount.name;
       this.loggedinuserid=this.loggedInUserAccount.$id
-      console.log(this.username);
-      console.log(this.loggedinuserid);
+      // console.log(this.username);
+      // console.log(this.loggedinuserid);
       }
   }
   
   fetchUserData(userId: string) {
     this.service.getUserData(userId).subscribe(
       (data) => {
-        console.log('Fetched user data:', data);  // Debugging log
+        // console.log('Fetched user data:', data);  // Debugging log
         this.collaboratorsUsernames.push(data.user.username);
       },
       (error) => {
@@ -299,7 +319,7 @@ async getloggedinuserdata (){
           this.funnycount = updatedPost.funnycount;
           this.sadcount = updatedPost.sadcount;
           this.loveitcount = updatedPost.loveitcount;
-          console.log(updatedPost);
+          // console.log(updatedPost);
           
         },
         error: (error:any) => {
@@ -308,7 +328,7 @@ async getloggedinuserdata (){
       });
     } else {
       this.toastr.error("Please log in to like the post.")
-      console.log('Please log in to like the post.');
+      // console.log('Please log in to like the post.');
     }
   }
   
@@ -333,7 +353,7 @@ async getloggedinuserdata (){
       
   }
   else{
-    console.log("login to like posts");
+    // console.log("login to like posts");
     this.toastr.error("login to like posts")
   }
 }
@@ -411,7 +431,7 @@ async fetchComments()
   }
 }
 refreshcomponent() {
-  console.log("Refresh component called");
+  // console.log("Refresh component called");
   this.fetchComments();
   this.cdr.detectChanges();
 }
@@ -437,9 +457,9 @@ async searchGifs() {
 selectGif(gif: any) {
   // const gifUrl = gif.images.original.url
   const gifUrl=gif.images.fixed_height.url
-  console.log('Click to send gif:', gif);
+  // console.log('Click to send gif:', gif);
   this.newCommentText+=`<img style="width:95% !important; height: auto;" src="${gifUrl}" />`
-  console.log(this.newCommentText);
+  // console.log(this.newCommentText);
   this.addComment()
 
 }
@@ -454,7 +474,7 @@ highlightText() {
       this.showTooltip( rect,selectedText);
     }
   } else {
-    console.log("No text is selected.");
+    // console.log("No text is selected.");
   }
 
 
@@ -490,7 +510,7 @@ showTooltip(rect: DOMRect, selectedText: string) {
 bookmarkthispost() {
   this.service.addPostBookmark(this.loggedinuserid, this.postid).subscribe(
       () => {
-          console.log("Bookmark added successfully");
+          // console.log("Bookmark added successfully");
           this.toastr.success("Bookmarked")
       },
       (error) => { 
@@ -509,7 +529,8 @@ start(text: string): void {
   }
   this.utterance.text = this.stripHTML(text);
   this.synth.cancel();
-  this.synth.speak(this.utterance); 
+  this.speakInChunks(this.utterance.text); 
+  // this.synth.speak(this.utterance); 
   this.readingblog=true
   // console.log(this.utterance.text);
   

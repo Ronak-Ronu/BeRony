@@ -12,7 +12,6 @@
         <img [src]="post.imageUrl" [alt]="post.title" />
       </div>
       
-      <!-- Check if videoUrl exists, if not, show nothing or handle it as fallback -->
       <div *ngIf="post.videoUrl && !post.imageUrl" >
         <video [src]="post.videoUrl" controls >
           Your browser does not support the video tag.
@@ -32,20 +31,18 @@
     
         </div>
         <div>
-
-          <button class="footerbutton" (click)="bookmarkthispost()">
-            <img style="transform: rotate(180deg);" src="../../assets/img/bookmark.png" alt=""  /> 
-          </button>
-        </div>
-        <div>
           <button class="footerbutton" (click)="share()">SHARE</button>
         </div>
         <div>
           <button class="footerbutton" (click)="downloadBlog()">
-            <img  style="width: 30px;" src="../../assets/img/download-blog-pdf.png" alt=""  /> 
-
-          </button>
-        </div>
+            <img  style="width: 27px;" src="../../assets/img/download-blog-pdf.png" alt=""  />           </button>
+          </div>
+            <div>
+    
+              <button class="footerbutton" (click)="bookmarkthispost()">
+                <img style="transform: rotate(180deg);width: 27px;" src="../../assets/img/bookmark.png" alt=""  /> 
+              </button>
+            </div>
       </div>
       <div class="likebuttons">
 
@@ -164,7 +161,7 @@
             <textarea
                 [(ngModel)]="newCommentText"
                 name="newCommentText"
-                maxlength="300"
+                maxlength="1000"
                 placeholder="What's your thought on this :)"
                 (keydown.enter)="addComment()"
             ></textarea>
