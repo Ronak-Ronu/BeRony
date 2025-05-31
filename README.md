@@ -33,7 +33,7 @@ So, why wait? Start creating and let the world see your work!
 - collaborative blogging (v1.0.1) ✅
 - monetize your ideas
 - Users can order Hard Copy of their favourite blog
-- schedule blog publication
+- schedule blog publication ✅ 
 - Scaling and Marketing
 
 ## Run Development 
