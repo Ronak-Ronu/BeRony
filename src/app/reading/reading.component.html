@@ -9,8 +9,14 @@
 
     <div class="imagesection">
       <div *ngIf="post.imageUrl">
-        <img [src]="post.imageUrl" [alt]="post.title" />
-      </div>
+        <img 
+        [src]="post.imageUrl" 
+        [alt]="post.title" 
+        loading="lazy" 
+        [srcset]="post.imageUrl + ' 600w, ' + post.imageUrl + ' 1200w'" 
+        sizes="(max-width: 600px) 600px, 1200px" 
+        width="600" 
+        height="400" />      </div>
       
       <div *ngIf="post.videoUrl && !post.imageUrl" >
         <video [src]="post.videoUrl" controls >
@@ -141,9 +147,6 @@
   💬
 </button>
 <div *ngIf="isDiscussionOpen" class="rightcommentsection">
-  <button class="floating-chat-btn" (click)="toggleDiscussion()">
-    X
-  </button>
   <div class="discussionheader">
     <h1>DISCUSSION</h1><div (click)="refreshcomponent()" class="refreshbtn">⟳</div>
   </div>

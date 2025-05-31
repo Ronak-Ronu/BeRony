@@ -471,7 +471,7 @@ highlightText() {
     if (selectedText.length > 0) {
       const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
-      this.showTooltip( rect,selectedText);
+      this.showTooltip(rect,selectedText);
     }
   } else {
     // console.log("No text is selected.");
@@ -481,20 +481,33 @@ highlightText() {
 }
 showTooltip(rect: DOMRect, selectedText: string) {
   const tooltip = document.createElement('div');
-  tooltip.innerHTML = '💬 Comment'; 
+  tooltip.innerHTML = `
+    <div style="display: flex; gap: 10px;">
+      <button style="background-color: #bdc2fb; padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer;">Comment</button>
+      <button style="background-color: #f0ad4e; padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer;">Meaning</button>
+    </div>
+  `;
   tooltip.style.position = 'absolute';
   tooltip.style.fontSize = '16px';
-  tooltip.style.top = `${rect.top + window.scrollY - 40}px`; 
+  tooltip.style.top = `${rect.top + window.scrollY - 50}px`; 
   tooltip.style.left = `${rect.left + window.scrollX}px`;
-  tooltip.style.backgroundColor = '#bdc2fb';
+  tooltip.style.backgroundColor = '#fff';
   tooltip.style.padding = '10px';
   tooltip.style.borderRadius = '4px';
-  tooltip.style.cursor = 'pointer';
-  tooltip.style.zIndex = '1000'; 
+  tooltip.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+  tooltip.style.zIndex = '1000';
 
-  tooltip.addEventListener('click', () => {
+  const commentButton = tooltip.querySelector('button:nth-child(1)');
+  const meaningButton = tooltip.querySelector('button:nth-child(2)');
+
+  commentButton?.addEventListener('click', () => {
     this.isCommentBoxOpen = !this.isCommentBoxOpen;
     this.showhighlightTextInComment = selectedText;
+    document.body.removeChild(tooltip);
+  });
+
+  meaningButton?.addEventListener('click', () => {
+    this.fetchWordMeaning(selectedText, rect);
     document.body.removeChild(tooltip);
   });
 
@@ -504,8 +517,108 @@ showTooltip(rect: DOMRect, selectedText: string) {
   }
   tooltip.classList.add('custom-tooltip'); 
   document.body.appendChild(tooltip);
+
+  setTimeout(() => {
+    const outsideClickListener = (event: MouseEvent) => {
+      if (!tooltip.contains(event.target as Node)) {
+        document.body.removeChild(tooltip);
+        document.removeEventListener('click', outsideClickListener);
+      }
+    };
+    document.addEventListener('click', outsideClickListener);
+  }, 0);
 }
 
+fetchWordMeaning(word: string, rect: DOMRect) {
+  const apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
+  
+  const meaningPopup = document.createElement('div');
+  meaningPopup.style.position = 'absolute';
+  meaningPopup.style.fontSize = '16px';
+  meaningPopup.style.top = `${rect.top + window.scrollY + 20}px`; 
+  meaningPopup.style.left = `${Math.min(rect.left + window.scrollX, window.innerWidth - 360)}px`; 
+  meaningPopup.style.backgroundColor = '#ffffff'; 
+  meaningPopup.style.padding = '15px'; 
+  meaningPopup.style.borderRadius = '8px';
+  meaningPopup.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)'; 
+  meaningPopup.style.zIndex = '1000';
+  meaningPopup.style.maxWidth = '90%'
+  meaningPopup.style.maxHeight = '50%'
+  meaningPopup.style.overflowY = 'auto'; 
+  meaningPopup.style.transition = 'transform 0.3s ease, opacity 0.3s ease'; 
+  meaningPopup.style.transform = 'scale(0.95)'; 
+  meaningPopup.style.opacity = '0'; 
+  meaningPopup.innerHTML = 'Loading...';
+
+  document.body.appendChild(meaningPopup);
+  setTimeout(() => {
+    meaningPopup.style.transform = 'scale(1)';
+    meaningPopup.style.opacity = '1';
+  }, 0);
+
+
+  setTimeout(() => {
+    const outsideClickListener = (event: MouseEvent) => {
+      if (!meaningPopup.contains(event.target as Node)) {
+        document.body.removeChild(meaningPopup);
+        document.removeEventListener('click', outsideClickListener);
+      }
+    };
+    document.addEventListener('click', outsideClickListener);
+  }, 0);
+
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+      if (data && data[0]) {
+        const wordData = data[0];
+        const meanings = wordData.meanings.map((meaning: any) => {
+          const definitions = meaning.definitions.map((def: any) => {
+            const example = def.example ? `<br><strong>Example:</strong> ${def.example}` : '';
+            return `<li>${def.definition}${example}</li>`;
+          }).join('');
+          return `<strong>${meaning.partOfSpeech}:</strong><ul>${definitions}</ul>`;
+        }).join('');
+
+        const synonyms = wordData.meanings
+          .flatMap((meaning: any) => meaning.synonyms || [])
+          .slice(0, 5) // Limit to 5 synonyms
+          .map((synonym: string) => `<span style="background-color: #f0f0f0; padding: 2px 5px; margin: 2px; border-radius: 3px;">${synonym}</span>`)
+          .join('');
+
+        const phonetics = wordData.phonetics.map((phonetic: any) => {
+          if (phonetic.audio) {
+            return `<audio controls style="width: 100%; margin-top: 10px;">
+                      <source src="${phonetic.audio}" type="audio/mpeg">
+                      Your browser does not support the audio element.
+                    </audio>`;
+          }
+          return '';
+        }).join('');
+
+        const image = `<img src="https://source.unsplash.com/300x200/?${word}" 
+                          alt="${word}" 
+                          style="width: 100%; margin-top: 10px; border-radius: 4px;" 
+                          onerror="this.src='https://via.placeholder.com/300x200?text=No+Image';" />`;
+
+        meaningPopup.innerHTML = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <strong style="font-size: 18px; color: #000;">Word:</strong> ${word}<br>
+          ${image}
+          ${phonetics}
+          <strong style="font-size: 16px; color: #000; margin-top: 10px;">Meanings:</strong><br>${meanings}
+          ${synonyms ? `<strong style="font-size: 16px; color: #000; margin-top: 10px;">Synonyms:</strong><br>${synonyms}` : ''}
+        </div>
+      `;
+      } else {
+        meaningPopup.innerHTML = `No meaning found for "${word}".`;
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching word meaning:', error);
+      meaningPopup.innerHTML = `Error fetching meaning for "${word}".`;
+    });
+}
 
 bookmarkthispost() {
   this.service.addPostBookmark(this.loggedinuserid, this.postid).subscribe(
@@ -664,10 +777,22 @@ unfollowUser(currentuserid: string,userid:string)
     }
   )
 }
-
-
 toggleDiscussion() {
   this.isDiscussionOpen = !this.isDiscussionOpen;
-}
 
+  setTimeout(() => {
+    const chatSection = document.querySelector('.rightcommentsection') as HTMLElement;
+
+    if (chatSection) {
+      if (this.isDiscussionOpen) {
+        chatSection.classList.add('visible');
+      } else {
+        chatSection.classList.remove('visible');
+      }
+    } else {
+      // console.error('Chat section element not found!');
+    }
+  }, 0);
+  }
+  
 }
