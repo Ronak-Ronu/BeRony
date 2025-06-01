@@ -52,21 +52,9 @@
     position: sticky;
     top: 0;
     scale: 1;
-    animation: fade-out linear;
-    animation-timeline: view();
-    z-index: -10;
 }
 
-@keyframes fade-out {
-    0% {
-        scale: 1;
-        opacity: 1;
-    }
-    50% {
-        scale: 0;
-        opacity: 0;
-    }
-}
+
 
 .imagesection {
     width: 100%;
