@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as fabric from 'fabric'; 
 import { environment } from '../../environments/environment';
 import axios from 'axios';
+import { AiService } from '../services/ai.service';
 @Component({
   selector: 'app-write',
   templateUrl: './write.component.html',
@@ -66,7 +67,11 @@ export class WriteComponent implements OnInit,AfterViewInit {
   @ViewChild('bodyTextarea') bodyTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('endnoteTextarea') endnoteTextarea!: ElementRef<HTMLTextAreaElement>;
 
-  constructor(private writeservice:WriteserviceService,private cdr: ChangeDetectorRef,private toastr: ToastrService){  }
+  constructor(private writeservice:WriteserviceService,
+    private cdr: ChangeDetectorRef,
+    private toastr: ToastrService,
+    private aiService: AiService,
+  ){  }
   ngOnInit(): void {
     this.readdraftblog()
     this.getloggedinuserdata()
@@ -597,7 +602,28 @@ addImageToCanvas(event: Event): void {
       this.canvas.renderAll();
   }
 }
-
+generateFullBlog() {
+  if (!this.edittitle) {
+    this.toastr.warning('You forgot to provide title to me!');
+    return;
+  }
+  this.toastr.info('Generating your blog post...');
+  this.aiService.generateBlogContent(this.edittitle, this.username).subscribe({
+    next: (blogContent) => {
+      this.editbodycontent = blogContent;
+      this.editendnotecontent = `Post by: <font color="blue">${this.username}</font>`;
+      this.toastr.success('Blog post generated! Feel free to edit and publish.');
+      this.cdr.detectChanges();
+      const textarea = this.bodyTextarea.nativeElement;
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    },
+    error: (error) => {
+      console.error('Error generating blog:', error);
+      this.toastr.error('Failed to generate blog post.');
+    }
+  });
+}
   
 }
 
