@@ -74,8 +74,9 @@
           <input
             type="text"
             [(ngModel)]="aiQuestion"
-            placeholder="E.g., What is the main argument of this post?"
+            placeholder="Why i should read this blog?"
             style="flex: 1; padding: 8px; border-radius: 4px; border: 1px solid #ccc;"
+            (keydown.enter)="askAiQuestion()"
           />
           <button
             class="footerbutton"

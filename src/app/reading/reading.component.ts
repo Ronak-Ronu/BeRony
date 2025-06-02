@@ -806,7 +806,7 @@ toggleDiscussion() {
 
   generateInsight(insightType: 'summary' | 'keyPoints' | 'sentiment') {
     this.isAiLoading = true;
-    const blogContent = "POST TITLE"+this.stripHTML(this.post.title)+"POST BODY/ MAIN CONTENT"+this.stripHTML(this.post.bodyofcontent)+this.stripHTML(this.post.tags.join(', '))+"POST AUTHOR:"+this.post.username+ "POST_ID OF THIS BLOG:"+this.postid;
+    const blogContent = "POST TITLE: "+this.stripHTML(this.post.title)+" POST BODY or MAIN CONTENT: "+this.stripHTML(this.post.bodyofcontent)+this.stripHTML(this.post.tags.join(', '))+" AUTHOR OF THIS POST IS: "+this.post.username+ " POST_ID OF THIS BLOG: "+this.postid;
     this.aiService.generateBlogInsights(blogContent, insightType).subscribe({
       next: (response) => {
         this.aiInsights[insightType] = response;
@@ -818,20 +818,19 @@ toggleDiscussion() {
       },
       error: (error) => {
         this.isAiLoading = false;
-        this.toastr.error('Failed to generate insights');
+        this.toastr.error('Model needs some sleeps, try again later please');
         console.error(error);
       }
     });
   }
 
-  // Answer user question about the blog
   askAiQuestion() {
     if (!this.aiQuestion.trim()) {
       this.toastr.warning('Please enter a question');
       return;
     }
     this.isAiLoading = true;
-    const blogContent = this.stripHTML(this.post.bodyofcontent);
+    const blogContent = "POST TITLE: "+this.stripHTML(this.post.title)+" POST BODY or MAIN CONTENT: "+this.stripHTML(this.post.bodyofcontent)+this.stripHTML(this.post.tags.join(', '))+" AUTHOR OF THIS POST IS: "+this.post.username+ " POST_ID OF THIS BLOG: "+this.postid;
     this.aiService.answerQuestion(this.aiQuestion, blogContent).subscribe({
       next: (response) => {
         this.aiAnswer = response;
@@ -841,7 +840,7 @@ toggleDiscussion() {
       },
       error: (error) => {
         this.isAiLoading = false;
-        this.toastr.error('Failed to answer question');
+        this.toastr.error('Model needs some sleeps, try again later please');
         console.error(error);
       }
     });
