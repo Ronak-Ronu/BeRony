@@ -10,6 +10,7 @@ import { DomSanitizer, Meta, SafeHtml, Title } from '@angular/platform-browser';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import sanitizeHtml from 'sanitize-html';
+import { AiService } from '../services/ai.service';
 
 
 @Component({
@@ -53,6 +54,11 @@ export class ReadingComponent implements OnInit {
   seotitle:string=''
   isDiscussionOpen = false;
 
+  aiInsights: { summary?: string; keyPoints?: string; sentiment?: string } = {};
+  aiQuestion: string = '';
+  aiAnswer: string = '';
+  isAiLoading: boolean = false;
+
 
   private synth = window.speechSynthesis;
   private utterance = new SpeechSynthesisUtterance();
@@ -63,7 +69,8 @@ export class ReadingComponent implements OnInit {
     private toastr: ToastrService,
     private sanitizer: DomSanitizer,
     private meta: Meta, private title: Title,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private aiService: AiService
   )
    {
     const client = new Client().
@@ -94,32 +101,33 @@ export class ReadingComponent implements OnInit {
     const script = this.renderer.createElement('script');
     script.type = 'application/ld+json';
     script.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": this.post.title,
-      "author": {
-        "@type": "Person",
-        "name": this.post.username
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      'headline': this.post.title,
+      'author': {
+        '@type': 'Person',
+        'name': this.post.username
       },
-      "publisher": {
-        "@type": "Organization",
-        "name": "BeRony",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://berony.com/logo.png"
+      'publisher': {
+        '@type': 'Organization',
+        'name': 'BeRony',
+        'logo': {
+          '@type': 'ImageObject',
+          'url': 'https://berony.com/logo.png'
         }
       },
-      "datePublished": Date.now(),
-      "dateModified": Date.now(),
-      "description": this.post.bodyofcontent,
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": window.location.href
+      'datePublished': this.post.createdAt || new Date().toISOString(),
+      'description': this.post.bodyofcontent || this.stripHTML(this.post.bodyofcontent).substring(0, 160),
+      'keywords': this.post.tags.join(', '),
+      'image': this.post.imageUrl,
+      'mainEntityOfPage': {
+        '@type': 'WebPage',
+        '@id': `https://berony.web.app/blog/${this.postid}`
       }
     });
-
     this.renderer.appendChild(document.head, script);
   }
+
 
   private setVoice(): void {
     const voices = this.synth.getVoices();
@@ -203,7 +211,8 @@ readblogdatabyid() {
           { property: 'og:description', content: data.bodyofcontent },
           { name: 'keywords', content: `${data.tags.toLocaleString()}` },
           { property: 'og:image', content: data.imageUrl },
-          { property: 'og:url', content: window.location.href },
+          { property: 'og:url', content: `https://berony.web.app/blog/${this.postid}` },
+            { name: 'canonical', content: `https://berony.web.app/blog/${this.postid}` }
         ]);
         this.tagsarray = this.post.tags;
         this.collabos = this.post.collaborators;
@@ -794,5 +803,47 @@ toggleDiscussion() {
     }
   }, 0);
   }
-  
+
+  generateInsight(insightType: 'summary' | 'keyPoints' | 'sentiment') {
+    this.isAiLoading = true;
+    const blogContent = "POST TITLE"+this.stripHTML(this.post.title)+"POST BODY/ MAIN CONTENT"+this.stripHTML(this.post.bodyofcontent)+this.stripHTML(this.post.tags.join(', '))+"POST AUTHOR:"+this.post.username+ "POST_ID OF THIS BLOG:"+this.postid;
+    this.aiService.generateBlogInsights(blogContent, insightType).subscribe({
+      next: (response) => {
+        this.aiInsights[insightType] = response;
+        this.isAiLoading = false;
+        this.cdr.detectChanges();
+        this.toastr.success(`${insightType} generated successfully`);
+        console.log(response);
+        
+      },
+      error: (error) => {
+        this.isAiLoading = false;
+        this.toastr.error('Failed to generate insights');
+        console.error(error);
+      }
+    });
+  }
+
+  // Answer user question about the blog
+  askAiQuestion() {
+    if (!this.aiQuestion.trim()) {
+      this.toastr.warning('Please enter a question');
+      return;
+    }
+    this.isAiLoading = true;
+    const blogContent = this.stripHTML(this.post.bodyofcontent);
+    this.aiService.answerQuestion(this.aiQuestion, blogContent).subscribe({
+      next: (response) => {
+        this.aiAnswer = response;
+        this.isAiLoading = false;
+        this.cdr.detectChanges();
+        this.toastr.success('Question answered');
+      },
+      error: (error) => {
+        this.isAiLoading = false;
+        this.toastr.error('Failed to answer question');
+        console.error(error);
+      }
+    });
+  }  
 }

@@ -516,7 +516,31 @@
     z-index: 1000;
   }
 
-
+  .ai-insights-section {
+    border: 1px solid #ddd;
+  }
+  .ai-buttons button {
+    background-color: #bdc2fb;
+    color: #333;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .ai-buttons button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  .insight, .answer {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    border-left: 3px solid #9932cc;
+  }
+  .ai-question input {
+    font-size: 14px;
+  }
 @media (max-width: 600px) {
     .headingwrite {
         font-size: clamp(1.5rem, 5vw, 2rem);

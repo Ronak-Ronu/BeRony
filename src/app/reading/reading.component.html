@@ -25,7 +25,72 @@
       </div>
     
     </div>
-    
+    <div class="ai-insights-section" style="margin: 20px 0; padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
+      <h3>Talk To AI for getting more insights about this blog:</h3>
+      <div class="ai-buttons" style="display: flex; gap: 10px; margin-bottom: 10px;">
+        <button
+          class="footerbutton"
+          style="color: white;"
+          [disabled]="isAiLoading"
+          (click)="generateInsight('summary')"
+        >
+          {{ isAiLoading ? 'thinking...' : 'Summarize Post' }}
+        </button>
+        <button
+          class="footerbutton"
+          style="color: white;"
+          [disabled]="isAiLoading"
+          (click)="generateInsight('keyPoints')"
+        >
+          {{ isAiLoading ? 'thinking...' : 'Key Points' }}
+        </button>
+        <button
+          class="footerbutton"
+          style="color: white;"
+          [disabled]="isAiLoading"
+          (click)="generateInsight('sentiment')"
+        >
+          {{ isAiLoading ? 'thinking...' : 'Sentiment Analysis' }}
+        </button>
+      </div>
+
+
+      <div *ngIf="aiInsights.summary" class="insight">
+        <h4>Summary:</h4>
+        <div [innerHTML]="aiInsights.summary"></div>
+      </div>
+      <div *ngIf="aiInsights.keyPoints" class="insight">
+        <h4>Key Points:</h4>
+        <div [innerHTML]="aiInsights.keyPoints"></div>
+      </div>
+      <div *ngIf="aiInsights.sentiment" class="insight">
+        <h4>Sentiment Analysis:</h4>
+        <div [innerHTML]="aiInsights.sentiment"></div>
+      </div>
+
+      <div class="ai-question" style="margin-top: 15px;">
+        <h4>Ask About This Post</h4>
+        <div style="display: flex; gap: 10px;">
+          <input
+            type="text"
+            [(ngModel)]="aiQuestion"
+            placeholder="E.g., What is the main argument of this post?"
+            style="flex: 1; padding: 8px; border-radius: 4px; border: 1px solid #ccc;"
+          />
+          <button
+            class="footerbutton"
+            [disabled]="isAiLoading"
+            (click)="askAiQuestion()"
+          >
+            {{ isAiLoading ? 'thinking...' : 'Ask' }}
+          </button>
+        </div>
+        <div *ngIf="aiAnswer" class="answer" style="margin-top: 10px;">
+          <h4>Answer:</h4>
+          <div [innerHTML]="aiAnswer"></div>
+        </div>
+      </div>
+    </div>
 
 
     <div class="buttonsection">
@@ -159,7 +224,6 @@
         </span>
     </div> 
       <div class="inputbox">
-     
         <div class="textarea-container">
             <textarea
                 [(ngModel)]="newCommentText"

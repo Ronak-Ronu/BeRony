@@ -41,7 +41,7 @@ interface ChatRoom {
   ]
 })
 export class ReadComponent implements OnInit, OnDestroy {
-  blogs: WriteModel[] = [];
+  blogs: any[] = [];
   userData: any;
   loggedInUserAccount: any = null;
   username: string = '';
