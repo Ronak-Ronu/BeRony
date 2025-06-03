@@ -186,23 +186,34 @@ Example Format{ this format is not necessary, but you can use it as a reference 
       })
     );
   }
-
-  fetchGif(keyword: string): Observable<string> {
+  fetchGif(prompt: string): Observable<string> {
+    const keyword = this.extractKeyword(prompt); // Extract a short keyword or phrase
     const params = {
-      api_key: environment.giphyAPIKEY,
+      api_key: 'yjwN0kfk4xk2BHKeuuoEts36Pdx80oJH',
       q: keyword,
       limit: '1',
-      rating: 'g'
+      rating: 'g',
     };
   
     return this.http.get<any>('https://api.giphy.com/v1/gifs/search', { params }).pipe(
       map(response => {
         if (response.data && response.data.length > 0) {
-          return response.data[0].images.original.url;
+          return response.data[0].images.original.url; // Return the GIF URL
         }
-        return ''; 
+        return ''; // Return an empty string if no GIF is found
+      }),
+      catchError(error => {
+        console.error('Giphy API Error:', error);
+        return throwError(() => new Error('Failed to fetch GIF'));
       })
     );
   }
+  
+  private extractKeyword(prompt: string): string {
+    // Extract a short keyword or phrase from the prompt
+    const match = prompt.match(/about\s+"([^"]+)"/); // Extract text after "about"
+    return match ? match[1] : 'funny'; // Default to 'funny' if no match is found
+  }
+
 
 }
