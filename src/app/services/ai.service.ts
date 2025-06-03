@@ -1,14 +1,17 @@
 // src/app/services/ai.service.ts
 import { Injectable } from '@angular/core';
 import { Observable, from, throwError } from 'rxjs';
-import { catchError, delayWhen, map,retryWhen, delay, scan } from 'rxjs/operators';
+import { catchError, delayWhen, map,retryWhen, delay, scan, switchMap } from 'rxjs/operators';
 import { model } from '../../../firebase-config';
+import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AiService {
-  constructor() {}
+
+  constructor(private http: HttpClient) {}
 
   private readonly systemPrompt = `
 You are an AI assistant that generates well-structured, humorous, and engaging HTML content designed specifically to be rendered inside a web application. Follow these detailed instructions strictly to maintain a consistent, visually dynamic, and fun user experience:
@@ -95,6 +98,7 @@ Example Format{ this format is not necessary, but you can use it as a reference 
         }
         return 'No response generated';
       }),
+      
       retryWhen(errors =>
         errors.pipe(
           scan((retryCount, error) => {
@@ -105,6 +109,16 @@ Example Format{ this format is not necessary, but you can use it as a reference 
             return retryCount + 1;
           }, 0),
           delayWhen((retryCount: number) => from([null]).pipe(delay(retryCount * 2000))) // Increase delay with each retry
+        )
+      ),
+      switchMap(text =>
+        this.fetchGif(prompt).pipe(
+          map(gifUrl => {
+            if (gifUrl) {
+              return `${text}<br><img src="${gifUrl}" alt="Relevant GIF" />`;
+            }
+            return text;
+          })
         )
       ),
       catchError(error => {
@@ -173,5 +187,22 @@ Example Format{ this format is not necessary, but you can use it as a reference 
     );
   }
 
+  fetchGif(keyword: string): Observable<string> {
+    const params = {
+      api_key: environment.giphyAPIKEY,
+      q: keyword,
+      limit: '1',
+      rating: 'g'
+    };
+  
+    return this.http.get<any>('https://api.giphy.com/v1/gifs/search', { params }).pipe(
+      map(response => {
+        if (response.data && response.data.length > 0) {
+          return response.data[0].images.original.url;
+        }
+        return ''; 
+      })
+    );
+  }
 
 }
