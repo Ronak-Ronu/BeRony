@@ -93,7 +93,7 @@
     width: 65%;
     font-size: 25px;
 }
-.followuserbutton button{
+.followuserbutton button, .upload-btn{
     font-size: 23px;
     background-color: rgb(143, 159, 233);
     padding: 10px;
@@ -266,21 +266,6 @@
   text-align: right;
 }
 
-.upload-btn {
-  font-size: 1rem;
-  background-color: rgb(143, 159, 233);
-  padding: 10px 20px;
-  border-radius: 20px;
-  color: white;
-  cursor: pointer;
-  border: none;
-  touch-action: manipulation;
-}
-
-.upload-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
 .story-editor-content .tool-section textarea {
   padding: 8px;
   border: 1px solid #ccc;
@@ -357,7 +342,7 @@
   text-align: right;
 }
 
-.popup-footer .upload-btn {
+.popup-footer{
   padding: 10px 20px;
   background-color: #c6caf9;
   color: white;

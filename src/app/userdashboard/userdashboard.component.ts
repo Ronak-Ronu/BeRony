@@ -428,10 +428,20 @@ export class UserdashboardComponent implements OnInit {
           const imageElement = document.createElement('img');
           imageElement.src = imgUrl;
           imageElement.onload = () => {
+            const canvasWidth = this.canvas.getWidth();
+            const canvasHeight = this.canvas.getHeight();
+            const scaleX = canvasWidth / imageElement.width;
+            const scaleY = canvasHeight / imageElement.height;
+            const scale = Math.min(scaleX, scaleY);
+  
             const image = new fabric.Image(imageElement, {
               selectable: true,
-              scaleX: 400 / imageElement.width,
-              scaleY: 600 / imageElement.height,
+              scaleX: scale,
+              scaleY: scale,
+              left: canvasWidth / 2,
+              top: canvasHeight / 2,
+              originX: 'center',
+              originY: 'center',
             });
             this.canvas.add(image);
             this.canvas.setActiveObject(image);
@@ -444,9 +454,9 @@ export class UserdashboardComponent implements OnInit {
     } else if (file.type.startsWith('video/')) {
       this.showVideoDescriptionPopup = true;
       this.videoPreviewUrl = URL.createObjectURL(file);
-      // this.uploadStory(file);
     }
   }
+
   confirmVideoUpload() {
     if (this.file) {
       this.uploadStory(this.file);
