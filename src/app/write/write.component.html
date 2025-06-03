@@ -1,357 +1,406 @@
 <div class="writemainbody">
-  <div class="generateimagepopup" *ngIf="openimagegeneratepopup">
-    <div
-      class="closeimagesign"
-      style="cursor: pointer"
-      (click)="closeImagePopup()"
-    >
-      X
-    </div>
-    <input [(ngModel)]="prompt" placeholder="Enter your prompt" />
-    <button (click)="generateImage()" class="toolbarbutton">
-      Generate Image
-    </button>
-
-    <div>
-      <div class="image-gallery">
-        <div *ngFor="let imageUrl of photos" class="image-item">
-          <img
-            [src]="imageUrl"
-            (click)="selectThisImage(imageUrl)"
-            alt="Unsplash Image"
-            (click)="closeImagePopup()"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="previewWindow" *ngIf="ispreview">
-    <div
-      style="cursor: pointer; font-size: 25px; color: blueviolet"
-      (click)="closepreview()"
-    >
-      <u>Close</u>
-    </div>
-
-    <div class="previewcontentbody">
-      <div class="titleinpreview" [innerHTML]="previewTitle"></div>
-      <!-- <hr /> -->
-      <div class="contentinpreview" [innerHTML]="previewBodyContent"></div>
-      <!-- <hr /> -->
-      <div class="endnoteinpreview" [innerHTML]="previewEndNote"></div>
-    </div>
-  </div>
   <div class="headingwrite">
-    <p>WRITE</p>
+    <p>WRITE YOUR BEST</p>
   </div>
 
   <div class="bodyofwriting">
     <div class="container">
       <form #writecontentform="ngForm">
         <div class="toolbar">
-          <button
-            style="cursor: pointer"
-            class="toolbarbutton"
-            (click)="toggleCodeEditor()"
-          >
-            Code
+          <button type="button" class="toolbarbutton" (click)="toggleCodeEditor()">
+            <i class="fas fa-code"></i> Code
           </button>
-          <div class="code-editor-popup" *ngIf="showCodeEditor">
-            <div style="cursor: pointer" (click)="toggleCodeEditor()">
-              Save & Close
-            </div>
-            <textarea
-              placeholder="print('HAPPY CODING')"
-              name="codecontent"
-              #codecontent="ngModel"
-              [(ngModel)]="editCodeContent"
-            >
-            </textarea>
-          </div>
+          <button type="button" class="toolbarbutton" (click)="toggleImageUploadPopup()">
+            <i class="fas fa-image"></i> Image
+          </button>
+          <button type="button" class="toolbarbutton" (click)="openCanvasModal()">
+            <i class="fas fa-paint-brush"></i> Canvas
+          </button>
+          <button type="button" class="toolbarbutton" (click)="generateimagewindow()">
+            <i class="fas fa-camera"></i> Unsplash
+          </button>
+          <button type="button" class="toolbarbutton" (click)="preview()">
+            <i class="fas fa-eye"></i> Preview
+          </button>
+          <button type="button" class="toolbarbutton" (click)="showDraftsModal = true">
+            <i class="fas fa-file-alt"></i> Drafts
+          </button>
+          <button type="button" class="toolbarbutton" (click)="generateFullBlog()">
+            <i class="fas fa-robot"></i> AI Writer
+          </button>
+        </div>
 
-          <button
-            style="cursor: pointer"
-            class="toolbarbutton"
-            (click)="toggleImageUploadPopup()"
-          >
-            FILE
-          </button>
-          <!-- <button style="cursor: pointer;" class="toolbarbutton" (click)="opencanvas()">Canvas</button> -->
+        <div class="format-toolbar" *ngIf="showFormatToolbar" 
+             [style.top.px]="toolbarPosition.top" 
+             [style.left.px]="toolbarPosition.left">
+          <button (click)="formatText('h1')" title="Heading"><b>H1</b></button>
+          <button (click)="formatText('bold')" title="Bold"><b>B</b></button>
+          <button (click)="formatText('italic')" title="Italic"><i>I</i></button>
+          <button (click)="formatText('code')" title="Code Block"><i class="fas fa-code"></i></button>
+          <select (change)="formatText('color', $event)" title="Text Color">
+            <option value="" disabled selected>Color</option>
+            <option value="#000000">Black</option>
+            <option value="#ff0000">Red</option>
+            <option value="#0000ff">Blue</option>
+            <option value="#008000">Green</option>
+            <option value="#ffa500">Orange</option>
+          </select>
+          <button (click)="formatText('align-left')" title="Align Left"><i class="fas fa-align-left"></i></button>
+          <button (click)="formatText('align-center')" title="Align Center"><i class="fas fa-align-center"></i></button>
+          <button (click)="formatText('align-right')" title="Align Right"><i class="fas fa-align-right"></i></button>
+          <select (change)="formatText('font-size', $event)" title="Font Size">
+            <option value="" disabled selected>Size</option>
+            <option value="1">Small</option>
+            <option value="3">Medium</option>
+            <option value="5">Large</option>
+            <option value="7">X-Large</option>
+          </select>
+        </div>
+        
+        <div class="writecontentarea paper-style">
+          <div
+            #titleEditor
+            class="editor"
+            contenteditable="true"
+            (input)="updateTitle($event)"
+          ></div>
 
           <div
-            class="popup-backdrop"
-            *ngIf="showImageUploadPopup"
-            (click)="closePopup()"
-          >
-            <div class="popup-modal" (click)="$event.stopPropagation()">
-              <h3>Select Thumbnail</h3>
-              <!-- <form (submit)="uploadBlogImage()"> -->
-              <i>Image/Video size must be <b>less than 20MB</b> </i>
-              <input
-                type="file"
-                (change)="handleImageUpload($event)"
-                name="imageUrl"
-              />
-              <!-- <button type="submit">Upload</button> -->
-              <br /><br />
-              <!-- </form> -->
-              <button (click)="closePopup()">Close</button>
-            </div>
-          </div>
+            #bodyEditor
+            class="editor"
+            contenteditable="true"
+            (input)="updateBody($event)"
+            (keyup)="checkForGifKeyword()"
+          ></div>
 
-          <button
-            style="cursor: pointer"
-            class="toolbarbutton"
-            (click)="generateimagewindow()"
-          >
-            UnSplash
-          </button>
-          <button
-            style="cursor: pointer"
-            class="toolbarbutton"
-            (click)="preview()"
-          >
-            PREVIEW
-          </button>
-          <button style="cursor: pointer" class="toolbarbutton" (click)="generateFullBlog()">Hey AI</button>
-        </div>
-        <div *ngIf="selectedimagefile" class="selectedimagefilecss">
-          <img [src]="imageUrl" width="35%" height="35%" alt="" />
-          <!-- <b>{{selectedimagefile.name}}</b> -->
-        </div>
-
-        <div class="canvasdiv">
-          <div *ngIf="showstickerwindow">
-            <div>
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                "
-              >
-                <div class="inputgif">
-                  <input
-                    class="inputgifstyle"
-                    type="text"
-                    name="gifSearchQuery"
-                    [(ngModel)]="gifSearchQuery"
-                    (input)="searchGifs()"
-                    placeholder="Comment gif?"
-                    style="font-size: 27px"
-                  />
-                </div>
-                <div class="closebtn" style="cursor: pointer; font-size: 32px">
-                  <span (click)="addSticker()">X</span>
-                </div>
-              </div>
-
-              <div *ngIf="gifs.length">
-                <div class="gif-container">
-                  <div
-                    style="background-color: rgb(190, 190, 190)"
-                    class="gif"
-                    *ngFor="let gif of gifs"
-                    (click)="selectGif(gif)"
-                  >
-                    <img
-                      [src]="gif.images.fixed_height_small.url"
-                      [alt]="gif.title"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="canvaseditbuttons" *ngIf="!showstickerwindow">
-            <!-- <button (click)="addRect()">addRect</button>  -->
-            <span style="font-size: 19px">Brush Setting:</span>
-            <div style="display: flex; flex-direction: row">
-              <input
-                type="color"
-                [(ngModel)]="pickedcolor"
-                name="pickedcolor"
-                (change)="setBrushColor()"
-              />
-              <input
-                type="range"
-                [(ngModel)]="brushsize"
-                name="brushsize"
-                placeholder="brush size"
-                (change)="setBrushSize()"
-              />
-            </div>
-            <div>
-              <input type="file" (change)="addImageToCanvas($event)" />
-            </div>
-            <div style="margin-top: 5px;">
-                <span style="font-size: 14px;">Brush Type:</span>
-                <button (click)="selectBrush('pencil')" style="cursor: pointer;font-size: 17px;margin-right: 2px;" [disabled]="isdrawing">Pencil</button>
-                <button (click)="selectBrush('circle')" style="cursor: pointer;font-size: 17px;margin-right: 2px;" [disabled]="isdrawing">Circle</button>
-                <button (click)="selectBrush('spray')"  style="cursor: pointer;font-size: 17px;"[disabled]="isdrawing">Spray</button>
-            </div>
-            <button (click)="clearcanvas()" [disabled]="isdrawing">
-              Clear
-            </button>
-            <button (click)="draw()">Draw</button>
-            <button (click)="addText()" [disabled]="isdrawing">Text</button>
-            <button (click)="addSticker()" [disabled]="isdrawing">
-              Sticker
-            </button>
-            <button (click)="saveCanvas()" [disabled]="isdrawing">Save</button>
-          </div>
-          <div>
-            <canvas
-              id="fabricCanvas"
-              width="900"
-              height="500"
-              class="canvas"
-            ></canvas>
-          </div>
-        </div>
-        <div *ngIf="showstickerwindow1" class="gif-picker-popup">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <input
-              class="inputgifstyle"
-              type="text"
-              name="gifSearchQuery"
-              [(ngModel)]="gifSearchQuery"
-              (input)="searchGifs()"
-              placeholder="Search GIFs"
-            />
-            <span style="cursor: pointer; font-size: 32px;" (click)="addSticker1()">X</span>
-          </div>
-          <div class="gif-container" *ngIf="gifs.length">
-            <div class="gif" *ngFor="let gif of gifs" (click)="selectGif(gif)">
-              <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title" />
-            </div>
-          </div>
-        </div>
-        <div class="writecontentarea paper-style">
-          <textarea
-            #titleTextarea
-            rows="2"
-            placeholder="Title Goes Here"
-            name="title"
-            #title="ngModel"
-            maxlength="300"
-            [(ngModel)]="edittitle"
-            required
-          >
-          </textarea>
-
-          <textarea
-            #bodyTextarea
-            rows="17"
-            maxlength="10000"
-            placeholder="Try @gif to add gifs"
-            name="bodyofcontent"
-            #bodyofcontent="ngModel"
-            [(ngModel)]="editbodycontent"
-            required
-          ></textarea>
-
-          <textarea
-            #endnoteTextarea
-            rows="2"
-            maxlength="400"
-            placeholder="Share your post script/ending note"
-            name="endnotecontent"
-            #endnotecontent="ngModel"
-            required
-            [(ngModel)]="editendnotecontent"
-          ></textarea>
+          <div
+            #endnoteEditor
+            class="editor"
+            contenteditable="true"
+            (input)="updateEndnote($event)"
+          ></div>
 
           <div class="tagsinputarea">
-            <input
-              [(ngModel)]="tagInput"
-              name="tagInput"
-              (keydown)="onKeyDown($event)"
-              placeholder="Press Enter to add tag"
-            />
+            <input [(ngModel)]="tagInput" name="tagInput" 
+                   (keydown)="onKeyDown($event)" 
+                   placeholder="Add tags (press Enter after each tag)" />
           </div>
-          <label>Schedule Post (Optional):</label>
-          <input
-            type="datetime-local"
-            [(ngModel)]="postScheduleTime"
-            name="postScheduleTime"
-          />
+          
+          <div class="schedule-container">
+            <label>Schedule Post (Optional):</label>
+            <input type="datetime-local" [(ngModel)]="postScheduleTime" name="postScheduleTime" />
+          </div>
 
           <div class="tags">
-            <span *ngFor="let tag of tags" class="tag"
-              >{{ tag }}
-              <div
-                style="cursor: pointer; color: blueviolet; font-weight: bolder"
-                [@tagAnimation]
-                (click)="removeTag(tag)"
-              >
-                X
-              </div>
+            <span *ngFor="let tag of tags" class="tag" [@tagAnimation]>
+              {{ tag }} 
+              <div (click)="removeTag(tag)"><i class="fas fa-times"></i></div>
             </span>
           </div>
-          <!-- <label for="scheduleDate">Schedule Post</label>
-            <input id="scheduleDate" type="datetime-local" [(ngModel)]="postScheduleInput" name="postScheduleInput" /> -->
+        </div>
+
+        <div *ngIf="imageUrl" class="selectedimagefilecss">
+          <img [src]="imageUrl" alt="Featured Image" />
+          <button type="button" class="remove-image-btn" (click)="imageUrl = null; selectedimagefile = null">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
 
         <div class="footerbuttons">
-          <button
-            class="footerbutton"
-            (click)="publishblog(writecontentform.value)"
-            style="cursor: pointer"
-          >
-            PUBLISH
+          <button type="button" class="publish-btn" (click)="publishblog(writecontentform.value)">
+            <i class="fas fa-paper-plane"></i> PUBLISH
           </button>
-          <button
-            class="footerbutton"
-            (click)="saveasdraft(writecontentform.value)"
-            style="cursor: pointer"
-          >
-            DRAFT IT
+          <button type="button" style="
+            background: linear-gradient(45deg, #c9cad7, #888888);
+            background-color: rgb(200, 204, 223);
+            padding: 17px;
+            border-radius: 50px;
+            color:  black;
+            cursor: pointer;
+
+          " (click)="saveasdraft(writecontentform.value)">
+
+            <i class="fas fa-save"></i> SAVE AS DRAFT
           </button>
         </div>
       </form>
     </div>
+  </div>
 
-    <div class="draftcontainer">
-      <div class="headerofdraft">
-        <p>DRAFTS</p>
-        <div (click)="refreshcomponent()" class="refreshbtn">⟳</div>
+  <div class="modal-backdrop" *ngIf="showImageUploadPopup" [@modalAnimation]>
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Upload Featured Image</h3>
+        <button class="close-btn" (click)="closePopup()"><i class="fas fa-times"></i></button>
       </div>
-      <div *ngIf="draftblogs && draftblogs.length > 0; else noDrafts">
-        <div *ngFor="let item of draftblogs">
-          <div class="draftsbody">
-            <div class="draft1">
-              <!-- <p>TITLE OF THE DRAFT</p> -->
-              <p [innerHTML]="item.title">
-                <!-- {{item.title}} -->
-              </p>
-              <button
-                class="continuewritingbutton"
-                (click)="publishdraft(item)"
-                style="cursor: pointer"
-              >
-                PUBLISH
+      <div class="modal-body">
+        <p><i>Image size must be <b>less than 20MB</b></i></p>
+        <div class="upload-area">
+          <input type="file" id="imageUpload" (change)="handleImageUpload($event)" 
+                 accept="image/*" hidden />
+          <label for="imageUpload" class="upload-btn" style="cursor: pointer;">
+            <i class="fas fa-cloud-upload-alt"></i> Choose Image
+          </label>
+          <p>or drag and drop here</p>
+        </div>
+        <div *ngIf="imageUrl" class="image-preview">
+          <img [src]="imageUrl" alt="Preview" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="openimagegeneratepopup" [@modalAnimation]>
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Find Images from Unsplash</h3>
+        <button class="close-btn" (click)="closeImagePopup()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="search-bar">
+          <input [(ngModel)]="prompt" placeholder="Search for images (e.g., mountains, beach)" />
+          <button (click)="generateImage()" class="search-btn">
+            <i class="fas fa-search"></i> Search
+          </button>
+        </div>
+        <div *ngIf="photos.length === 0" class="empty-state">
+          <i class="fas fa-image"></i>
+          <p>Enter keywords to find beautiful images</p>
+        </div>
+        <div *ngIf="photos.length > 0" class="image-gallery">
+          <div *ngFor="let imageUrl of photos" class="image-item">
+            <img [src]="imageUrl" (click)="selectThisImage(imageUrl)" alt="Unsplash Image" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showCodeEditor" [@modalAnimation]>
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Add Code Snippet</h3>
+        <button class="close-btn" (click)="toggleCodeEditor()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <textarea placeholder="// Write your code here
+function hello() {
+  console.log('Hello world!');
+}" 
+                  name="codecontent" [(ngModel)]="editCodeContent"></textarea>
+        <div class="modal-footer">
+          <button class="insert-btn" (click)="insertCode()">
+            <i class="fas fa-plus"></i> Insert Code
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showCanvasModal" [@modalAnimation]>
+    <div class="modal-content canvas-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Create Custom Artwork</h3>
+        <button class="close-btn" (click)="closeCanvasModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="canvas-controls">
+          <div class="control-group">
+            <label>Brush Color:</label>
+            <input type="color" [(ngModel)]="pickedcolor" (change)="setBrushColor()" />
+          </div>
+          
+          <div class="control-group">
+            <label>Brush Size: {{brushsize}}px</label>
+            <input type="range" min="1" max="50" [(ngModel)]="brushsize" (input)="setBrushSize()" />
+          </div>
+          
+          <div class="control-group">
+            <label>Brush Type:</label>
+            <div class="brush-selector">
+              <button [class.active]="brushtype === 'pencil'" (click)="selectBrush('pencil')">
+                <i class="fas fa-pencil-alt"></i> Pencil
               </button>
-              <button
-                class="continuewritingbutton"
-                (click)="editdraft(item)"
-                style="cursor: pointer"
-              >
-                EDIT
+              <button [class.active]="brushtype === 'circle'" (click)="selectBrush('circle')">
+                <i class="fas fa-circle"></i> Circle
+              </button>
+              <button [class.active]="brushtype === 'spray'" (click)="selectBrush('spray')">
+                <i class="fas fa-spray-can"></i> Spray
+              </button>
+            </div>
+          </div>
+          
+          <div class="control-group">
+            <button (click)="clearcanvas()" class="control-btn">
+              <i class="fas fa-trash-alt"></i> Clear
+            </button>
+            <button (click)="addText()" class="control-btn">
+              <i class="fas fa-font"></i> Add Text
+            </button>
+            <button (click)="openStickerModal()" class="control-btn">
+              <i class="fas fa-sticky-note"></i> Add Sticker
+            </button>
+            <button (click)="toggleDrawing()" class="control-btn" [class.active]="isdrawing">
+              <i class="fas fa-paint-brush"></i> {{isdrawing ? 'Stop Drawing' : 'Start Drawing'}}
+            </button>
+          </div>
+          
+          <div class="control-group">
+            <input type="file" id="canvasImageUpload" (change)="addImageToCanvas($event)" 
+                   accept="image/*" hidden />
+            <label for="canvasImageUpload" class="control-btn">
+              <i class="fas fa-file-image"></i> Add Image
+            </label>
+            <button (click)="saveCanvas()" class="control-btn save-canvas-btn">
+              <i class="fas fa-save"></i> Save as Thumbnail
+            </button>
+          </div>
+        </div>
+        
+        <div class="canvas-container">
+          <canvas #fabricCanvas1 id="fabricCanvas1"></canvas>
+        </div>
+        
+        <div *ngIf="canvasImageUrl" class="canvas-preview">
+          <h4>Canvas Thumbnail:</h4>
+          <img [src]="canvasImageUrl" alt="Canvas Preview" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showStickerModal" [@modalAnimation]>
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Add Stickers to Canvas</h3>
+        <button class="close-btn" (click)="showStickerModal = false"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="search-bar">
+          <input [(ngModel)]="gifSearchQuery" (input)="searchGifs()" placeholder="Search for stickers..." />
+          <button (click)="searchGifs()" class="search-btn">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+        <div *ngIf="gifs.length === 0" class="empty-state">
+          <i class="fas fa-sticky-note"></i>
+          <p>Search for stickers to add to your canvas</p>
+        </div>
+        <div *ngIf="gifs.length > 0" class="sticker-gallery">
+          <div *ngFor="let gif of gifs" class="sticker-item" (click)="selectGif(gif)">
+            <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showGifModal" [@modalAnimation]>
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Add GIF to Content</h3>
+        <button class="close-btn" (click)="showGifModal = false"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="search-bar">
+          <input [(ngModel)]="gifSearchQuery" (input)="searchGifs()" placeholder="Search for GIFs..." />
+          <button (click)="searchGifs()" class="search-btn">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+        <div *ngIf="gifs.length === 0" class="empty-state">
+          <i class="fas fa-film"></i>
+          <p>Search for GIFs to add to your content</p>
+        </div>
+        <div *ngIf="gifs.length > 0" class="gif-gallery">
+          <div *ngFor="let gif of gifs" class="gif-item" (click)="selectGif(gif)">
+            <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showDraftsModal" [@modalAnimation]>
+    <div class="modal-content drafts-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Your Drafts</h3>
+        <div class="header-actions">
+          <button (click)="refreshcomponent()" class="refresh-btn" title="Refresh">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+          <button (click)="showDraftsModal = false" class="close-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="draftblogs && draftblogs.length > 0; else noDrafts" class="drafts-list">
+          <div *ngFor="let item of draftblogs" class="draft-item">
+            <div class="draft-content">
+              <h4 [innerHTML]="item.title || 'Untitled Draft'"></h4>
+              <p class="draft-date">{{item.createdAt | date:'medium'}}</p>
+            </div>
+            <div class="draft-actions">
+              <button (click)="publishdraft(item)" class="draft-btn publish" title="Publish">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+              <button (click)="editdraft(item)" class="draft-btn edit" title="Edit">
+                <i class="fas fa-edit"></i>
               </button>
             </div>
           </div>
         </div>
+        <ng-template #noDrafts>
+          <div class="empty-drafts">
+            <i class="fas fa-file-alt"></i>
+            <p>No drafts found</p>
+            <p>Start writing to save drafts</p>
+          </div>
+        </ng-template>
       </div>
+    </div>
+  </div>
 
-      <ng-template #noDrafts>
-        <div class="draftsbody">
-          <div class="draft1" style="text-align: center">
-            <p>NO DRAFTS</p>
+  <div class="modal-backdrop preview-modal" *ngIf="ispreview" [@modalAnimation]>
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Preview Your Post</h3>
+        <button class="close-btn" (click)="closepreview()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="preview-content">
+          <div class="preview-header">
+            <h1 class="preview-title" [innerHTML]="previewTitle"></h1>
+            <div class="author-info">
+              <div class="author-avatar">
+                <i class="fas fa-user-circle"></i>
+              </div>
+              <div class="author-details">
+                <span class="author-name">{{username || 'Anonymous'}}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="imageUrl" class="featured-image">
+            <img [src]="imageUrl" alt="Featured Image" />
+          </div>
+          
+          <div class="preview-body" [innerHTML]="previewBodyContent"></div>
+          
+          <div class="preview-footer">
+            <div class="preview-endnote" [innerHTML]="previewEndNote"></div>
+            <div class="preview-tags">
+              <span *ngFor="let tag of tags" class="tag">{{ tag }}</span>
+            </div>
           </div>
         </div>
-      </ng-template>
+      </div>
+      <div class="modal-footer">
+        <button class="publish-btn" (click)="publishblog(writecontentform.value)">
+          <i class="fas fa-paper-plane"></i> Publish Now
+        </button>
+      </div>
     </div>
   </div>
 </div>
