@@ -33,6 +33,7 @@ jobs:
             bucketName: '${{ secrets.BUCKET_NAME }}',
             project: '${{ secrets.PROJECT }}',
             mode: '${{ secrets.MODE }}',
+            murfApiKey: '${{ secrets.MURF_API_KEY }}',
             Unsplash_ACCESSKEY: '${{ secrets.UNSPLASH_ACCESS_KEY }}',
             firebaseConfig: {
               projectId: '${{ secrets.FIREBASE_PROJECT_ID }}',
