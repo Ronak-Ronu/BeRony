@@ -97,17 +97,19 @@
     <div class="buttonsection">
       <div class="footerbuttonsgrey">
         <div>
-          <button class="footerbutton" (click)="readingblog ? stop() : start(post.bodyofcontent)">
-            {{ readingblog ? 'STOP' : 'READ' }}
+          <button class="footerbutton" [disabled]="isAiLoading" (click)="readingblog ? (isPaused ? resume() : pause()) : start(post.bodyofcontent)">
+            {{ isAiLoading ? 'LOADING...' : (readingblog ? (isPaused ? 'RESUME' : 'PAUSE') : 'READ') }}
           </button>
-    
+        </div>
+        <div>
+          <button class="footerbutton" (click)="stop()">STOP</button>
         </div>
         <div>
           <button class="footerbutton" (click)="share()">SHARE</button>
         </div>
         <div>
           <button class="footerbutton" (click)="downloadBlog()">
-            <img  style="width: 27px;" src="../../assets/img/download-blog-pdf.png" alt=""  />           </button>
+            <img  style="width: 27px;" src="../../assets/img/download-blog-pdf.png" alt=""  /></button>
           </div>
             <div>
     
@@ -115,6 +117,9 @@
                 <img style="transform: rotate(180deg);width: 27px;" src="../../assets/img/bookmark.png" alt=""  /> 
               </button>
             </div>
+      </div>
+      <div class="audio-progress" *ngIf="readingblog">
+        <progress [value]="audio.currentTime" [max]="audio.duration || 100"></progress>
       </div>
       <div class="likebuttons">
 

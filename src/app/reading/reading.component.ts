@@ -59,6 +59,14 @@ export class ReadingComponent implements OnInit {
   aiAnswer: string = '';
   isAiLoading: boolean = false;
 
+   audio = new Audio();
+   isPaused: boolean = false;
+   voiceStyle: string = 'default';
+   currentChunk: number = 0;
+   textChunks: string[] = [];
+   readonly MURF_API_URL = 'https://api.murf.ai/v1/speech/stream';
+   readonly MURF_VOICE_ID = 'en-US-natalie';
+
 
   private synth = window.speechSynthesis;
   private utterance = new SpeechSynthesisUtterance();
@@ -644,24 +652,164 @@ bookmarkthispost() {
 stripHTML(html:string) {
   return html.replace(/<\/?[^>]+(>|$)/g, "");
 }
-start(text: string): void {
-  if (!this.synth) {
-    console.error('Speech Synthesis is not supported in this browser.');
-    return;
+async start(text: string): Promise<void> {
+  try {
+    this.isAiLoading = true;
+    this.readingblog = true;
+    this.isPaused = false;
+    const cleanText = this.stripHTML(text);
+    const cacheKey = `tts_${this.postid}`;
+    const cachedAudio = localStorage.getItem(cacheKey);
+    if (cachedAudio) {
+      this.audio.src = cachedAudio;
+      this.audio.playbackRate = this.getPlaybackRate();
+      this.audio.play();
+      this.renderer.addClass(document.querySelector('.bodycontentsection'), 'reading-active');
+      this.audio.onended = () => {
+        this.readingblog = false;
+        this.isPaused = false;
+        this.renderer.removeClass(document.querySelector('.bodycontentsection'), 'reading-active');
+        this.cdr.detectChanges();
+      };
+      this.isAiLoading = false;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.textChunks = cleanText.match(/.{1,500}/g) || [cleanText];
+    this.currentChunk = 0;
+    this.renderer.addClass(document.querySelector('.bodycontentsection'), 'reading-active');
+    await this.playNextChunk();
+  } catch (error) {
+    console.error('TTS Error:', error);
+    this.toastr.error('Failed to generate audio. Falling back to browser TTS.');
+    this.fallbackToSpeechSynthesis(this.textChunks.join(' '));
+  } finally {
+    this.isAiLoading = false;
+    this.cdr.detectChanges();
   }
-  this.utterance.text = this.stripHTML(text);
-  this.synth.cancel();
-  this.speakInChunks(this.utterance.text); 
-  // this.synth.speak(this.utterance); 
-  this.readingblog=true
-  // console.log(this.utterance.text);
-  
-}
-stop(): void {
-  this.synth.cancel();
-  this.readingblog=false
 }
 
+private async playNextChunk(): Promise<void> {
+  if (this.currentChunk >= this.textChunks.length) {
+    this.readingblog = false;
+    this.isPaused = false;
+    this.renderer.removeClass(document.querySelector('.bodycontentsection'), 'reading-active');
+    URL.revokeObjectURL(this.audio.src);
+    this.cdr.detectChanges();
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      this.MURF_API_URL,
+      {
+        text: this.textChunks[this.currentChunk],
+        voiceId: this.MURF_VOICE_ID
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': environment.murfApiKey
+        },
+        responseType: 'arraybuffer',
+        timeout: 30000
+      }
+    );
+
+    const audioBlob = new Blob([response.data], { type: 'audio/wav' });
+    this.audio.src = URL.createObjectURL(audioBlob);
+    this.audio.playbackRate = this.getPlaybackRate();
+    this.audio.play();
+    this.toastr.success(`Playing chunk ${this.currentChunk + 1} of ${this.textChunks.length}`);
+    this.currentChunk++;
+
+    if (this.currentChunk === 1) {
+      localStorage.setItem(`tts_${this.postid}`, this.audio.src);
+    }
+
+    this.audio.onended = () => {
+      this.playNextChunk();
+    };
+  } catch (error: any) {
+    console.error('Murf.ai Error:', error);
+    if (error.response?.status === 401) {
+      this.toastr.error('Invalid Murf.ai API key. Falling back to browser TTS.');
+    } else if (error.response?.status === 429) {
+      this.toastr.error('Murf.ai rate limit exceeded. Falling back to browser TTS.');
+    } else {
+      this.toastr.error('Failed to generate audio chunk.');
+    }
+    this.fallbackToSpeechSynthesis(this.textChunks.join(' '));
+  }
+}
+
+private getPlaybackRate(): number {
+  return this.voiceStyle === 'fast' ? 1.2 : this.voiceStyle === 'slow' ? 0.8 : 1.0;
+}
+
+private fallbackToSpeechSynthesis(text: string): void {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.rate = this.getPlaybackRate();
+  utterance.pitch = 1.1;
+  utterance.volume = 1;
+  const voices = window.speechSynthesis.getVoices();
+  utterance.voice = voices.find(v => v.name.includes('Google US English')) || voices.find(v => v.lang === 'en') || voices[0];
+  window.speechSynthesis.onvoiceschanged = () => {
+    utterance.voice = voices.find(v => v.name.includes('Google US English')) || voices.find(v => v.lang === 'en') || voices[0];
+  };
+  window.speechSynthesis.speak(utterance);
+  this.readingblog = true;
+  this.renderer.addClass(document.querySelector('.bodycontentsection'), 'reading-active');
+  utterance.onend = () => {
+    this.readingblog = false;
+    this.renderer.removeClass(document.querySelector('.bodycontentsection'), 'reading-active');
+    this.cdr.detectChanges();
+  };
+}
+
+pause(): void {
+  if (!this.isPaused) {
+    this.audio.pause();
+    window.speechSynthesis.pause();
+    this.isPaused = true;
+    this.readingblog = false;
+    this.cdr.detectChanges();
+  }
+}
+
+resume(): void {
+  if (this.isPaused) {
+    if (this.audio.src) {
+      this.audio.play();
+    } else {
+      window.speechSynthesis.resume();
+    }
+    this.isPaused = false;
+    this.readingblog = true;
+    this.cdr.detectChanges();
+  }
+}
+
+stop(): void {
+  this.audio.pause();
+  this.audio.currentTime = 0;
+  window.speechSynthesis.cancel();
+  this.readingblog = false;
+  this.isPaused = false;
+  this.currentChunk = 0;
+  this.textChunks = [];
+  this.renderer.removeClass(document.querySelector('.bodycontentsection'), 'reading-active');
+  URL.revokeObjectURL(this.audio.src);
+  this.cdr.detectChanges();
+}
+
+setVoiceStyle(): void {
+  if (this.audio.src) {
+    this.audio.playbackRate = this.getPlaybackRate();
+  }
+}
 downloadBlog() {
   const pdf = new jsPDF({
     orientation: 'portrait',
