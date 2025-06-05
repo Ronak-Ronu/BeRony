@@ -1,4 +1,4 @@
-import { Component, OnInit,ChangeDetectorRef,Renderer2 } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef,Renderer2, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WriteModel } from '../Models/writemodel';
 import { WriteserviceService } from '../writeservice.service';
@@ -11,6 +11,7 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import sanitizeHtml from 'sanitize-html';
 import { AiService } from '../services/ai.service';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { AiService } from '../services/ai.service';
 })
 
 export class ReadingComponent implements OnInit {
+  @ViewChild('postBody') postBody!: ElementRef<HTMLDivElement>; // Add ViewChild to reference the body content
   post!:WriteModel
   username!:string
   postadmin!:string
@@ -70,6 +72,9 @@ export class ReadingComponent implements OnInit {
 
   private synth = window.speechSynthesis;
   private utterance = new SpeechSynthesisUtterance();
+  audioChunks: string[] | undefined;
+  poll: any = null;
+  userId: string = ''; 
 
 
   constructor(private service:WriteserviceService,private cdr: ChangeDetectorRef,private router:ActivatedRoute,
@@ -229,6 +234,9 @@ readblogdatabyid() {
           this.fetchUserData(collaboratorId);
         });
         this.sanitizeBodyContent();
+        if (this.post.pollId) {
+          this.loadPoll();
+        }
       },
       error: (error) => {
         console.error('Error fetching post data:', error);
@@ -245,6 +253,7 @@ async getloggedinuserdata (){
       this.loggedinuserid=this.loggedInUserAccount.$id
       // console.log(this.username);
       // console.log(this.loggedinuserid);
+      this.userId = this.loggedInUserAccount.$id; // Set userId for poll fetching
       }
   }
   
@@ -652,6 +661,8 @@ bookmarkthispost() {
 stripHTML(html:string) {
   return html.replace(/<\/?[^>]+(>|$)/g, "");
 }
+
+
 async start(text: string): Promise<void> {
   try {
     this.isAiLoading = true;
@@ -660,25 +671,33 @@ async start(text: string): Promise<void> {
     const cleanText = this.stripHTML(text);
     const cacheKey = `tts_${this.postid}`;
     const cachedAudio = localStorage.getItem(cacheKey);
+
     if (cachedAudio) {
       this.audio.src = cachedAudio;
       this.audio.playbackRate = this.getPlaybackRate();
-      this.audio.play();
-      this.renderer.addClass(document.querySelector('.bodycontentsection'), 'reading-active');
-      this.audio.onended = () => {
-        this.readingblog = false;
-        this.isPaused = false;
-        this.renderer.removeClass(document.querySelector('.bodycontentsection'), 'reading-active');
+      try {
+        await this.audio.play();
+        this.renderer.addClass(document.querySelector('.bodycontentsection'), 'reading-active');
+        this.audio.onended = () => this.endReading();
+        this.isAiLoading = false;
         this.cdr.detectChanges();
-      };
-      this.isAiLoading = false;
-      this.cdr.detectChanges();
-      return;
+        return;
+      } catch (error) {
+        console.error('Audio playback error:', error);
+        this.toastr.error('Failed to play cached audio. Falling back to browser TTS.');
+        this.fallbackToSpeechSynthesis(cleanText);
+        return;
+      }
     }
 
-    this.textChunks = cleanText.match(/.{1,500}/g) || [cleanText];
+    this.textChunks = cleanText.match(/.{1,1000}/g) || [cleanText];
     this.currentChunk = 0;
     this.renderer.addClass(document.querySelector('.bodycontentsection'), 'reading-active');
+
+    // Preload all audio chunks
+    await this.preloadAudioChunks();
+
+    // Start playing the first chunk
     await this.playNextChunk();
   } catch (error) {
     console.error('TTS Error:', error);
@@ -689,6 +708,49 @@ async start(text: string): Promise<void> {
     this.cdr.detectChanges();
   }
 }
+
+private async preloadAudioChunks(): Promise<void> {
+  this.audioChunks = [];
+
+  try {
+    const chunkPromises = this.textChunks.map(async (textChunk) => {
+      const response = await axios.post(
+        this.MURF_API_URL,
+        {
+          text: textChunk,
+          voiceId: this.MURF_VOICE_ID,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'api-key': environment.murfApiKey,
+          },
+          responseType: 'arraybuffer',
+          timeout: 30000,
+        }
+      );
+
+      const audioBlob = new Blob([response.data], { type: 'audio/wav' });
+      return URL.createObjectURL(audioBlob);
+    });
+
+    this.audioChunks = await Promise.all(chunkPromises);
+    this.toastr.success('Audio chunks preloaded successfully.');
+  } catch (error) {
+    console.error('Error preloading audio chunks:', error);
+    this.toastr.error('Failed to preload audio chunks.');
+  }
+}
+
+private endReading(): void {
+  this.readingblog = false;
+  this.isPaused = false;
+  this.renderer.removeClass(document.querySelector('.bodycontentsection'), 'reading-active');
+  URL.revokeObjectURL(this.audio.src);
+  this.cdr.detectChanges();
+}
+
+
 
 private async playNextChunk(): Promise<void> {
   if (this.currentChunk >= this.textChunks.length) {
@@ -993,4 +1055,54 @@ toggleDiscussion() {
       }
     });
   }  
+
+  loadPoll(): void {
+    if (this.post.pollId) {
+      this.service.getPoll(this.post.pollId, this.userId).subscribe({
+        next: (response) => {
+          this.poll = response.poll;
+          if (this.postBody && this.postBody.nativeElement) {
+            const placeholder = this.postBody.nativeElement.querySelector(
+              `[data-poll-id="${this.post.pollId}"]`
+            );
+            if (placeholder) {
+              this.renderer.removeChild(this.postBody.nativeElement, placeholder);
+            }
+          }
+          this.cdr.detectChanges(); 
+        },
+        error: (error) => {
+          console.error('Error fetching poll:', error);
+          this.toastr.error('Failed to load poll');
+        }
+      });
+    }
+  }
+
+  getPoll(pollId: string): Observable<any> {
+    return this.service.getPoll(pollId, this.userId);
+  }
+
+  vote(pollId: string, optionIndex: number): void {
+    this.service.vote(pollId, optionIndex, this.userId).subscribe({
+      next: (response) => {
+        this.toastr.success('Vote recorded!');
+        this.poll = { ...response.poll, hasVoted: true };
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.toastr.error(error.error?.error || 'Failed to vote');
+        console.error(error);
+      }
+    });
+  }
+
+  getVotePercentage(votes: number[], optionIndex: number): number {
+    const totalVotes = this.getTotalVotes(votes);
+    return totalVotes ? Math.round((votes[optionIndex] / totalVotes) * 100) : 0;
+  }
+
+  getTotalVotes(votes: number[]): number {
+    return votes && Array.isArray(votes) ? votes.reduce((sum, vote) => sum + vote, 0) : 0;
+  }
 }

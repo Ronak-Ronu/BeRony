@@ -98,12 +98,12 @@
       <div class="footerbuttonsgrey">
         <div>
           <button class="footerbutton" [disabled]="isAiLoading" (click)="readingblog ? (isPaused ? resume() : pause()) : start(post.bodyofcontent)">
-            {{ isAiLoading ? 'LOADING...' : (readingblog ? (isPaused ? 'RESUME' : 'PAUSE') : 'READ') }}
+            {{ isAiLoading ? 'LOADING...' : (readingblog ? (isPaused ? 'RESUME' : 'STOP') : 'LISTEN') }}
           </button>
         </div>
-        <div>
+        <!-- <div>
           <button class="footerbutton" (click)="stop()">STOP</button>
-        </div>
+        </div> -->
         <div>
           <button class="footerbutton" (click)="share()">SHARE</button>
         </div>
@@ -165,11 +165,50 @@
     </div>
     <br>
     <br>
-      <div class="bodycontentsection" (mouseup)="highlightText()" >
-        
-        <div [innerHTML]="sanitizedBodyContent"></div>
+    <div #postBody class="post-body" [innerHTML]="sanitizedBodyContent" (mouseup)="highlightText()">        
+        <div  [innerHTML]="sanitizedBodyContent"></div>
          <!-- <p>{{post.bodyofcontent}}</p>  -->
+       
         </div> 
+        <div *ngIf="poll" class="poll-card">
+          <div class="poll-header">
+            <h3>{{ poll.question }}</h3>
+            <div class="poll-tag">Live Poll</div>
+          </div>
+          
+          <div class="poll-options">
+            <div *ngFor="let option of poll.options; let i = index" class="poll-option">
+              <div class="option-content" (click)="!poll.hasVoted && vote(poll._id, i)">
+                <div class="option-text">{{ option }}</div>
+                <div class="option-stats">
+                  <div class="vote-percentage">{{ getVotePercentage(poll.votes, i) }}%</div>
+                  <div class="vote-count">{{ poll.votes[i] }} vote{{ poll.votes[i] !== 1 ? 's' : '' }}</div>
+                </div>
+              </div>
+              
+              <div class="vote-progress">
+                <div class="progress-bar" [style.width]="getVotePercentage(poll.votes, i) + '%'"></div>
+              </div>
+              
+              <button
+                class="vote-btn"
+                (click)="vote(poll._id, i)"
+                [disabled]="poll.hasVoted"
+                [ngClass]="{ 'voted': poll.hasVoted }"
+              >
+                {{ poll.hasVoted ? '✓ Voted' : 'Vote' }}
+              </button>
+            </div>
+          </div>
+          
+          <div class="poll-footer">
+            <div class="total-votes">
+              <span class="vote-icon"></span> 
+              <span>{{ getTotalVotes(poll.votes) }} votes</span>
+            </div>
+            <div class="poll-time">polled with ♥️ by {{post.username}}</div>
+          </div>
+        </div>
 
         
     <div class="endofnotesection" [innerHTML]="post.endnotecontent">
