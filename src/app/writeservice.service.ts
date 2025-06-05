@@ -45,17 +45,17 @@ export class WriteserviceService {
   private startEditingSubject = new Subject<string>();
 
   constructor(private http: HttpClient) {
-    // this.url = 'http://localhost:3000/api/posts';
-    // this.drafturl = 'http://localhost:3000/api/drafts';
-    // this.findposturl = 'http://localhost:3000/api/findpost';
-    // this.baseurl = 'http://localhost:3000';
+    this.url = 'http://localhost:3000/api/posts';
+    this.drafturl = 'http://localhost:3000/api/drafts';
+    this.findposturl = 'http://localhost:3000/api/findpost';
+    this.baseurl = 'http://localhost:3000';
     this.accessKey = environment.Unsplash_ACCESSKEY;
 
 
-    this.url = `${environment.beronyAPI}/api/posts`;
-    this.drafturl = `${environment.beronyAPI}/api/drafts`;
-    this.findposturl = `${environment.beronyAPI}/api/findpost`;
-    this.baseurl = environment.beronyAPI;
+    // this.url = `${environment.beronyAPI}/api/posts`;
+    // this.drafturl = `${environment.beronyAPI}/api/drafts`;
+    // this.findposturl = `${environment.beronyAPI}/api/findpost`;
+    // this.baseurl = environment.beronyAPI;
 
     // console.log('Initializing Socket.io client to:', this.baseurl);
     this.socket1 = io(this.baseurl, { autoConnect: false });
@@ -379,6 +379,23 @@ export class WriteserviceService {
 
   getStoryById(storyId: string): Observable<any> {
     return this.http.get<any>(`${this.baseurl}/api/stories/${storyId}`);
+  }
+
+
+  createPoll(question: string, options: string[]): Observable<any> {
+    return this.http.post(`${this.baseurl}/api/create-poll`, { question, options });
+  }
+
+  vote(pollId: string, optionIndex: number, userId: string): Observable<any> {
+    return this.http.post(`${this.baseurl}/api/vote`, { pollId, optionIndex, userId });
+  }
+
+  getPolls(userId: string): Observable<any> {
+    return this.http.get(`${this.baseurl}/api/polls`, { params: { userId } });
+  }
+
+  getPoll(pollId: string, userId: string): Observable<any> {
+    return this.http.get(`${this.baseurl}/api/poll/${pollId}`, { params: { userId } });
   }
 
   ngOnDestroy(): void {
