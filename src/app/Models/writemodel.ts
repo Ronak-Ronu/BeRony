@@ -16,5 +16,6 @@ export class WriteModel{
     pageviews:number=0
     collaborators:string[]=[]
     createdAt:string="s"
+    pollId: any
 
 }
