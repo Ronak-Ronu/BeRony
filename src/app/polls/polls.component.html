@@ -1,0 +1,91 @@
+<div class="polls-container">
+  <div *ngIf="isViewingOwnProfile" class="create-poll-section">
+    <button class="create-poll-btn" (click)="toggleCreatePollForm()">
+      {{ showCreatePollForm ? 'Cancel' : ' Create a Poll' }}
+    </button>
+
+    <div *ngIf="showCreatePollForm" class="create-poll-form">
+      <div class="form-group">
+        <label for="poll-question">Poll Question:</label>
+        <input
+          id="poll-question"
+          type="text"
+          [(ngModel)]="newPollQuestion"
+          placeholder="What would you like to ask?"
+          maxlength="100"
+          class="poll-input"
+        />
+      </div>
+
+      <div class="options-group">
+        <label>Options:</label>
+        <div *ngFor="let option of newPollOptions; let i = index; trackBy: trackByIndex" class="option-input">
+          <input
+            type="text"
+            [(ngModel)]="newPollOptions[i]"
+            placeholder="Option {{ i + 1 }}"
+            maxlength="100"
+            [name]="'option-' + i"
+            class="poll-input"
+          />
+          <button
+            *ngIf="newPollOptions.length > 2"
+            class="remove-option-btn"
+            (click)="removeOption(i)"
+          >
+            ✕
+          </button>
+        </div>
+        <button class="add-option-btn" (click)="addOption()"> Add Option</button>
+      </div>
+      <button class="submit-poll-btn" (click)="createPoll()">Post Poll</button>
+    </div>
+  </div>
+
+  <div class="polls-list">
+    <div *ngIf="polls.length === 0" class="no-polls">
+      <div class="no-polls-icon"></div>
+      <p>No polls available yet.</p>
+      <p *ngIf="isViewingOwnProfile" class="create-prompt">Create your first poll to engage your audience!</p>
+    </div>
+
+    <div *ngFor="let poll of polls" class="poll-card">
+      <div class="poll-header">
+        <h3>{{ poll.question }}</h3>
+        <div class="poll-tag">Live Poll</div>
+      </div>
+      
+      <div class="poll-options">
+        <div *ngFor="let option of poll.options; let i = index" class="poll-option">
+          <div class="option-content" (click)="!poll.hasVoted && vote(poll._id, i)">
+            <div class="option-text">{{ option }}</div>
+            <div class="option-stats">
+              <div class="vote-percentage">{{ getVotePercentage(poll.votes, i) }}%</div>
+              <div class="vote-count">{{ poll.votes[i] }} vote{{ poll.votes[i] !== 1 ? 's' : '' }}</div>
+            </div>
+          </div>
+          
+          <div class="vote-progress">
+            <div class="progress-bar" [style.width]="getVotePercentage(poll.votes, i) + '%'"></div>
+          </div>
+          
+          <button
+            class="vote-btn"
+            (click)="vote(poll._id, i)"
+            [disabled]="poll.hasVoted"
+            [ngClass]="{ 'voted': poll.hasVoted }"
+          >
+            {{ poll.hasVoted ? ' Voted' : 'Vote' }}
+          </button>
+        </div>
+      </div>
+      
+      <div class="poll-footer">
+        <div class="total-votes">
+          <span class="vote-icon"></span> 
+          <span>{{ getTotalVotes(poll.votes) }} votes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

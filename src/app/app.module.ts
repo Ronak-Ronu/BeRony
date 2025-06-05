@@ -36,6 +36,7 @@ import { NumberAbbrPipe } from './number-abbr.pipe';
 import { ChatRoomComponent } from './chat-room/chat-room.component';
 import { StoryComponent } from './story/story.component';
 import { FooterComponent } from './footer/footer.component';
+import { PollsComponent } from './polls/polls.component';
 
 const routes  = [
 
@@ -80,6 +81,7 @@ const routes  = [
     ChatRoomComponent,
     StoryComponent,
     FooterComponent,
+    PollsComponent,
   ],
   imports: [
     BrowserModule,
