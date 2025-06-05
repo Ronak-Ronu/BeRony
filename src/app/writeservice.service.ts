@@ -45,17 +45,17 @@ export class WriteserviceService {
   private startEditingSubject = new Subject<string>();
 
   constructor(private http: HttpClient) {
-    this.url = 'http://localhost:3000/api/posts';
-    this.drafturl = 'http://localhost:3000/api/drafts';
-    this.findposturl = 'http://localhost:3000/api/findpost';
-    this.baseurl = 'http://localhost:3000';
+    // this.url = 'http://localhost:3000/api/posts';
+    // this.drafturl = 'http://localhost:3000/api/drafts';
+    // this.findposturl = 'http://localhost:3000/api/findpost';
+    // this.baseurl = 'http://localhost:3000';
     this.accessKey = environment.Unsplash_ACCESSKEY;
 
 
-    // this.url = `${environment.beronyAPI}/api/posts`;
-    // this.drafturl = `${environment.beronyAPI}/api/drafts`;
-    // this.findposturl = `${environment.beronyAPI}/api/findpost`;
-    // this.baseurl = environment.beronyAPI;
+    this.url = `${environment.beronyAPI}/api/posts`;
+    this.drafturl = `${environment.beronyAPI}/api/drafts`;
+    this.findposturl = `${environment.beronyAPI}/api/findpost`;
+    this.baseurl = environment.beronyAPI;
 
     // console.log('Initializing Socket.io client to:', this.baseurl);
     this.socket1 = io(this.baseurl, { autoConnect: false });
