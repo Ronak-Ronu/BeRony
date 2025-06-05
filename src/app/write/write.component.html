@@ -28,6 +28,9 @@
           <button type="button" class="toolbarbutton" (click)="generateFullBlog()">
             <i class="fas fa-robot"></i> AI Writer
           </button>
+          <button type="button" class="toolbarbutton" (click)="togglePollModal()">
+            <i class="fas fa-poll"></i> Poll
+          </button>
         </div>
 
         <div class="format-toolbar" *ngIf="showFormatToolbar" 
@@ -361,6 +364,68 @@ function hello() {
       </div>
     </div>
   </div>
+
+  <div class="modal-backdrop" *ngIf="showPollModal" [@modalAnimation]>
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Create a Poll for Your Post</h3>
+        <button class="close-btn" (click)="showPollModal = false"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="create-poll-form">
+          <div class="form-group">
+            <label for="poll-question">Poll Question:</label>
+            <input
+              id="poll-question"
+              type="text"
+              [(ngModel)]="newPollQuestion"
+              placeholder="What would you like to ask your audience?"
+              maxlength="100"
+              (ngModelChange)="validatePollForm()"
+              class="poll-input"
+            />
+          </div>
+  
+          <div class="options-group">
+            <label>Options:</label>
+            <div *ngFor="let option of newPollOptions; let i = index; trackBy: trackByIndex" class="option-input">
+              <input
+                type="text"
+                [(ngModel)]="newPollOptions[i]"
+                placeholder="Option {{ i + 1 }}"
+                maxlength="100"
+                [name]="'option-' + i"
+                (ngModelChange)="validatePollForm()"
+                class="poll-input"
+              />
+              <button
+                *ngIf="newPollOptions.length > 2"
+                class="remove-option-btn"
+                (click)="removePollOption(i)"
+              >
+                ✕
+              </button>
+            </div>
+            <button class="add-option-btn" (click)="addPollOption()">
+              <i class="fas fa-plus-circle"></i> Add Option
+            </button>
+          </div>
+  
+          <div class="form-actions">
+            <button 
+              class="create-poll-btn" 
+              (click)="createPollAndInsert()" 
+              [disabled]="!isPollFormValid"
+              [ngClass]="{'disabled-btn': !isPollFormValid}"
+            >
+            Create and Insert Poll
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
   <div class="modal-backdrop preview-modal" *ngIf="ispreview" [@modalAnimation]>
     <div class="modal-content" (click)="$event.stopPropagation()">

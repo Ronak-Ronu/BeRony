@@ -80,7 +80,14 @@ export class WriteComponent implements OnInit, AfterViewInit {
   showDraftsModal: boolean = false;
   isCanvasDirty: boolean = false;
   canvasImageUrl: string | null = null;
-  private lastCursorPosition: number = 0;
+  lastCursorPosition: number = 0;
+  showPollModal: boolean = false;
+  availablePolls: any[] = [];
+
+  newPollQuestion: string = ''; // Add property for poll question
+  newPollOptions: string[] = ['', '']; // Add property for poll options
+  isPollFormValid: boolean = false; // Add property to track form validity
+  selectedPollId: string | null = null; // Add property to store the selected poll ID
 
   constructor(
     private writeservice: WriteserviceService,
@@ -254,6 +261,7 @@ export class WriteComponent implements OnInit, AfterViewInit {
     const formData = new FormData();
     const scheduleDate = this.postScheduleTime || new Date();
     const bdy = this.formatCode(this.editCodeContent) + this.editbodycontent;
+    let pollId: string | null = null;
 
     formData.append('title', this.edittitle);
     formData.append('bodyofcontent', bdy);
@@ -262,6 +270,10 @@ export class WriteComponent implements OnInit, AfterViewInit {
     formData.append('userId', this.userId);
     formData.append('username', this.username);
     formData.append('postScheduleTime', new Date(scheduleDate).toISOString());
+    if (this.selectedPollId) {
+      formData.append('pollId', this.selectedPollId); // Add pollId to formData
+    }
+
 
     if (this.selectedimagefile) {
       const maxSize = 20 * 1024 * 1024;
@@ -280,6 +292,7 @@ export class WriteComponent implements OnInit, AfterViewInit {
             this.toastr.success('Blog published 🥳');
             this.toastr.info('Informing your followers about your new blog ...');
             this.resetForm();
+            this.selectedPollId = null; 
           } else {
             this.toastr.error('Failed to publish blog');
           }
@@ -329,7 +342,9 @@ export class WriteComponent implements OnInit, AfterViewInit {
       userEmotion: '',
       pageviews: 0,
       collaborators: [],
-      createdAt: ''
+      createdAt: '',
+      pollId: this.selectedPollId || undefined 
+    
     };
     this.writeservice.draftblog(draft)
         this.toastr.success('Draft saved');
@@ -374,7 +389,9 @@ export class WriteComponent implements OnInit, AfterViewInit {
     formData.append('userId', this.userId);
     formData.append('username', this.username);
     formData.append('postScheduleTime', new Date().toISOString());
-
+    if (draftdata.pollId) {
+      formData.append('pollId', draftdata.pollId); // Include poll ID when publishing draft
+    }
     if (this.selectedimagefile) {
       formData.append('imageUrl', this.selectedimagefile);
     }
@@ -435,6 +452,7 @@ export class WriteComponent implements OnInit, AfterViewInit {
     this.editendnotecontent = draftdata.endnotecontent;
     this.tags = draftdata.tags || [];
     this.imageUrl = draftdata.imageUrl || null;
+    this.selectedPollId = draftdata.pollId || null;  
     this.titleEditor.nativeElement.innerHTML = this.edittitle;
     this.bodyEditor.nativeElement.innerHTML = this.editbodycontent;
     this.endnoteEditor.nativeElement.innerHTML = this.editendnotecontent;
@@ -842,6 +860,123 @@ export class WriteComponent implements OnInit, AfterViewInit {
       this.canvas.renderAll();
       this.cdr.detectChanges();
     }
+  }
+ 
+  togglePollModal(): void {
+    this.showPollModal = !this.showPollModal;
+    if (this.showPollModal) {
+      this.fetchAvailablePolls();
+    }
+    this.cdr.detectChanges();
+  }
+
+  // Fetch polls for the current user
+  fetchAvailablePolls(): void {
+    if (!this.userId) {
+      this.toastr.warning('Please log in to access polls');
+      this.showPollModal = false;
+      return;
+    }
+
+    this.writeservice.getPolls(this.userId).subscribe({
+      next: (response) => {
+        this.availablePolls = response.polls || [];
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.toastr.error('Failed to load polls');
+        console.error('Error fetching polls:', error);
+        this.showPollModal = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  addPollOption(): void {
+    this.newPollOptions.push('');
+    this.validatePollForm();
+    this.cdr.detectChanges();
+  }
+
+  // Remove a poll option
+  removePollOption(index: number): void {
+    if (this.newPollOptions.length > 2) {
+      this.newPollOptions.splice(index, 1);
+      this.validatePollForm();
+      this.cdr.detectChanges();
+    } else {
+      this.toastr.warning('A poll must have at least two options');
+    }
+  }
+
+  // Validate the poll form
+  validatePollForm(): void {
+    const question = this.newPollQuestion.trim();
+    const options = this.newPollOptions.map(opt => opt.trim()).filter(opt => opt);
+    this.isPollFormValid = question.length > 0 && options.length >= 2;
+  }
+
+  // Create a poll and insert it into the post
+  createPollAndInsert(): void {
+    const question = this.newPollQuestion.trim();
+    const options = this.newPollOptions.map(opt => opt.trim()).filter(opt => opt);
+
+    if (!question || options.length < 2) {
+      this.toastr.error('Please provide a question and at least two valid options');
+      return;
+    }
+
+    this.writeservice.createPoll(question, options).subscribe({
+      next: (response) => {
+        const poll = response.poll;
+        const pollId = poll._id;
+        this.selectedPollId = pollId; // Store the poll ID
+        const pollPlaceholder = `<div class="poll-placeholder" data-poll-id="${pollId}">[Poll: ${poll.question}]</div>`;
+        this.insertPollAtPosition(pollPlaceholder);
+        this.toastr.success('Poll created and added to your post!');
+        this.showPollModal = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.toastr.error(error.error?.error || 'Failed to create poll');
+        console.error('Error creating poll:', error);
+      }
+    });
+  }
+
+  insertPollAtPosition(pollPlaceholder: string): void {
+    const bodyEditor = this.bodyEditor.nativeElement;
+
+    const markerId = `cursor-marker-${Date.now()}`;
+    const marker = `<span id="${markerId}"></span>`;
+
+    bodyEditor.innerHTML =
+      bodyEditor.innerHTML.substring(0, this.lastCursorPosition) +
+      marker +
+      bodyEditor.innerHTML.substring(this.lastCursorPosition);
+
+    const markerElement = document.getElementById(markerId);
+
+    if (markerElement) {
+      const pollElement = document.createElement('div');
+      pollElement.innerHTML = pollPlaceholder;
+      markerElement.parentNode?.insertBefore(pollElement, markerElement);
+      markerElement.remove();
+      this.editbodycontent = bodyEditor.innerHTML;
+      this.cdr.detectChanges();
+    }
+  }
+
+  // Add trackBy function for ngFor
+  trackByIndex(index: number, item: any): number {
+    return index;
+  }
+
+
+  selectPoll(poll: any): void {
+    const pollPlaceholder = `<div class="poll-placeholder" data-poll-id="${poll._id}">[Poll: ${poll.question}]</div>`;
+    this.insertPollAtPosition(pollPlaceholder);
+    this.showPollModal = false;
+    this.cdr.detectChanges();
   }
 
   generateFullBlog() {

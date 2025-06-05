@@ -767,7 +767,256 @@ canvas {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Responsive Styles */
+
+/* Modal Backdrop */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+/* Modal Content */
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(110, 122, 249, 0.3);
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #f0f2ff;
+  position: relative;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background: #f0f2ff;
+  color: #6e7af9;
+  transform: rotate(90deg);
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 20px;
+}
+
+/* Form Elements */
+.create-poll-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.poll-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e0e0ff;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #f9f9ff;
+}
+
+.poll-input:focus {
+  outline: none;
+  border-color: #a1a1ff;
+  box-shadow: 0 0 0 3px rgba(161, 161, 255, 0.2);
+}
+
+.poll-input::placeholder {
+  color: #bbb;
+}
+
+/* Options Group */
+.options-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.options-group label {
+  font-weight: 600;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.option-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.option-input input {
+  flex: 1;
+}
+
+.remove-option-btn {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.remove-option-btn:hover {
+  background: #ff5252;
+  transform: scale(1.1);
+}
+
+.add-option-btn {
+  background: #f0f2ff;
+  color: #6e7af9;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+.add-option-btn:hover {
+  background: #e0e4ff;
+}
+
+.add-option-btn i {
+  font-size: 1rem;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.create-poll-btn {
+  background: linear-gradient(135deg, #a1a1ff 0%, #6e7af9 100%);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(110, 122, 249, 0.3);
+}
+
+.create-poll-btn:hover:not([disabled]) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(110, 122, 249, 0.4);
+}
+
+.create-poll-btn i {
+  font-size: 1rem;
+}
+
+.disabled-btn {
+  background: #e0e0ff !important;
+  color: #a1a1ff !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .modal-content {
+    width: 95%;
+    padding: 15px;
+  }
+  
+  .modal-header {
+    padding: 15px;
+  }
+  
+  .modal-body {
+    padding: 15px;
+  }
+  
+  .create-poll-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
 @media (max-width: 768px) {
   .headingwrite {
     font-size: 2rem;
