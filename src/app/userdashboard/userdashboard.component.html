@@ -44,6 +44,16 @@
         </div>
         <div>
           <li
+            (click)="setActiveSection('polls')"
+            [ngClass]="{ active: activeSection === 'polls' }"
+            unselectable="on"
+            style="user-select: none"
+          >
+            Polls
+          </li>
+        </div>
+        <div>
+          <li
             *ngIf="isViewingOwnProfile"
             (click)="setActiveSection('settings')"
             [ngClass]="{ active: activeSection === 'settings' }"
@@ -71,6 +81,11 @@
         *ngIf="isViewingOwnProfile && activeSection === 'analytics'"
         [posts]="posts"
       ></app-analytics>
+      <app-polls
+      *ngIf="activeSection === 'polls'"
+      [userId]="userId"
+      [isViewingOwnProfile]="isViewingOwnProfile"
+    ></app-polls>
       <app-settings
         *ngIf="isViewingOwnProfile && activeSection === 'settings'"
         [userId]="userId"
