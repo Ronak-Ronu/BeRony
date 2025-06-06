@@ -1,34 +1,68 @@
-<br>
-<div class="collaborative-editor">
-  <header>
-    
-    <div *ngIf="postdata.imageUrl">
-      <img [src]="postdata.imageUrl" [alt]="postdata.title" />
-    </div>
-    
-    <div *ngIf="postdata.videoUrl && !postdata.imageUrl">
-      <video [src]="postdata.videoUrl" controls>
-        Your browser does not support the video tag.
-      </video>
-    </div>  
-  
-      <h2>Collaborative Editor for: <span [innerHTML]="postdata.title"></span></h2>
-    <p>Author: <b>{{postdata.username}}</b></p>
-  </header>
-  <div style="align-items: start; color: rgb(85, 85, 164); padding: 10px; background-color: rgba(128, 128, 202, 0.295); border-radius: 10px ; width: fit-content;margin-left: 40px;">
-    {{ editingUser ? editingUser + ' is editing...' : 'No one is editing' }}
+<div class="writemainbody">
+  <div class="headingwrite">
+    <p>Collaborative Editor</p>
   </div>
-  <div class="editor-container">
-    
-    <textarea 
-      [(ngModel)]="text" 
-      (input)="onTextChange()" 
-      (focus)="startEditing()"
-      placeholder="Start collaborating here..."
-    ></textarea>
-    <div class="button-group">
-      <button class="btn-save" (click)="onSaveChanges()">💾 Save Changes</button>
-    </div>
-  </div>
-</div>
 
+  <div class="bodyofwriting">
+    <div class="container">
+      <header>
+        <div *ngIf="postdata.imageUrl">
+          <img [src]="postdata.imageUrl" [alt]="postdata.title" class="featured-image" />
+        </div>
+        <div *ngIf="postdata.videoUrl && !postdata.imageUrl">
+          <video [src]="postdata.videoUrl" controls class="featured-image">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <h2>Collaborative Editor for: <span [innerHTML]="postdata.title"></span></h2>
+        <p>Author: <b>{{postdata.username}}</b></p>
+      </header>
+
+      <div class="editing-indicator">
+        {{ editingUser ? editingUser + ' is editing...' : 'No one is editing' }}
+      </div>
+
+      <div class="writecontentarea paper-style">
+        <div class="format-toolbar" *ngIf="showFormatToolbar" 
+             [style.top.px]="toolbarPosition.top" 
+             [style.left.px]="toolbarPosition.left">
+          <button title="Heading 1" (click)="formatText('h1')"><b>H1</b></button>
+          <button title="Bold" (click)="formatText('bold')"><b>B</b></button>
+          <button title="Italic" (click)="formatText('italic')"><i>I</i></button>
+          <button title="Code Block" (click)="formatText('code')"><i class="fas fa-code"></i></button>
+          <select title="Text Color" (change)="formatText('color', $event)">
+            <option value="" disabled selected>Color</option>
+            <option value="#000000">Black</option>
+            <option value="#ff0000">Red</option>
+            <option value="#0000ff">Blue</option>
+            <option value="#008000">Green</option>
+            <option value="#ffa500">Orange</option>
+          </select>
+          <button title="Align Left" (click)="formatText('align-left')"><i class="fas fa-align-left"></i></button>
+          <button title="Align Center" (click)="formatText('align-center')"><i class="fas fa-align-center"></i></button>
+          <button title="Align Right" (click)="formatText('align-right')"><i class="fas fa-align-right"></i></button>
+          <select title="Font Size" (change)="formatText('font-size', $event)">
+            <option value="" disabled selected>Size</option>
+            <option value="1">Small</option>
+            <option value="3">Medium</option>
+            <option value="5">Large</option>
+            <option value="7">X-Large</option>
+          </select>
+        </div>
+
+        <div
+          #bodyEditor
+          class="editor"
+          contenteditable="true"
+          (input)="onTextChange()"
+          (focus)="startEditing()"
+        >
+        <div class="cursor-container"></div>
+
+      </div>
+
+        <div class="footerbuttons">
+          <button class="publish-btn" (click)="onSaveChanges()">
+            <i class="fas fa-save"></i> Save Changes
+          </button>
+          </div>

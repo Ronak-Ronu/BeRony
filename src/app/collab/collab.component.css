@@ -1,147 +1,296 @@
-.collaborative-editor {
-    width: 70%;
-    margin: 5% auto;
-    background-color: #f9f9f9;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    font-family: "PT Sans", sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=Poppins:wght@300;400;500;600&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+.writemainbody {
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+  background-color: #f8f9fa;
 }
 
-.collaborative-editor header {
-    text-align: center;
-    margin-bottom: 20px;
+.headingwrite {
+  font-family: 'Julius Sans One', sans-serif;
+  font-weight: 400;
+  font-size: 3.5rem;
+  padding: 20px 0;
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
-.collaborative-editor header img,
-.collaborative-editor header video {
-    width: 40%;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 10px;
-    margin-bottom: 20px;
+.bodyofwriting {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.collaborative-editor header h2 {
-    font-size: 28px;
-    font-weight: bold;
-    color: #333;
+.container {
+  width: 100%;
+  max-width: 1100px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  padding: 20px;
 }
 
-.collaborative-editor header p {
-    font-size: 20px;
-    color: #555;
+header {
+  padding: 20px;
+  text-align: center;
 }
 
-.editor-container {
-    display: flex;
+header h2 {
+  font-family: 'Julius Sans One', sans-serif;
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
+  color: #495057;
+}
+
+.featured-image {
+  margin: 20px auto;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  max-width: 100%;
+  max-height: 400px;
+}
+
+.featured-image img,
+.featured-image video {
+  width: 100%;
+  display: block;
+}
+
+.writecontentarea {
+  padding: 25px;
+  background-color: #ffffff;
+}
+
+.paper-style {
+  background: #fff;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: inset 0 0 0 1px #e9ecef;
+}
+
+.editor {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  line-height: 1.8;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  min-height: 300px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #e9ecef;
+  transition: border-color 0.3s;
+  color: #343a40;
+  position: relative;
+}
+
+.cursor-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.remote-cursor {
+  position: absolute;
+  width: 2px;
+  height: 20px;
+  background-color: red; /* Fallback color */
+  z-index: 20;
+  transition: all 0.2s ease; /* Smooth movement */
+}
+
+.remote-cursor::after {
+  content: attr(data-username); /* Use data-username attribute */
+  position: absolute;
+  top: -20px;
+  left: 5px;
+  background-color: inherit;
+  color: white;
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+
+.editor:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.editor.placeholder::before {
+  content: attr(data-placeholder);
+  color: #adb5bd;
+  position: absolute;
+  pointer-events: none;
+}
+
+.editing-indicator {
+  color: rgb(85, 85, 164);
+  padding: 10px;
+  background-color: rgba(128, 128, 202, 0.295);
+  border-radius: 10px;
+  width: fit-content;
+  margin: 20px auto;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+}
+
+.format-toolbar {
+  position: fixed;
+  background-color: #ffffff;
+  border: 1px solid #d5d8f9;
+  border-radius: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  z-index: 1000;
+  align-items: center;
+}
+
+.format-toolbar button,
+.format-toolbar select {
+  background: #e7f5ff;
+  border: 1px solid #d5d8f9;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 30px;
+  color: #2c3e50;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.format-toolbar button:hover,
+.format-toolbar select:hover {
+  background-color: #d0ebff;
+}
+
+/* Custom Tooltip Styling */
+.format-toolbar button[title]:hover:after,
+.format-toolbar select[title]:hover:after {
+  content: attr(title);
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #2c3e50;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  white-space: nowrap;
+  z-index: 1001;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.format-toolbar select {
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 30px;
+  outline: none;
+}
+
+.footerbuttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.publish-btn {
+  background: linear-gradient(45deg, #7d87f3, #cbcef9);
+  color: white;
+  padding: 14px 30px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 30px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.publish-btn:hover {
+  background: linear-gradient(45deg, #6e7af9, #b4b9f8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(110, 122, 249, 0.3);
+}
+
+@media (max-width: 768px) {
+  .headingwrite {
+    font-size: 2rem;
+    padding: 15px 0;
+  }
+
+  .container {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .editor {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  .format-toolbar {
+    flex-wrap: wrap;
+    max-width: 90%;
+  }
+
+  .format-toolbar button,
+  .format-toolbar select {
+    padding: 4px 8px;
+    font-size: 14px;
+  }
+
+  .format-toolbar button[title]:hover:after,
+  .format-toolbar select[title]:hover:after {
+    top: -30px;
+    font-size: 10px;
+  }
+
+  .footerbuttons {
     flex-direction: column;
-    gap: 20px;
-    align-items: center;
+    gap: 10px;
+  }
+
+  .publish-btn {
+    width: 100%;
+  }
 }
 
-.editor-container textarea {
-    width: 90%;
-    height: 400px;
-    font-size: 18px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    outline: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    resize: none;
-}
+@media (max-width: 480px) {
+  .headingwrite {
+    font-size: 1.8rem;
+  }
 
-.editor-container textarea:focus {
-    border-color: #8b8beb;
-    box-shadow: 0 0 8px rgba(139, 139, 235, 0.5);
-}
-
-.button-group {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 15px;
-}
-
-.button-group .btn-save {
-    font-size: 18px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    background-color: #bdc2fb;
-    color: #fff;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.button-group .btn-save:hover {
-    background-color: #8b8beb;
-}
-
-.button-group .btn-save:active {
-    background-color: #6f6fd1;
-    transform: scale(0.95);
-}
-
-@media (max-width: 600px) {
-    .collaborative-editor {
-        width: 92%;
-        margin: 0% auto;
-        background-color: #f9f9f9;
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 10px;
-        font-family: "PT Sans", sans-serif;
-    }
-    .collaborative-editor header {
-        text-align: center;
-        margin-bottom: 10px;
-    }
-    
-    .collaborative-editor header img,
-    .collaborative-editor header video {
-        width: 50%;
-        object-fit: cover;
-        object-position: center;
-        border-radius: 10px;
-        margin-bottom: 0px;
-    }
-
-    .collaborative-editor header h2 {
-        font-size: 18px;
-        font-weight: bold;
-        color: #333;
-    }
-    .collaborative-editor header p {
-        font-size: 14px;
-        color: rgb(112, 112, 179);
-    }
-
-    .editor-container textarea {
-        width:99%;
-        height: 470px;
-        font-size: 15px;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-        padding: 9px;
-        outline: none;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        resize: none;
-    }
-
-    .button-group .btn-save {
-        font-size: 14px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        background-color: #a3aaee;
-        color: #fff;
-        cursor: pointer;
-        font-weight: bold;
-        transition: all 0.3s ease;
-    }
-        
-
+  .editor {
+    font-size: 15px;
+  }
 }

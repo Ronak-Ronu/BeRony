@@ -34,7 +34,7 @@ export class WriteserviceService {
   postid: any;
   accessKey: string;
   baseurl: string;
-  private socket1: Socket;
+  socket1: Socket;
   textSubject = new BehaviorSubject<string>('');
   text$ = this.textSubject.asObservable();
   private messagesSubject = new Subject<ChatMessage>();
@@ -43,7 +43,9 @@ export class WriteserviceService {
   private roomCreatedSubject = new Subject<ChatRoom>();
   private textChangeSubject = new Subject<string>();
   private startEditingSubject = new Subject<string>();
-
+  private cursorUpdateSubject = new Subject<any>();
+  private cursorRemoveSubject = new Subject<string>();
+  
   constructor(private http: HttpClient) {
     // this.url = 'http://localhost:3000/api/posts';
     // this.drafturl = 'http://localhost:3000/api/drafts';
@@ -110,16 +112,26 @@ export class WriteserviceService {
       this.errorSubject.next(error.message);
     });
 
-    this.socket1.on('textChange', (newText: string) => {
-      // console.log('Received textChange:', newText);
-      this.textChangeSubject.next(newText);
+    this.socket1.on('textChange', (payload: { text: string, senderId: string }) => {
+      if (!payload || typeof payload !== 'object') return;
+    
+      if (payload.senderId === this.socket1.id) return; // Ignore self
+      this.textChangeSubject.next(payload.text);
     });
+    
+    
 
     this.socket1.on('startEditing', (username: string) => {
       // console.log('Received startEditing:', username);
       this.startEditingSubject.next(username);
     });
-
+    this.socket1.on('cursorUpdate', (data) => {
+      this.cursorUpdateSubject.next(data);
+    });
+    this.socket1.on('cursorRemove', ({ socketId }) => {
+      this.cursorRemoveSubject.next(socketId);
+    });
+    
     this.socket1.on('error', (error: { message: string }) => {
       // console.error('Socket error:', error.message);
       this.errorSubject.next(error.message);
@@ -139,9 +151,9 @@ export class WriteserviceService {
   }
 
   onTextChange(text: string): void {
-    // console.log('Emitting textChange:', text);
-    this.socket1.emit('textChange', text);
+    this.socket1.emit('textChange', { text, senderId: this.socket1.id });
   }
+  
 
   startEditing(username: string): void {
     // console.log('Emitting startEditing for user:', username);
@@ -156,6 +168,17 @@ export class WriteserviceService {
   listenForTextChange(): Observable<string> {
     return this.textChangeSubject.asObservable();
   }
+    // in WriteserviceService, expose the raw socket event directly (not just the subject)
+    listenForRawTextChange(): Observable<{ text: string, senderId: string }> {
+      return new Observable(observer => {
+        this.socket1.on('textChange', (payload) => {
+          if (!payload || typeof payload !== 'object' || !('text' in payload)) return;
+
+          observer.next(payload);
+        });
+      });
+    }
+
 
   listenForStartEditing(): Observable<string> {
     return this.startEditingSubject.asObservable();
@@ -164,7 +187,13 @@ export class WriteserviceService {
   listenForSocketError(): Observable<string> {
     return this.errorSubject.asObservable();
   }
-
+  listenForCursorUpdates(): Observable<any> {
+    return this.cursorUpdateSubject.asObservable();
+  }
+  listenForCursorRemovals(): Observable<string> {
+    return this.cursorRemoveSubject.asObservable();
+  }
+  
   joinRoom(roomId: string, userId: string, username: string): void {
     // console.log('Joining room:', { roomId, userId, username });
     this.socket1.auth = { userId, username };
