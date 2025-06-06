@@ -86,6 +86,14 @@ export class PollsComponent implements OnInit {
         if (pollIndex !== -1) {
           this.polls[pollIndex] = { ...response.poll, hasVoted: true };
         }
+        this.pollService.log_user_activity(this.userId, "poll").subscribe({
+          next: () => {
+            //console.log("User activity logged successfully");
+          },
+          error: (error) => {
+            // console.error("Error logging user activity:", error);
+          }
+        });
       },
       error: (error) => {
         this.toastr.error(error.error?.error || 'Failed to vote');

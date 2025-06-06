@@ -239,7 +239,7 @@ readblogdatabyid() {
         }
       },
       error: (error) => {
-        console.error('Error fetching post data:', error);
+        // console.error('Error fetching post data:', error);
       }
     });
   });
@@ -251,21 +251,29 @@ async getloggedinuserdata (){
     if (this.loggedInUserAccount) {
       this.username=this.loggedInUserAccount.name;
       this.loggedinuserid=this.loggedInUserAccount.$id
-      // console.log(this.username);
-      // console.log(this.loggedinuserid);
+      // //console.log(this.username);
+      // //console.log(this.loggedinuserid);
       this.userId = this.loggedInUserAccount.$id; // Set userId for poll fetching
       }
+    this.service.log_user_activity(this.userId, "read").subscribe({
+      next: () => {
+        //console.log("User activity logged successfully");
+      },
+      error: (error) => {
+        // console.error("Error logging user activity:", error);
+      }
+    });
   }
   
   fetchUserData(userId: string) {
     this.service.getUserData(userId).subscribe(
       (data) => {
-        // console.log('Fetched user data:', data);  // Debugging log
+        // //console.log('Fetched user data:', data);  // Debugging log
         this.collaboratorsUsernames.push(data.user.username);
       },
       (error) => {
         this.toastr.error('User does not exist.');
-        console.error('Error fetching user data:', error);
+        // console.error('Error fetching user data:', error);
       }
     );
   }
@@ -277,7 +285,7 @@ async getloggedinuserdata (){
   //   this.service.getpublishpostdatabyid(this.postid).subscribe({
   //           next: (data: WriteModel) => {
   //               this.post = data;
-  //               console.log(this.post);
+  //               //console.log(this.post);
   //               this.seotitle=this.stripHTML(data.title);
   //               this.title.setTitle(this.seotitle);
   //               this.meta.addTags([
@@ -293,9 +301,9 @@ async getloggedinuserdata (){
   //               this.tagsarray = this.post.tags;
   //               this.collabos=this.post.collaborators
 
-  //               // console.log(this.filetype);
-  //               // console.log(this.tagsarray);
-  //               // console.log(this.collabos);
+  //               // //console.log(this.filetype);
+  //               // //console.log(this.tagsarray);
+  //               // //console.log(this.collabos);
   //               this.collaboratorsUsernames = []; // Reset collaborators' usernames
   //               this.collabos.forEach(collaboratorId => {
   //                 this.fetchUserData(collaboratorId);
@@ -305,7 +313,7 @@ async getloggedinuserdata (){
   //               this.sanitizeBodyContent()
   //           },
   //           error: (error) => {
-  //               console.error('Error fetching post data:', error);
+  //               // console.error('Error fetching post data:', error);
   //           }
   //       });
   //   });
@@ -319,8 +327,11 @@ async getloggedinuserdata (){
             text: '👋 I found this amazing content you might like. 👉',
             url: window.location.href,
         })
-        .then(() => console.log('Share successful'))
-        .catch((error) => console.error('Error sharing:', error));
+        .catch((error) =>
+          { 
+            // console.error('Error sharing:', error));
+            this.toastr.error('Sharing failed. Please try copying the link manually.');
+          } )
     } else {
         // If sharing is not supported, copy the URL to the clipboard
         const url = window.location.href;
@@ -329,7 +340,7 @@ async getloggedinuserdata (){
                 this.toastr.success('URL copied to clipboard! 📋');
             })
             .catch((error) => {
-                console.error('Error copying to clipboard:', error);
+                // console.error('Error copying to clipboard:', error);
                 this.toastr.success('Failed to copy the URL.');
             });
     }
@@ -345,16 +356,23 @@ async getloggedinuserdata (){
           this.funnycount = updatedPost.funnycount;
           this.sadcount = updatedPost.sadcount;
           this.loveitcount = updatedPost.loveitcount;
-          // console.log(updatedPost);
-          
+          // //console.log(updatedPost);
+          this.service.log_user_activity(this.userId, "read").subscribe({
+            next: () => {
+              //console.log("User activity logged successfully");
+            },
+            error: (error) => {
+              // console.error("Error logging user activity:", error);
+            }
+          });
         },
         error: (error:any) => {
-          console.error('Error updating reaction count:', error);
+          // console.error('Error updating reaction count:', error);
         }
       });
     } else {
       this.toastr.error("Please log in to like the post.")
-      // console.log('Please log in to like the post.');
+      // //console.log('Please log in to like the post.');
     }
   }
   
@@ -379,7 +397,7 @@ async getloggedinuserdata (){
       
   }
   else{
-    // console.log("login to like posts");
+    // //console.log("login to like posts");
     this.toastr.error("login to like posts")
   }
 }
@@ -424,19 +442,26 @@ async addComment() {
             username: this.loggedInUserAccount.name
           }
         );
-
+        this.service.log_user_activity(this.userId, "comment").subscribe({
+          next: () => {
+            //console.log("User activity logged successfully");
+          },
+          error: (error) => {
+            // console.error("Error logging user activity:", error);
+          }
+        });
         this.comments.push(response);
         this.newCommentText = ''; 
         this.showhighlightTextInComment = '';
         this.ngOnInit();
       } catch (error) {
-        console.error('Error adding comment:', error);
+        // console.error('Error adding comment:', error);
       }
     } else {
-      console.error('Comment is empty. Nothing to submit.');
+      // console.error('Comment is empty. Nothing to submit.');
     }
   } else {
-    console.error('Please log in to add a comment');
+    // console.error('Please log in to add a comment');
   }
 }
 
@@ -452,12 +477,12 @@ async fetchComments()
       this.comments = response.documents;
       
     } catch (error) {
-      console.error('Error fetching comments:', error);
+      // console.error('Error fetching comments:', error);
     }
   }
 }
 refreshcomponent() {
-  // console.log("Refresh component called");
+  // //console.log("Refresh component called");
   this.fetchComments();
   this.cdr.detectChanges();
 }
@@ -476,16 +501,16 @@ async searchGifs() {
     });
     this.gifs = response.data.data; // Set gifs with the response data
   } catch (error) {
-    console.error('Error fetching GIFs', error);
+    // console.error('Error fetching GIFs', error);
   }
 }
 
 selectGif(gif: any) {
   // const gifUrl = gif.images.original.url
   const gifUrl=gif.images.fixed_height.url
-  // console.log('Click to send gif:', gif);
+  // //console.log('Click to send gif:', gif);
   this.newCommentText+=`<img style="width:95% !important; height: auto;" src="${gifUrl}" />`
-  // console.log(this.newCommentText);
+  // //console.log(this.newCommentText);
   this.addComment()
 
 }
@@ -500,7 +525,7 @@ highlightText() {
       this.showTooltip(rect,selectedText);
     }
   } else {
-    // console.log("No text is selected.");
+    // //console.log("No text is selected.");
   }
 
 
@@ -641,7 +666,7 @@ fetchWordMeaning(word: string, rect: DOMRect) {
       }
     })
     .catch(error => {
-      console.error('Error fetching word meaning:', error);
+      // console.error('Error fetching word meaning:', error);
       meaningPopup.innerHTML = `Error fetching meaning for "${word}".`;
     });
 }
@@ -649,11 +674,11 @@ fetchWordMeaning(word: string, rect: DOMRect) {
 bookmarkthispost() {
   this.service.addPostBookmark(this.loggedinuserid, this.postid).subscribe(
       () => {
-          // console.log("Bookmark added successfully");
+          // //console.log("Bookmark added successfully");
           this.toastr.success("Bookmarked")
       },
       (error) => { 
-          console.error("Error adding bookmark:", error.error.message);
+          // console.error("Error adding bookmark:", error.error.message);
           this.toastr.error(error.error.message)
       }
   );
@@ -683,7 +708,7 @@ async start(text: string): Promise<void> {
         this.cdr.detectChanges();
         return;
       } catch (error) {
-        console.error('Audio playback error:', error);
+        // console.error('Audio playback error:', error);
         this.toastr.error('Failed to play cached audio. Falling back to browser TTS.');
         this.fallbackToSpeechSynthesis(cleanText);
         return;
@@ -700,7 +725,7 @@ async start(text: string): Promise<void> {
     // Start playing the first chunk
     await this.playNextChunk();
   } catch (error) {
-    console.error('TTS Error:', error);
+    // console.error('TTS Error:', error);
     this.toastr.error('Failed to generate audio. Falling back to browser TTS.');
     this.fallbackToSpeechSynthesis(this.textChunks.join(' '));
   } finally {
@@ -737,7 +762,7 @@ private async preloadAudioChunks(): Promise<void> {
     this.audioChunks = await Promise.all(chunkPromises);
     this.toastr.success('Audio chunks preloaded successfully.');
   } catch (error) {
-    console.error('Error preloading audio chunks:', error);
+    // console.error('Error preloading audio chunks:', error);
     this.toastr.error('Failed to preload audio chunks.');
   }
 }
@@ -794,7 +819,7 @@ private async playNextChunk(): Promise<void> {
       this.playNextChunk();
     };
   } catch (error: any) {
-    console.error('Murf.ai Error:', error);
+    // console.error('Murf.ai Error:', error);
     if (error.response?.status === 401) {
       this.toastr.error('Invalid Murf.ai API key. Falling back to browser TTS.');
     } else if (error.response?.status === 429) {
@@ -963,16 +988,16 @@ downloadBlog() {
 
 followUser(currentuserid: string,userid:string)
 {
-  // console.log(currentuserid,userid);
+  // //console.log(currentuserid,userid);
 
   this.service.followUser(currentuserid,"Follow",userid).subscribe(
     (response)=>{
-      // console.log(response.message);
+      // //console.log(response.message);
       this.toastr.success(response.message)
 
     },
     (error)=>{
-      // console.log(error.error.message);
+      // //console.log(error.error.message);
       this.toastr.warning(error.error.message)
 
       
@@ -981,16 +1006,16 @@ followUser(currentuserid: string,userid:string)
 }
 unfollowUser(currentuserid: string,userid:string)
 {
-  // console.log(currentuserid,userid);
+  // //console.log(currentuserid,userid);
 
   this.service.unfollowUser(currentuserid,"Unfollow",userid).subscribe(
     (response)=>{
-      // console.log(response.message);
+      // //console.log(response.message);
       this.toastr.success(response.message)
 
     },
     (error)=>{
-      // console.log(error.error.message);
+      // //console.log(error.error.message);
       this.toastr.warning(error.error.message)
       
     }
@@ -1009,7 +1034,7 @@ toggleDiscussion() {
         chatSection.classList.remove('visible');
       }
     } else {
-      // console.error('Chat section element not found!');
+      // // console.error('Chat section element not found!');
     }
   }, 0);
   }
@@ -1023,13 +1048,13 @@ toggleDiscussion() {
         this.isAiLoading = false;
         this.cdr.detectChanges();
         this.toastr.success(`${insightType} generated successfully`);
-        console.log(response);
+        //console.log(response);
         
       },
       error: (error) => {
         this.isAiLoading = false;
         this.toastr.error('Model needs some sleeps, try again later please');
-        console.error(error);
+        //console.error(error);
       }
     });
   }
@@ -1051,7 +1076,7 @@ toggleDiscussion() {
       error: (error) => {
         this.isAiLoading = false;
         this.toastr.error('Model needs some sleeps, try again later please');
-        console.error(error);
+        //console.error(error);
       }
     });
   }  
@@ -1072,7 +1097,7 @@ toggleDiscussion() {
           this.cdr.detectChanges(); 
         },
         error: (error) => {
-          console.error('Error fetching poll:', error);
+          //console.error('Error fetching poll:', error);
           this.toastr.error('Failed to load poll');
         }
       });
@@ -1092,7 +1117,7 @@ toggleDiscussion() {
       },
       error: (error) => {
         this.toastr.error(error.error?.error || 'Failed to vote');
-        console.error(error);
+        //console.error(error);
       }
     });
   }

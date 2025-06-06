@@ -139,6 +139,14 @@ export class CollabComponent implements OnInit, AfterViewInit {
 
   onSaveChanges(): void {
     this.service.saveChanges(this.text);
+    this.service.log_user_activity(this.userId, "edit").subscribe({
+      next: () => {
+        //console.log("User activity logged successfully");
+      },
+      error: (error) => {
+        // console.error("Error logging user activity:", error);
+      }
+    });
     this.clearCache();
   }
 

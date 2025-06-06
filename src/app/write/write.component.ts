@@ -290,9 +290,18 @@ export class WriteComponent implements OnInit, AfterViewInit {
         res => {
           if (res) {
             this.toastr.success('Blog published 🥳');
+            this.writeservice.log_user_activity(this.userId,"post")
             this.toastr.info('Informing your followers about your new blog ...');
             this.resetForm();
             this.selectedPollId = null; 
+            this.writeservice.log_user_activity(this.userId, "post").subscribe({
+              next: () => {
+                //console.log("User activity logged successfully");
+              },
+              error: (error) => {
+                // console.error("Error logging user activity:", error);
+              }
+            });
           } else {
             this.toastr.error('Failed to publish blog');
           }

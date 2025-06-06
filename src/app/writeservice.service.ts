@@ -427,6 +427,16 @@ export class WriteserviceService {
     return this.http.get(`${this.baseurl}/api/poll/${pollId}`, { params: { userId } });
   }
 
+  log_user_activity(userId: string, activityType: string): Observable<any> {
+    const body = { userId, activityType };
+    return this.http.post(`${this.baseurl}/api/log-activity`, body);
+  }
+  // writeservice.service.ts (add this method)
+    getUserContributions(userId: string): Observable<any> {
+      return this.http.get(`${this.baseurl}/api/contributions/${userId}`);
+    }
+
+
   ngOnDestroy(): void {
     this.socket1.disconnect();
     this.messagesSubject.complete();

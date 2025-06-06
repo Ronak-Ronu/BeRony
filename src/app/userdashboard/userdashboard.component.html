@@ -70,7 +70,9 @@
         *ngIf="activeSection === 'overview'"
         [userBio]="userBio"
         [username]="username"
-      ></app-overview>
+      >
+      <app-activity-heatmap [userId]="userId"></app-activity-heatmap>
+    </app-overview>
       <app-my-blogs
         *ngIf="activeSection === 'my-blogs'"
         [posts]="posts"
