@@ -165,8 +165,9 @@
     </div>
     <br>
     <br>
-    <div #postBody class="post-body" [innerHTML]="sanitizedBodyContent" (mouseup)="highlightText()">        
-        <div  [innerHTML]="sanitizedBodyContent"></div>
+    <div #postBody class="post-body bodycontentsection" [innerHTML]="sanitizedBodyContent" (mouseup)="highlightText()">
+    
+    <div [innerHTML]="sanitizedBodyContent"></div>
          <!-- <p>{{post.bodyofcontent}}</p>  -->
        
         </div> 

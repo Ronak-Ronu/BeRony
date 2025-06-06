@@ -168,6 +168,9 @@
           </div>
         </div>
       </div>
+
+
+
       <div *ngIf="isloadingblogs" class="loader">
         Loading beautiful blogs for {{ username }} ♥️
       </div>
@@ -341,6 +344,71 @@
           </button>
         </div>
       </div>
+      <div>
+        <span class="recommendationtitle">Quick Poll</span>
+      </div>
+      <div class="polls-container">
+        <div class="poll-card" *ngFor="let poll of polls" (click)="openPoll(poll)">
+          <div class="poll-card-content">
+            <div class="poll-header">
+              <h3>{{ poll.question }}</h3>
+              <div class="poll-tag">Live Poll</div>
+            </div>
+            <div class="poll-options">
+              <div *ngFor="let option of poll.options; let i = index" class="poll-option">
+                <div class="option-content">
+                  <div class="option-text">{{ option }}</div>
+                  <div *ngIf="poll.hasVoted" class="option-stats">
+                    <div class="vote-percentage">{{ getVotePercentage(poll.votes, i) }}%</div>
+                    <div class="vote-count">{{ poll.votes[i] }} vote{{ poll.votes[i] !== 1 ? 's' : '' }}</div>
+                  </div>
+                </div>
+                <div class="vote-progress" *ngIf="poll.hasVoted">
+                  <div class="progress-bar" [style.width]="getVotePercentage(poll.votes, i) + '%'"></div>
+                </div>
+              </div>
+            </div>
+ 
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedPoll" class="fullscreen-overlay" (click)="closePoll($event)">
+        <div class="poll-fullscreen" (click)="$event.stopPropagation()">
+          <div class="poll-header">
+            <h2>{{ selectedPoll.question }}</h2>
+            <div class="poll-tag">Active Poll</div>
+            <button class="close-btn" (click)="closePoll($event)">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div class="poll-options">
+            <div *ngFor="let option of selectedPoll.options; let i = index" class="poll-option">
+              <button
+                class="option-btn"
+                [disabled]="selectedPoll.hasVoted"
+                [ngClass]="{'voted': selectedPoll.hasVoted}"
+                (click)="vote(selectedPoll._id, i); $event.stopPropagation()"
+              >
+                {{ option }}
+                <span *ngIf="selectedPoll.hasVoted" class="vote-percentage">
+                  {{ getVotePercentage(selectedPoll.votes, i) }}%
+                </span>
+              </button>
+              <div class="vote-progress" *ngIf="selectedPoll.hasVoted">
+                <div class="progress-bar" [style.width]="getVotePercentage(selectedPoll.votes, i) + '%'"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="poll-footer">
+            <div class="total-votes">
+              <span class="vote-icon"></span> 
+              <span>{{ getTotalVotes(selectedPoll.votes) }} votes</span>
+            </div>
+          </div>
+        </div>
+      </div>
       <hr />
       <div class="toppicks">
         <div>
@@ -358,7 +426,7 @@
           </div>
           <div class="readtime">Jan 21, 2024 · 6 min read</div>
         </div>
-
+        
         <div class="seeall">See all (12)</div><hr><br>
     
         <div *ngIf="ischatroomvisible" class="chat-rooms-popup" [@popupAnimation] (click)="showChatRoom()">

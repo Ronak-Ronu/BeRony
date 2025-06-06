@@ -861,7 +861,337 @@ input:focus{
   background-color: #727bc8;
 
 }
+.polls-container {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden; 
+  gap: 20px;
+  padding: 20px 10px; 
+  scrollbar-width: thin;
+  scrollbar-color: #a1a1ff #f0f2ff;
+  width: 100%;
+  white-space: nowrap; 
+  -webkit-overflow-scrolling: touch; 
+  margin: 0 auto; 
+}
 
+/* Webkit browsers scrollbar styling */
+.polls-container::-webkit-scrollbar {
+  height: 6px; 
+}
+
+.polls-container::-webkit-scrollbar-track {
+  background: #f0f2ff; 
+  border-radius: 10px;
+}
+
+.polls-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #a1a1ff 0%, #6e7af9 100%); /* Match your gradient */
+  border-radius: 10px;
+}
+
+.poll-card {
+  flex: 0 0 auto;
+  width: 400px;
+  height: 400px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(110, 122, 249, 0.1);
+  border: 1px solid #e0e0ff;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  text-wrap: pretty;
+  overflow: hidden;
+}
+
+
+.poll-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(110, 122, 249, 0.15);
+}
+
+.poll-card-content {
+  padding: 20px;
+}
+
+.poll-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.poll-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: 600;
+  flex: 1;
+}
+
+.poll-tag {
+  background: linear-gradient(135deg, #a1a1ff 0%, #6e7af9 100%);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+/* Poll Options */
+.poll-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.poll-option {
+  position: relative;
+}
+
+.option-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.option-text {
+  font-size: 1rem;
+  color: #333;
+}
+
+.option-stats {
+  text-align: right;
+  margin-left: 10px;
+}
+
+.vote-percentage {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #6e7af9;
+}
+
+.vote-count {
+  font-size: 0.7rem;
+  color: #888;
+}
+
+.vote-progress {
+  position: relative;
+  height: 8px;
+  background-color: #f0f2ff;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(161, 161, 255, 0.7) 0%, rgba(110, 122, 249, 0.7) 100%);
+  border-radius: 10px;
+  transition: width 0.6s ease-out;
+}
+
+/* Vote Button */
+.vote-btn {
+  background: linear-gradient(135deg, #a1a1ff 0%, #6e7af9 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  box-shadow: 0 2px 5px rgba(110, 122, 249, 0.3);
+}
+
+.vote-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(110, 122, 249, 0.3);
+}
+
+/* Poll Footer */
+.poll-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px dashed #e0e0ff;
+  font-size: 0.8rem;
+}
+
+.total-votes {
+  display: flex;
+  align-items: center;
+  color: #666;
+}
+
+.vote-icon {
+  margin-right: 5px;
+  font-size: 1rem;
+}
+
+.poll-time {
+  color: #6e7af9;
+  font-weight: 500;
+}
+
+/* Fullscreen Poll */
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.poll-fullscreen {
+  background: white;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 600px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(110, 122, 249, 0.3);
+  animation: pollFadeIn 0.3s ease-out;
+}
+
+@keyframes pollFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.poll-fullscreen .poll-header {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.poll-fullscreen h2 {
+  font-size: 1.5rem;
+  margin-right: 30px;
+}
+
+.poll-fullscreen .close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.poll-fullscreen .close-btn:hover {
+  background: #f0f2ff;
+  color: #6e7af9;
+  transform: rotate(90deg);
+}
+
+.poll-fullscreen .poll-options {
+  gap: 15px;
+}
+
+.poll-fullscreen .option-btn {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e0e0ff;
+  border-radius: 12px;
+  background: white;
+  font-size: 1.1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.poll-fullscreen .option-btn:hover:not([disabled]) {
+  border-color: #a1a1ff;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 10px rgba(161, 161, 255, 0.2);
+}
+
+.poll-fullscreen .option-btn.voted {
+  border-color: #6e7af9;
+  background: #f8f9ff;
+}
+
+.poll-fullscreen .vote-percentage {
+  position: absolute;
+  right: 15px;
+  font-weight: bold;
+  color: #6e7af9;
+}
+
+.poll-fullscreen .vote-progress {
+  height: 10px;
+  margin-top: 10px;
+}
+
+.poll-fullscreen .poll-footer {
+  margin-top: 25px;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .polls-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .poll-fullscreen {
+    width: 95%;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .poll-card {
+    border-radius: 12px;
+  }
+  
+  .poll-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .poll-tag {
+    align-self: flex-start;
+    margin-left: 0;
+  }
+  
+  .poll-footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
   /* Responsive styles */
   @media (min-width: 768px) {
     .rooms-grid {
@@ -982,7 +1312,7 @@ input:focus{
         .leftshowcontainer{
             border-left: 0.5px solid rgb(118, 117, 117);
             width:100%;
-            height: 61vh;
+            height: 100vh;
             padding: 10px;
             margin-top: 2%;
             border-bottom: 0.5px solid rgb(118, 117, 117);

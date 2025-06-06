@@ -70,6 +70,8 @@ export class ReadComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   isTruncated: boolean = true;
 
+  polls: any[] = [];
+  selectedPoll: any | null = null;
 
   constructor(
     private readsevice: WriteserviceService,
@@ -91,7 +93,7 @@ export class ReadComponent implements OnInit, OnDestroy {
       this.readsevice.connect(this.userId, this.username);
       this.subscriptions.add(
         this.readsevice.getRoomCreated().subscribe((room: ChatRoom) => {
-          console.log('New room created:', room);
+          // // console.log('New room created:', room);
           this.rooms = [room, ...this.rooms];
           this.cdr.detectChanges();
         })
@@ -113,6 +115,7 @@ export class ReadComponent implements OnInit, OnDestroy {
     this.readblogdata();
     this.loadStories();
     this.loadRooms();
+    this.loadPolls(); 
 
     this.subscriptions.add(
       this.searchSubject.pipe(
@@ -243,8 +246,8 @@ export class ReadComponent implements OnInit, OnDestroy {
   }
 
   getid(item: WriteModel): void {
-    console.log(item._id);
-    console.log(item.title);
+    // // console.log(item._id);
+    // // console.log(item.title);
   }
 
   async getloggedinuserdata(): Promise<void> {
@@ -253,7 +256,7 @@ export class ReadComponent implements OnInit, OnDestroy {
       if (this.loggedInUserAccount) {
         this.username = this.loggedInUserAccount.name || 'Guest_' + Math.random().toString(36).substr(2, 5);
         this.userId = this.loggedInUserAccount.$id;
-        console.log('Logged in user:', { userId: this.userId, username: this.username });
+        // console.log('Logged in user:', { userId: this.userId, username: this.username });
         this.cdr.detectChanges();
       } else {
         console.warn('No logged-in user found');
@@ -353,10 +356,10 @@ export class ReadComponent implements OnInit, OnDestroy {
   }
 
   loadRooms(): void {
-    console.log('Loading rooms...');
+    // console.log('Loading rooms...');
     this.readsevice.getRooms().subscribe({
       next: (rooms: ChatRoom[]) => {
-        console.log('Rooms loaded:', rooms);
+        // console.log('Rooms loaded:', rooms);
         this.rooms = rooms;
         this.cdr.detectChanges();
       },
@@ -380,7 +383,7 @@ export class ReadComponent implements OnInit, OnDestroy {
 
 
   createRoom(): void {
-    console.log('Attempting to create room:', { roomId: this.newRoomId, title: this.newRoomTitle, userId: this.userId, username: this.username });
+    // console.log('Attempting to create room:', { roomId: this.newRoomId, title: this.newRoomTitle, userId: this.userId, username: this.username });
     if (!this.newRoomId || !this.newRoomTitle) {
       this.error = 'Please enter both Room ID and Title';
       this.toastr.error(this.error);
@@ -406,7 +409,7 @@ export class ReadComponent implements OnInit, OnDestroy {
 
     this.readsevice.createRoom(this.newRoomId, this.newRoomTitle, this.userId, this.username).subscribe({
       next: (room: ChatRoom) => {
-        console.log('Room created successfully:', room);
+        // console.log('Room created successfully:', room);
         this.toastr.success(`Room "${room.title}" created!`);
         this.router.navigate([`/chat/${room.roomId}/${this.newRoomTitle}`]);
         this.newRoomId = '';
@@ -424,7 +427,7 @@ export class ReadComponent implements OnInit, OnDestroy {
   }
 
   joinRoom(roomId: string,roomtitle:string): void {
-    // console.log('Joining room:', roomId);
+    // // console.log('Joining room:', roomId);
     this.router.navigate([`/chat/${roomId}/${roomtitle}`]);
   }
   showChatRoom(){
@@ -457,7 +460,6 @@ export class ReadComponent implements OnInit, OnDestroy {
             text: '👋 check out this story on berony',
             url: shareUrl,
         })
-        .then(() => console.log('Share successful'))
         .catch((error) => console.error('Error sharing:', error));
     } else {
         const url = shareUrl;
@@ -470,6 +472,84 @@ export class ReadComponent implements OnInit, OnDestroy {
                 this.toastr.error('Failed to copy the URL.');
             });
     }
+}
+loadPolls(): void {
+  if (!this.userId) {
+    console.warn('User ID not set, cannot load polls');
+    this.toastr.error('Please log in to view polls');
+    this.polls = []; // Ensure polls is an array
+    this.cdr.detectChanges();
+    return;
+  }
+
+  this.readsevice.getPolls(this.userId).subscribe({
+    next: (response) => {
+      // Handle different response structures
+      if (Array.isArray(response)) {
+        this.polls = response;
+      } else if (response && Array.isArray(response.polls)) {
+        this.polls = response.polls; // Adjust if response is { polls: [...] }
+      } else {
+        console.warn('Invalid polls response:', response);
+        this.polls = [];
+        this.toastr.error('No polls available');
+      }
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.error('Error fetching polls:', error);
+      this.polls = []; // Ensure polls is an array on error
+      this.toastr.error('Failed to load polls');
+      this.cdr.detectChanges();
+    }
+  });
+}
+// Replace openStory with openPoll
+openPoll(poll: any): void {
+  this.selectedPoll = poll;
+}
+
+// Replace closeStory with closePoll
+closePoll(event: MouseEvent): void {
+  const target = event.target as HTMLElement;
+  if (target.classList.contains('fullscreen-overlay')) {
+    this.selectedPoll = null;
+  }
+}
+
+// Add voting functionality
+vote(pollId: string, optionIndex: number): void {
+  if (!this.userId) {
+    this.toastr.error('Please log in to vote');
+    return;
+  }
+  this.readsevice.vote(pollId, optionIndex, this.userId).subscribe({
+    next: (response) => {
+      this.toastr.success('Vote recorded!');
+      this.polls = this.polls.map(poll =>
+        poll._id === pollId ? { ...response.poll, hasVoted: true } : poll
+      );
+      if (this.selectedPoll && this.selectedPoll._id === pollId) {
+        this.selectedPoll = { ...response.poll, hasVoted: true };
+      }
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      this.toastr.error(error.error?.error || 'Failed to vote');
+      console.error(error);
+    }
+  });
+}
+
+// Calculate vote percentage (copied from ReadingComponent)
+getVotePercentage(votes: number[], optionIndex: number): number {
+  const totalVotes = this.getTotalVotes(votes);
+  return totalVotes ? Math.round((votes[optionIndex] / totalVotes) * 100) : 0;
+}
+
+// Calculate total votes (copied from ReadingComponent)
+getTotalVotes(votes: number[]): number {
+  return votes && Array.isArray(votes) ? votes.reduce((sum, vote) => sum + vote, 0) : 0;
 }
 
 
