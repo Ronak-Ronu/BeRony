@@ -81,16 +81,50 @@
       </div>
 
       <div class="collabwriting" style="position: relative;">
-        <textarea
-          #textarea
-          [(ngModel)]="text"
-          (input)="onTextChange()"
-          placeholder="Start collaborating here..."
-        ></textarea>
-        <div class="button-group">
-          <button class="btn-save" (click)="onSaveChanges()">
-            💾 Save Changes
-          </button>
+        <div class="container">
+          <form #collabForm="ngForm">
+            <div class="format-toolbar" *ngIf="showFormatToolbar" 
+                 [style.top.px]="toolbarPosition.top" 
+                 [style.left.px]="toolbarPosition.left">
+              <button (click)="formatText('h1')" title="Heading"><b>H1</b></button>
+              <button (click)="formatText('bold')" title="Bold"><b>B</b></button>
+              <button (click)="formatText('italic')" title="Italic"><i>I</i></button>
+              <button (click)="formatText('code')" title="Code Block"><i class="fas fa-code"></i></button>
+              <select (change)="formatText('color', $event)" title="Text Color">
+                <option value="" disabled selected>Color</option>
+                <option value="#000000">Black</option>
+                <option value="#ff0000">Red</option>
+                <option value="#0000ff">Blue</option>
+                <option value="#008000">Green</option>
+                <option value="#ffa500">Orange</option>
+              </select>
+              <button (click)="formatText('align-left')" title="Align Left"><i class="fas fa-align-left"></i></button>
+              <button (click)="formatText('align-center')" title="Align Center"><i class="fas fa-align-center"></i></button>
+              <button (click)="formatText('align-right')" title="Align Right"><i class="fas fa-align-right"></i></button>
+              <select (change)="formatText('font-size', $event)" title="Font Size">
+                <option value="" disabled selected>Size</option>
+                <option value="1">Small</option>
+                <option value="3">Medium</option>
+                <option value="5">Large</option>
+                <option value="7">X-Large</option>
+              </select>
+            </div>
+            <div class="writecontentarea paper-style">
+              <div
+                #bodyEditor
+                class="editor"
+                contenteditable="true"
+                (input)="onTextChange()"
+                (keyup)="emitCursorPosition()"
+              ></div>
+            </div>
+      
+            <div class="footerbuttons">
+              <button type="button" class="publish-btn" (click)="onSaveChanges()">
+                <i class="fas fa-paper-plane"></i> Save Changes
+              </button>
+            </div>
+          </form>
         </div>
       </div>
 
