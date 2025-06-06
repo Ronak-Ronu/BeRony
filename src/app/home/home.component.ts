@@ -59,11 +59,48 @@ export class HomeComponent implements OnInit{
         this.text = newText;
       });
       this.socket.on('cursorUpdate', ({ userId, username, position }) => {
-        if (userId !== this.userId) {
-          console.log('Cursor update received:', userId, position);
-          // this.updateCursor(userId, username, position);
+        if (userId === this.userId) return;
+      
+        if (!this.cursors[userId]) {
+          const cursor = document.createElement('div');
+          const label = document.createElement('div');
+          cursor.className = 'remote-cursor';
+          label.className = 'remote-cursor-label';
+      
+          const color = this.getCursorColor(userId);
+          cursor.style.backgroundColor = color;
+          label.style.backgroundColor = color;
+          label.textContent = username;
+      
+          document.body.appendChild(cursor);
+          document.body.appendChild(label);
+      
+          this.cursors[userId] = { cursor, label, position };
         }
+      
+        const { cursor, label } = this.cursors[userId];
+        const textareaRect = this.textarea.nativeElement.getBoundingClientRect();
+      
+        const topOffset = textareaRect.top + 20 + (position * 1.5); // Approximate
+        const leftOffset = textareaRect.left + 10;
+      
+        cursor.style.position = 'absolute';
+        cursor.style.left = `${leftOffset}px`;
+        cursor.style.top = `${topOffset}px`;
+        cursor.style.width = '2px';
+        cursor.style.height = '20px';
+        cursor.style.zIndex = '999';
+      
+        label.style.position = 'absolute';
+        label.style.left = `${leftOffset + 10}px`;
+        label.style.top = `${topOffset - 20}px`;
+        label.style.padding = '2px 6px';
+        label.style.borderRadius = '4px';
+        label.style.color = '#fff';
+        label.style.fontSize = '10px';
+        label.style.zIndex = '999';
       });
+      
   
       this.socket.on('cursorRemove', ({ userId }) => {
         if (this.cursors[userId]) {
@@ -73,11 +110,15 @@ export class HomeComponent implements OnInit{
           delete this.usedColors[userId];
         }
       });
-      this.socket.on("textChange", (newText:string) => {
-          this.text = newText;
-          this.service.textSubject.next(newText);
-          this.cdr.detectChanges();
+      this.socket.on("textChange", (payload: { text: string, senderId: string }) => {
+        if (!payload || typeof payload !== 'object') return;
+        if (payload.senderId === this.socket.id) return;
+      
+        this.text = payload.text;
+        this.service.textSubject.next(payload.text);
+        this.cdr.detectChanges();
       });
+      
     
     }
  
@@ -173,7 +214,7 @@ export class HomeComponent implements OnInit{
       );
     }
     onTextChange(): void {
-      this.socket.emit('textChange', this.text);
+      this.socket.emit('textChange', { text: this.text, senderId: this.socket.id });
       // console.log(this.text); 
     }
     onSaveChanges(): void {
@@ -196,6 +237,13 @@ export class HomeComponent implements OnInit{
       );
     }
  
-
+    getCursorColor(userId: string): string {
+      if (!this.usedColors[userId]) {
+        const index = Object.keys(this.usedColors).length % this.cursorColors.length;
+        this.usedColors[userId] = this.cursorColors[index];
+      }
+      return this.usedColors[userId];
+    }
+    
 
 }
