@@ -1,0 +1,51 @@
+<div class="heatmap-container">
+    <div class="heatmap-header">
+      <h3>Activity</h3>
+      <div class="stats">
+        <span>{{ totalContributions }} contributions</span>
+      </div>
+    </div>
+    
+    <div class="heatmap">
+      <div class="month-labels">
+        <div *ngFor="let month of months; let i = index" 
+             class="month-label"
+             [style.grid-column-start]="i + 1">
+          {{ month }}
+        </div>
+      </div>
+      
+      <div class="heatmap-grid">
+        <div class="weekday-labels">
+          <div *ngFor="let day of weekdays" class="weekday-label">{{ day }}</div>
+        </div>
+        
+        <div class="days-container">
+          <div *ngFor="let week of heatmapData; let rowIndex = index" class="week-row">
+            <div 
+              *ngFor="let day of week; let colIndex = index" 
+              class="day-cell"
+              [style.background-color]="day ? getColor(day.count) : '#f8f9fa'"
+              [title]="day ? getTooltipText(day) : 'No data'"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="legend">
+      <span>Less</span>
+      <div class="legend-item" style="background-color: #ebedf0"></div>
+      <div class="legend-item" style="background-color: #d6e4ff"></div>
+      <div class="legend-item" style="background-color: #adc8ff"></div>
+      <div class="legend-item" style="background-color: #85adff"></div>
+      <div class="legend-item" style="background-color: #5c91ff"></div>
+      <div class="legend-item" style="background-color: #4a5ac8"></div>
+      <span>More</span>
+    </div>width
+  </div>
+  
+  <div *ngIf="loading" class="loading-indicator">
+    <div class="spinner"></div>
+    Loading activity data...
+  </div>
