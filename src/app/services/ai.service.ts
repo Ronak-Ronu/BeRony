@@ -1,6 +1,6 @@
 // src/app/services/ai.service.ts
 import { Injectable } from '@angular/core';
-import { Observable, from, throwError } from 'rxjs';
+import { Observable, from, of, throwError } from 'rxjs';
 import { catchError, delayWhen, map,retryWhen, delay, scan, switchMap } from 'rxjs/operators';
 import { model } from '../../../firebase-config';
 import { environment } from '../../environments/environment';
@@ -186,25 +186,40 @@ Example Format{ this format is not necessary, but you can use it as a reference 
       })
     );
   }
+  
+  
   fetchGif(prompt: string): Observable<string> {
-    const keyword = this.extractKeyword(prompt); // Extract a short keyword or phrase
+    const keyword = this.extractKeyword(prompt);
     const params = {
       api_key: 'yjwN0kfk4xk2BHKeuuoEts36Pdx80oJH',
       q: keyword,
-      limit: '1',
+      limit: '5', // Increase limit for better results
       rating: 'g',
+      lang: 'en'
     };
   
-    return this.http.get<any>('https://api.giphy.com/v1/gifs/search', { params }).pipe(
-      map(response => {
-        if (response.data && response.data.length > 0) {
-          return response.data[0].images.original.url; // Return the GIF URL
-        }
-        return ''; // Return an empty string if no GIF is found
-      }),
+    // Helper function to search a specific Giphy endpoint
+    const searchEndpoint = (endpoint: string) => 
+      this.http.get<any>(`https://api.giphy.com/v1/${endpoint}/search`, { params }).pipe(
+        map(response => {
+          if (response.data?.length > 0) {
+            const item = response.data[0];
+            // Handle different response structures
+            return item.images?.original?.url || 
+                   item.images?.downsized?.url || 
+                   item.url;
+          }
+          return null;
+        }),
+        catchError(() => of(null)) // Suppress individual endpoint errors
+      );
+  
+    // Search multiple endpoints sequentially
+    return searchEndpoint('gifs').pipe(
+      switchMap(gifUrl => gifUrl ? of(gifUrl) : searchEndpoint('stickers')),
       catchError(error => {
         console.error('Giphy API Error:', error);
-        return throwError(() => new Error('Failed to fetch GIF'));
+        return of(''); // Return empty string on final failure
       })
     );
   }

@@ -361,8 +361,8 @@ export class WriteComponent implements OnInit, AfterViewInit {
         await this.writeservice.addUserToDB(this.userId, this.username, email).toPromise();
       }
     } catch (error) {
-      console.error('Error fetching user data:', error);
-      this.toastr.error('Failed to fetch user data');
+      // console.error('Error fetching user data:', error);
+      // this.toastr.error('Failed to fetch user data');
     }
   }
 
@@ -769,13 +769,45 @@ export class WriteComponent implements OnInit, AfterViewInit {
   }
   selectGif(gif: any) {
     const gifUrl = gif.images.fixed_height.url;
-    
-    if (this.showGifModal) {
-      this.insertGifAtPosition(gifUrl);
-    }
-  
+    this.insertGifAtPosition(gifUrl);
     this.showGifModal = false;
-    this.cdr.detectChanges();
+    
+    // Refocus editor
+    setTimeout(() => {
+      this.bodyEditor.nativeElement.focus();
+      this.setCursorPosition(this.lastCursorPosition);
+    });
+  }
+  
+  private setCursorPosition(position: number) {
+    const editor = this.bodyEditor.nativeElement;
+    const range = document.createRange();
+    const sel = window.getSelection();
+    
+    // Find text node at position
+    let charCount = 0;
+    let node: any = editor.firstChild;
+  
+    while (node) {
+      if (node.nodeType === 3) { // Text node
+        const nextCharCount = charCount + node.length;
+        if (position <= nextCharCount) {
+          range.setStart(node, position - charCount);
+          range.collapse(true);
+          sel?.removeAllRanges();
+          sel?.addRange(range);
+          return;
+        }
+        charCount = nextCharCount;
+      }
+      node = node.nextSibling;
+    }
+    
+    // Fallback to end of editor
+    range.selectNodeContents(editor);
+    range.collapse(false);
+    sel?.removeAllRanges();
+    sel?.addRange(range);
   }
 
   insertGifAtPosition(gifUrl: string) {
@@ -798,10 +830,13 @@ export class WriteComponent implements OnInit, AfterViewInit {
       gifElement.className = 'inserted-gif';
       gifElement.style.display = 'block';
       gifElement.style.margin = '10px 0';
+
       
       markerElement.parentNode?.insertBefore(gifElement, markerElement);
       
       markerElement.remove();
+      const newPosition = this.lastCursorPosition - 4 + gifElement.outerHTML.length;
+      this.lastCursorPosition = newPosition;
       
       this.editbodycontent = bodyEditor.innerHTML;
       this.cdr.detectChanges();

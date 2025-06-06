@@ -50,6 +50,16 @@ input:focus{
     justify-content: space-around;
     
 }
+.truncate-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  max-width: 100%;
+}
+
 .filterbutton {
     background-color: #d9dcf8;
     min-width: auto;

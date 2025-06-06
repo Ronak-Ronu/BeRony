@@ -194,7 +194,7 @@
               (click)="getid(item)"
             >
               <div>
-                <b [innerHTML]="item.title" style="line-clamp: 1;">
+                <b class="truncate-text" [innerHTML]="item.title">
                   <!-- {{item.title}} -->
                 </b>
                 <p [innerHTML]="item.endnotecontent.slice(0, 150) + ' ...'">
