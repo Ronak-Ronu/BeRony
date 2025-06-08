@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { AiService } from '../services/ai.service';
 
 interface ChatRoom {
   roomId: string;
@@ -72,12 +73,18 @@ export class ReadComponent implements OnInit, OnDestroy {
 
   polls: any[] = [];
   selectedPoll: any | null = null;
-
+  aiInsights: { [key: string]: string } = {};
+  isAiLoading = false;
+  showSummaryCard = false;
+  currentSummaryPostId: string | null = null;
+  window = window; 
+  
   constructor(
     private readsevice: WriteserviceService,
     private toastr: ToastrService,
     private cdr: ChangeDetectorRef,
     private router: Router,
+    private aiService: AiService 
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -504,12 +511,10 @@ loadPolls(): void {
     }
   });
 }
-// Replace openStory with openPoll
 openPoll(poll: any): void {
   this.selectedPoll = poll;
 }
 
-// Replace closeStory with closePoll
 closePoll(event: MouseEvent): void {
   const target = event.target as HTMLElement;
   if (target.classList.contains('fullscreen-overlay')) {
@@ -517,7 +522,6 @@ closePoll(event: MouseEvent): void {
   }
 }
 
-// Add voting functionality
 vote(pollId: string, optionIndex: number): void {
   if (!this.userId) {
     this.toastr.error('Please log in to vote');
@@ -541,16 +545,81 @@ vote(pollId: string, optionIndex: number): void {
   });
 }
 
-// Calculate vote percentage (copied from ReadingComponent)
-getVotePercentage(votes: number[], optionIndex: number): number {
-  const totalVotes = this.getTotalVotes(votes);
-  return totalVotes ? Math.round((votes[optionIndex] / totalVotes) * 100) : 0;
-}
+    getVotePercentage(votes: number[], optionIndex: number): number {
+      const totalVotes = this.getTotalVotes(votes);
+      return totalVotes ? Math.round((votes[optionIndex] / totalVotes) * 100) : 0;
+    }
 
-// Calculate total votes (copied from ReadingComponent)
-getTotalVotes(votes: number[]): number {
-  return votes && Array.isArray(votes) ? votes.reduce((sum, vote) => sum + vote, 0) : 0;
-}
+    getTotalVotes(votes: number[]): number {
+      return votes && Array.isArray(votes) ? votes.reduce((sum, vote) => sum + vote, 0) : 0;
+    }
+    async generateAndReadSummary(item: any) {
+      try {
+        this.isAiLoading = true;
+        this.currentSummaryPostId = item._id;
+        this.currentSummaryPost = item;  
+        if (!item.aiInsights?.summary) {
+          const blogContent = "POST TITLE: " + this.stripHTML(item.title) + 
+                             " POST CONTENT: " + this.stripHTML(item.bodyofcontent) +
+                             " TAGS: " + this.stripHTML(item.tags.join(', '));
+          
+          this.aiService.generateBlogInsights(blogContent, 'summary').subscribe({
+            next: (response) => {
+              if (!item.aiInsights) item.aiInsights = {};
+              item.aiInsights.summary = response;
+              this.showSummaryCard = true; // This should show the card
+              this.readSummaryAloud(response);
+              this.cdr.detectChanges();
+            },
+            error: (error) => {
+              this.toastr.error('Failed to generate summary. Please try again.');
+              console.error('AI Summary Error:', error);
+              this.isAiLoading = false;
+              this.cdr.detectChanges();
+            }
+          });
+        } else {
+          this.showSummaryCard = true; 
+          this.readSummaryAloud(item.aiInsights.summary);
+          this.isAiLoading = false;
+          this.cdr.detectChanges();
+        }
+      } catch (error) {
+        this.toastr.error('Failed to generate summary. Please try again.');
+        console.error('AI Summary Error:', error);
+        this.isAiLoading = false;
+        this.cdr.detectChanges();
+      }
+    }
+    
+    currentSummaryPost: any = null;
+    
+        
+    closeSummary() {
+      this.showSummaryCard = false;
+      this.isAiLoading=false;
+      window.speechSynthesis.cancel();
+      this.cdr.detectChanges();
+    }
+    
+    readSummaryAloud(text: string) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.95;
+      utterance.pitch = 1.1;
+      utterance.volume = 1;
+      
+      const voices = window.speechSynthesis.getVoices();
+      utterance.voice = voices.find(v => v.name.includes('Google US English')) || 
+                       voices.find(v => v.lang === 'en-US') || 
+                       voices[0];
+      
+      window.speechSynthesis.speak(utterance);
+    }
+    
+    stripHTML(html: string): string {
+      return html.replace(/<\/?[^>]+(>|$)/g, "");
+    }
 
 
 }

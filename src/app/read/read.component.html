@@ -257,41 +257,19 @@
             </div>
 
             <div class="footerbuttons">
-              <button
-                *ngIf="this.loggedInUserAccount"
-                class="footerbutton"
-                (click)="addPostBookmark(item._id)"
-              >
-                <img
-                  style="cursor: pointer; transform: rotate(180deg)"
-                  src="../../assets/img/bookmark.png"
-                  alt=""
-                />
+              <button *ngIf="this.loggedInUserAccount" class="footerbutton" (click)="addPostBookmark(item._id)">
+                <img style="cursor: pointer; transform: rotate(180deg)" src="../../assets/img/bookmark.png" alt="" />
               </button>
-              <!-- <button style="cursor: pointer;" class="footerbuttoncls" (click)="addPostBookmark(item._id)">SAVE</button> -->
-              <div
-                *ngIf="item.userId === this.userId && this.loggedInUserAccount"
-              >
+              <button class="ai-summary-button" (click)="generateAndReadSummary(item)" [disabled]="isAiLoading">
+                <i class="fas fa-robot"></i>
+              </button>
+              <div *ngIf="item.userId === this.userId && this.loggedInUserAccount">
                 <button class="footerbutton">
-                  <img
-                    style="cursor: pointer"
-                    (click)="deletepost(item)"
-                    src="../../assets/img/binicon.png"
-                    alt=""
-                  />
+                  <img style="cursor: pointer" (click)="deletepost(item)" src="../../assets/img/binicon.png" alt="" />
                 </button>
-                <!-- <button style="cursor: pointer;" >DEL</button> -->
               </div>
-              <div
-                *ngIf="item.userId === this.userId && this.loggedInUserAccount"
-              >
-                <img
-                  style="cursor: pointer; width: 47px; height: auto"
-                  [routerLink]="'/collab/' + userId + '/' + item._id"
-                  src="../../assets/img/editiconberony.png"
-                  alt=""
-                />
-                <!-- <button style="cursor: pointer;" >DEL</button> -->
+              <div *ngIf="item.userId === this.userId && this.loggedInUserAccount">
+                <img style="cursor: pointer; width: 47px; height: auto" [routerLink]="'/collab/' + userId + '/' + item._id" src="../../assets/img/editiconberony.png" alt="" />
               </div>
             </div>
           </div>
@@ -488,4 +466,28 @@
 </div>
 <div class="seemorebutton">
   <button (click)="seemore()">Whats Next?</button>
+</div>
+
+<div class="ai-summary-card" [ngClass]="{ 'visible': showSummaryCard }">
+  <div class="card-header">
+    <h3>AI Summary</h3>
+    <button class="close-btn" (click)="closeSummary()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="summary-content">
+    <div *ngIf="currentSummaryPost" [innerHTML]="currentSummaryPost.aiInsights?.summary ">
+    </div>
+  </div>
+  <div class="audio-controls">
+    <button (click)="readSummaryAloud(currentSummaryPost.aiInsights?.summary)">
+      <i class="fas fa-play"></i> Read Again
+    </button>
+    <button (click)="window.speechSynthesis.pause()">
+      <i class="fas fa-pause"></i> Pause
+    </button>
+    <button (click)="closeSummary()">
+      <i class="fas fa-stop"></i> Stop
+    </button>
+  </div>
 </div>
