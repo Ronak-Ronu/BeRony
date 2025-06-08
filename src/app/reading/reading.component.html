@@ -29,7 +29,7 @@
       <h3>Talk To AI for getting more insights about this blog:</h3>
       <div class="ai-buttons" style="display: flex; gap: 10px; margin-bottom: 10px;">
         <button
-          class="footerbutton"
+          class="footerbutton "
           style="color: white;"
           [disabled]="isAiLoading"
           (click)="generateInsight('summary')"
@@ -79,7 +79,7 @@
             (keydown.enter)="askAiQuestion()"
           />
           <button
-            class="footerbutton"
+            class="footerbutton premium-ai-writer "
             [disabled]="isAiLoading"
             (click)="askAiQuestion()"
           >
