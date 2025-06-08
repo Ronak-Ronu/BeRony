@@ -6,6 +6,5 @@ const firebaseApp = initializeApp(environment.firebaseConfig);
 const ai = getAI(firebaseApp, { backend: new GoogleAIBackend() });
 const model = getGenerativeModel(ai, { model: 'gemini-2.0-flash' });
 
-
-export { firebaseApp, ai, model };
+export { firebaseApp, ai, model};
 
