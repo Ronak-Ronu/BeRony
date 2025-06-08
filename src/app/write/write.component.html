@@ -108,7 +108,12 @@
             <i class="fas fa-times"></i>
           </button>
         </div>
-
+        <div class="recaptcha-container" *ngIf="username && siteKey">
+          <re-captcha
+            (resolved)="resolved($event)"
+            [siteKey]="siteKey"
+          ></re-captcha>
+        </div>
         <div class="footerbuttons">
           <button type="button" class="publish-btn" (click)="publishblog(writecontentform.value)">
             <i class="fas fa-paper-plane"></i> PUBLISH
@@ -337,6 +342,7 @@ function hello() {
           </button>
         </div>
       </div>
+
       <div class="modal-body">
         <div *ngIf="draftblogs && draftblogs.length > 0; else noDrafts" class="drafts-list">
           <div *ngFor="let item of draftblogs" class="draft-item">
@@ -461,6 +467,7 @@ function hello() {
           </div>
         </div>
       </div>
+      
       <div class="modal-footer">
         <button class="publish-btn" (click)="publishblog(writecontentform.value)">
           <i class="fas fa-paper-plane"></i> Publish Now
@@ -468,4 +475,5 @@ function hello() {
       </div>
     </div>
   </div>
+  
 </div>

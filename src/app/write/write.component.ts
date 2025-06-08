@@ -83,11 +83,16 @@ export class WriteComponent implements OnInit, AfterViewInit {
   lastCursorPosition: number = 0;
   showPollModal: boolean = false;
   availablePolls: any[] = [];
-
   newPollQuestion: string = ''; // Add property for poll question
   newPollOptions: string[] = ['', '']; // Add property for poll options
   isPollFormValid: boolean = false; // Add property to track form validity
   selectedPollId: string | null = null; // Add property to store the selected poll ID
+
+
+  siteKey: string= ''; 
+  captchaResponse: string | null = null; 
+  isCaptchaVerified: boolean = false; 
+
 
   constructor(
     private writeservice: WriteserviceService,
@@ -99,6 +104,11 @@ export class WriteComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.readdraftblog();
     this.getloggedinuserdata();
+    this.siteKey = environment.FIREBASE_RECAPTCHA_SITE_KEY ?? '';
+    if (!this.siteKey) {
+      console.error('reCAPTCHA site key is missing in environment configuration');
+      this.toastr.error('reCAPTCHA configuration is missing');
+    }
   }
 
   ngAfterViewInit() {
@@ -256,12 +266,15 @@ export class WriteComponent implements OnInit, AfterViewInit {
     }
     return 0;
   }
-
   publishblog(publishdata: WriteModel) {
+    if (!this.isCaptchaVerified) {
+      this.toastr.warning('Please complete the reCAPTCHA verification');
+      return;
+    }
+
     const formData = new FormData();
     const scheduleDate = this.postScheduleTime || new Date();
     const bdy = this.formatCode(this.editCodeContent) + this.editbodycontent;
-    let pollId: string | null = null;
 
     formData.append('title', this.edittitle);
     formData.append('bodyofcontent', bdy);
@@ -271,9 +284,9 @@ export class WriteComponent implements OnInit, AfterViewInit {
     formData.append('username', this.username);
     formData.append('postScheduleTime', new Date(scheduleDate).toISOString());
     if (this.selectedPollId) {
-      formData.append('pollId', this.selectedPollId); // Add pollId to formData
+      formData.append('pollId', this.selectedPollId);
     }
-
+    formData.append('captchaResponse', this.captchaResponse || ''); // Include reCAPTCHA response
 
     if (this.selectedimagefile) {
       const maxSize = 20 * 1024 * 1024;
@@ -290,18 +303,13 @@ export class WriteComponent implements OnInit, AfterViewInit {
         res => {
           if (res) {
             this.toastr.success('Blog published 🥳');
-            this.writeservice.log_user_activity(this.userId,"post")
+            this.writeservice.log_user_activity(this.userId, "post");
             this.toastr.info('Informing your followers about your new blog ...');
             this.resetForm();
-            this.selectedPollId = null; 
-            this.writeservice.log_user_activity(this.userId, "post").subscribe({
-              next: () => {
-                //console.log("User activity logged successfully");
-              },
-              error: (error) => {
-                // console.error("Error logging user activity:", error);
-              }
-            });
+            this.selectedPollId = null;
+            this.isCaptchaVerified = false; // Reset captcha verification
+            this.captchaResponse = null; // Clear response
+            this.cdr.detectChanges();
           } else {
             this.toastr.error('Failed to publish blog');
           }
@@ -1044,4 +1052,11 @@ export class WriteComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  resolved(captchaResponse: string | null) {
+    this.captchaResponse = captchaResponse;
+    this.isCaptchaVerified = !!captchaResponse; 
+    console.log(`Resolved captcha with response: ${captchaResponse}`);
+    this.cdr.detectChanges();
+  }
+
 }
