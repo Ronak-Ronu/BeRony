@@ -38,6 +38,7 @@ import { StoryComponent } from './story/story.component';
 import { FooterComponent } from './footer/footer.component';
 import { PollsComponent } from './polls/polls.component';
 import { ActivityHeatmapComponent } from './activity-heatmap/activity-heatmap.component';
+import { RecaptchaModule } from "ng-recaptcha";
 
 const routes  = [
 
@@ -101,6 +102,7 @@ const routes  = [
       progressBar: true, 
     }),
     RouterModule.forRoot(routes),
+    RecaptchaModule
   ],
   providers: [WriteserviceService,  provideFirebaseApp(() => initializeApp(environment.firebaseConfig)), 
     provideAnalytics(() => getAnalytics()),
