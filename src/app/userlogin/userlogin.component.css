@@ -31,7 +31,12 @@ button
     justify-content: center;
     margin-top: 6vh;
 }
-
+.recaptcha-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+  }
+  
 
 input{
     margin: 0;   

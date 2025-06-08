@@ -49,7 +49,12 @@
     
     
     </div>
-
+    <div class="recaptcha-container" *ngIf="siteKey">
+      <re-captcha
+        (resolved)="resolved($event)"
+        [siteKey]="siteKey"
+      ></re-captcha>
+    </div>
 
 
   <div class="footerheadinglogin"> signin / signup to write</div>

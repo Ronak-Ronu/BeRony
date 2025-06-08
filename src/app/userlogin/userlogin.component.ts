@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { account, ID,storage } from '../../lib/appwrite';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -11,7 +11,7 @@ import { WriteserviceService } from '../writeservice.service';
   templateUrl: './userlogin.component.html',
   styleUrl: './userlogin.component.css'
 })
-export class UserloginComponent {
+export class UserloginComponent implements OnInit {
   loggedInUser: any = null;
   email: string = '';
   password: string = '';
@@ -19,13 +19,28 @@ export class UserloginComponent {
   profileImage:File | null =null
   loading:boolean=false
   passwordVisible: boolean = false;
+  siteKey: string= ''; 
+  captchaResponse: string | null = null; 
+  isCaptchaVerified: boolean = false; 
+  constructor(private router:Router,private toastr: ToastrService,
+    private service:WriteserviceService,
+    private cdr: ChangeDetectorRef,
+  ){}
 
-constructor(private router:Router,private toastr: ToastrService,private service:WriteserviceService){}
-
-
+  ngOnInit(): void {
+    this.siteKey = environment.FIREBASE_RECAPTCHA_SITE_KEY ?? '';
+    if (!this.siteKey) {
+      console.error('reCAPTCHA site key is missing in environment configuration');
+      this.toastr.error('reCAPTCHA configuration is missing');
+    }
+  }
 async login(email: string, password: string) {
   this.loading = true;
   try {
+    if (!this.isCaptchaVerified) {
+      this.toastr.error('Please complete the reCAPTCHA verification');
+      return;
+    }
     await account.createEmailPasswordSession(email, password);
     this.loggedInUser = await account.get();
     
@@ -55,6 +70,10 @@ async guestlogin()
 {
   this.loading=true;
   try {
+    if (!this.isCaptchaVerified) {
+      this.toastr.error('Please complete the reCAPTCHA verification');
+      return;
+    }
     const guest = account.createAnonymousSession();
     guest.then((res)=>{
       this.router.navigate(['/write'])
@@ -74,6 +93,10 @@ async guestlogin()
 async register(email: string, password: string, name: string) {
   this.loading = true;
   try {
+    if (!this.isCaptchaVerified) {
+      this.toastr.error('Please complete the reCAPTCHA verification');
+      return;
+    }
     const userID=ID.unique()
     await account.create(userID, email, password, name);
     if (this.profileImage) {
@@ -125,5 +148,10 @@ async logout() {
   {
     this.passwordVisible=!this.passwordVisible;
   }
-
+  resolved(captchaResponse: string | null) {
+    this.captchaResponse = captchaResponse;
+    this.isCaptchaVerified = !!captchaResponse; 
+    console.log(`Resolved captcha with response: ${captchaResponse}`);
+    this.cdr.detectChanges();
+  }
 }
