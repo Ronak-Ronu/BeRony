@@ -35,6 +35,8 @@ jobs:
             mode: '${{ secrets.MODE }}',
             murfApiKey: '${{ secrets.MURF_API_KEY }}',
             Unsplash_ACCESSKEY: '${{ secrets.UNSPLASH_ACCESS_KEY }}',
+            FIREBASE_RECAPTCHA_SITE_KEY: '${{ secrets.FIREBASE_RECAPTCHA_SITE_KEY }}',
+            FIREBASE_RECAPTCHA_SECRET_KEY: '${{ secrets.FIREBASE_RECAPTCHA_SECRET_KEY }}',
             firebaseConfig: {
               projectId: '${{ secrets.FIREBASE_PROJECT_ID }}',
               appId: '${{ secrets.FIREBASE_APP_ID }}',
