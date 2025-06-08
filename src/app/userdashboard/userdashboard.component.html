@@ -168,7 +168,29 @@
           </button>
           <button (click)="unplantTree()">UnPlant Tree 🌱</button>
         </div>
+        <div class="suggestions-section" *ngIf="suggestedConnections.length > 0 && isViewingOwnProfile">
+          <h3>Suggested Authors</h3>
+          <div class="horizontal-suggestions">
+            <div *ngFor="let user of suggestedConnections" class="suggestion-card">
+            <div style="cursor: pointer;" (click)="goToAuthorProfile(user.userId)">
+              <img 
+              [src]="'https://cloud.appwrite.io/v1/storage/buckets/' + bucketName + '/files/' + user.userId + '/view?project=' + project + '&mode=' + mode" 
+                alt="{{ user.username }}"
+                class="suggestion-avatar"
+              >
+              <div class="suggestion-info">
+                <strong style="line-clamp: 1;">{{ user.username }}</strong>
+                <div class="mutual-count">{{ user.score }} mutual</div>
+              </div>
+            </div>
 
+              <button 
+                class="follow-btn"
+                (click)="followSuggestedUser(user.userId)"
+              >Follow</button>
+            </div>
+          </div>
+        </div>
         <div class="user-info">
           <div *ngIf="userBadges.length > 0" class="badges">
             <span *ngFor="let badge of userBadges" class="badge">

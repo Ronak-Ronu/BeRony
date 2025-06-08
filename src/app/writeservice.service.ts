@@ -431,12 +431,13 @@ export class WriteserviceService {
     const body = { userId, activityType };
     return this.http.post(`${this.baseurl}/api/log-activity`, body);
   }
-  // writeservice.service.ts (add this method)
-    getUserContributions(userId: string): Observable<any> {
+  getUserContributions(userId: string): Observable<any> {
       return this.http.get(`${this.baseurl}/api/contributions/${userId}`);
     }
-
-
+  getSuggestedConnections(userId: string): Observable<any> {
+    return this.http.get(`${this.baseurl}/api/users/${userId}/suggestions`);
+  }
+    
   ngOnDestroy(): void {
     this.socket1.disconnect();
     this.messagesSubject.complete();

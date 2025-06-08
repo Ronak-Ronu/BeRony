@@ -391,6 +391,102 @@
   max-width: 90%;
 }
 
+.suggestions-section {
+  margin-top: 2rem;
+  padding: 1rem 0;
+  width: 70%;
+}
+
+.suggestions-section h3 {
+  font-size: 1.5rem;
+  color: #5a67d8;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.horizontal-suggestions {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.2rem;
+  padding: 0.5rem 0 1.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: #c6caf9 transparent;
+}
+
+.horizontal-suggestions::-webkit-scrollbar {
+  height: 6px;
+}
+
+.horizontal-suggestions::-webkit-scrollbar-thumb {
+  background-color: #c6caf9;
+  border-radius: 3px;
+}
+
+.suggestion-card {
+  flex: 0 0 auto;
+  width: 140px;
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 3px 10px rgba(143, 159, 233, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.suggestion-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(143, 159, 233, 0.25);
+}
+
+.suggestion-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+  border: 3px solid #c6caf9;
+}
+
+.suggestion-info {
+  text-align: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.suggestion-info strong {
+  display: block;
+  font-size: 1rem;
+  color: #4a5568;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.mutual-count {
+  font-size: 0.8rem;
+  color: #718096;
+  background: #f8f9ff;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.follow-btn {
+  background: #8f9fe9;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.follow-btn:hover {
+  background: #6a7bd9;
+}
 
 @media (max-width: 600px) {
   .story-editor-content {
@@ -439,6 +535,9 @@
   .upload-btn {
     font-size: 0.9rem;
     padding: 8px 15px;
+  }
+  .suggestions-section {
+    width: 100%;
   }
 }
 
@@ -576,4 +675,7 @@
         color: rgb(81, 91, 194); 
       }
       
+      .suggestions-section {
+        width: 100%;
+      }
 }

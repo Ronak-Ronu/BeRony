@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { account } from '../../lib/appwrite';
 import { WriteserviceService } from '../writeservice.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
 import * as fabric from 'fabric';
@@ -52,11 +52,13 @@ export class UserdashboardComponent implements OnInit {
   description: string = ''; 
   showVideoDescriptionPopup: boolean = false; 
   videoPreviewUrl: string | null = null; 
+  suggestedConnections: any[] = [];
 
   constructor(
     private service: WriteserviceService,
     private route: ActivatedRoute,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router,
   ) {}
 
   async ngOnInit() {
@@ -80,9 +82,9 @@ export class UserdashboardComponent implements OnInit {
       }
       this.getloggedinuserdata();
       this.fetchUserData(this.userId);
+      this.fetchSuggestedConnections(this.loggedinuserid);
     });
   }
-
 
   openEditor() {
     this.showEditor = true;
@@ -529,4 +531,25 @@ export class UserdashboardComponent implements OnInit {
       },
     });
   }
+
+  fetchSuggestedConnections(userId: string) {
+    this.service.getSuggestedConnections(userId).subscribe({
+      next: (data) => {
+        this.suggestedConnections = data;
+        console.log(this.suggestedConnections);
+        
+      },
+      error: (err) => {
+        console.error('Error fetching suggestions:', err);
+      }
+    });
+  }
+  
+  followSuggestedUser(suggestedUserId: string) {
+    this.followUser(this.loggedinuserid, suggestedUserId);
+  }
+  goToAuthorProfile(authorUserId: string): void {
+    this.router.navigate(['/profile/', authorUserId]);
+  }
+
 }
