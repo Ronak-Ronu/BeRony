@@ -1,98 +1,110 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+// Updated Component
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { WriteserviceService } from '../writeservice.service';
-import { WriteModel } from '../Models/writemodel';
 
 @Component({
   selector: 'app-blog-reel',
   templateUrl: './blog-reel.component.html',
-  styleUrls: ['./blog-reel.component.css'],
+  styleUrls: ['./blog-reel.component.css']
 })
 export class BlogReelComponent implements OnInit {
+  @ViewChild('sliderContainer') sliderContainer!: ElementRef;
+  
   blogs: any[] = [];
-  currentBlogView: any[] = [];
-  startIndex: number = 0;
-  blogsPerPage: number = 1;
-  startX: number = 0;
-  threshold: number = 200;
-  loadingBlogs: boolean = false;  
+  currentIndex = 0;
+  offsetX = 0;
+  startX = 0;
+  isSwiping = false;
+  threshold = 100; // Increased threshold for better swipe detection
+  loadingBlogs = false;  
+  containerWidth = 0;
 
-  constructor(private readService: WriteserviceService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private readService: WriteserviceService, 
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadBlogs();
-    window.addEventListener('touchstart', this.onTouchStart.bind(this));
-    window.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: false });
-  
+    this.calculateContainerWidth();
+    window.addEventListener('resize', () => this.calculateContainerWidth());
+  }
+
+  calculateContainerWidth() {
+    this.containerWidth = window.innerWidth;
+    this.updatePosition();
   }
 
   loadBlogs() {
-    if (this.loadingBlogs) {
-      return;  
-    }
+    if (this.loadingBlogs) return;
     
-    this.loadingBlogs = true;  
-  
-    this.readService.getpublishpostdata(this.startIndex, this.blogsPerPage).subscribe(
-      (data: any[]) => {
+    this.loadingBlogs = true;
+    const startIndex = this.blogs.length;
+
+    this.readService.getpublishpostdata(startIndex, 3).subscribe({ // Load 3 at a time
+      next: (data: any[]) => {
         if (data.length > 0) {
-          this.blogs = [...this.blogs, ...data]; 
-          this.updateCurrentBlogView();
-        } else {
-          console.log("No more blogs to load.");
+          this.blogs = [...this.blogs, ...data];
         }
       },
-      (error) => {
-        console.error("Error fetching blogs:", error);
-      },
-      () => {
-        this.loadingBlogs = false;  
+      error: (error) => console.error("Error fetching blogs:", error),
+      complete: () => {
+        this.loadingBlogs = false;
+        this.cdr.detectChanges();
       }
-    );
-  }
-  
-
-  updateCurrentBlogView() {
-    this.currentBlogView = this.blogs.slice(this.startIndex, this.startIndex + this.blogsPerPage);
-    this.cdr.detectChanges();
+    });
   }
 
   onTouchStart(event: TouchEvent) {
     this.startX = event.touches[0].clientX;
+    this.isSwiping = true;
   }
 
   onTouchMove(event: TouchEvent) {
-    const moveX = event.touches[0].clientX;
-    const diffX = this.startX - moveX;
-  
-    if (Math.abs(diffX) > this.threshold) {
-      if (event.cancelable) {
-        event.preventDefault();
-      }
-  
-      if (diffX > 0) {
-        this.onSwipeLeft();
-      } else {
-        this.onSwipeRight();
-      }
-    }
+    if (!this.isSwiping) return;
+    
+    const currentX = event.touches[0].clientX;
+    const diff = currentX - this.startX;
+    this.offsetX = -(this.currentIndex * this.containerWidth) + diff;
   }
-  
 
-  onSwipeLeft() {
-    if (this.startIndex + this.blogsPerPage < this.blogs.length) {
-      this.startIndex += this.blogsPerPage;
-      this.updateCurrentBlogView();
+  onTouchEnd(event: TouchEvent) {
+    if (!this.isSwiping) return;
+    
+    const endX = event.changedTouches[0].clientX;
+    const diff = endX - this.startX;
+    const absDiff = Math.abs(diff);
+    
+    if (absDiff > this.threshold) {
+      if (diff > 0) {
+        this.prevSlide();
+      } else {
+        this.nextSlide();
+      }
     } else {
+      this.updatePosition();
+    }
+    
+    this.isSwiping = false;
+  }
+
+  nextSlide() {
+    if (this.currentIndex < this.blogs.length - 1) {
+      this.currentIndex++;
+    } else if (!this.loadingBlogs) {
       this.loadBlogs();
     }
+    this.updatePosition();
   }
-  
-  onSwipeRight() {
-    if (this.startIndex - this.blogsPerPage >= 0) {
-      this.startIndex -= this.blogsPerPage;
-      this.updateCurrentBlogView();
+
+  prevSlide() {
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      this.updatePosition();
     }
   }
-  
-  
+
+  updatePosition() {
+    this.offsetX = -this.currentIndex * this.containerWidth;
+  }
 }

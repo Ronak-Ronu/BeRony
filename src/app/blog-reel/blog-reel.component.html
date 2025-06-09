@@ -1,31 +1,56 @@
-<div class="readingreel" 
-     (touchstart)="onTouchStart($event)" 
-     (touchmove)="onTouchMove($event)">
-    <div class="readcontainer">
-        <div class="blogscontainer">
-            <div *ngFor="let item of currentBlogView" class="contentdivs">
-                <div class="assetsimgvid">
-                </div>
-                <div *ngIf="item.imageUrl">
-                    <img [src]="item.imageUrl" [alt]="item.title" />
-                </div>
-                
-                <div *ngIf="item.videoUrl && !item.imageUrl">
-                    <video [src]="item.videoUrl" controls>
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                
-                <h3>{{ item.title }} - <span style="color: rgb(98, 98, 98);">{{item.username}}</span></h3>
-                <hr>
-                <div [innerHTML]="item.bodyofcontent"></div>
-                <div class="aboutauthor">
-                    <div><b>{{item.username}}</b> | </div>
-                    <div>{{item.sadcount + item.loveitcount + item.funnycount}} Likes | </div>
-                    <div>Author feels: {{item.userEmotion}} | </div>
-                    <div class="date">Publish Date: {{item.createdAt | date:'mediumDate'}}</div>
-                </div>
+<div class="readingreel">
+    <div #sliderContainer class="slider-container" 
+         (touchstart)="onTouchStart($event)" 
+         (touchend)="onTouchEnd($event)"
+         (touchmove)="onTouchMove($event)" 
+         [style.transform]="'translateX(' + offsetX + 'px)'"
+         [style.transition]="isSwiping ? 'none' : 'transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1)'">
+      
+      <div *ngFor="let item of blogs" class="slide">
+        <div class="blog-card">
+          <div class="blog-media">
+            <img *ngIf="item.imageUrl" [src]="item.imageUrl" [alt]="item.title" />
+            <video *ngIf="item.videoUrl && !item.imageUrl" [src]="item.videoUrl" controls>
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          
+          <div class="blog-content">
+            <div [innerHTML]="item.title"></div>
+            <h3><span class="author">by {{item.username}}</span></h3>
+            
+            <div class="content" [innerHTML]="item.bodyofcontent"></div>
+            
+            <div class="blog-footer">
+              <div class="reactions">
+                <span class="likes">{{item.sadcount + item.loveitcount + item.funnycount}} Likes</span>
+                <span class="emotion">Author feels: {{item.userEmotion}}</span>
+              </div>
+              <div class="publish-date">{{item.createdAt | date:'MMM d, yyyy'}}</div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+    
+    <!-- Navigation Indicators -->
+    <div class="navigation-indicators">
+      <button class="nav-button prev" (click)="prevSlide()" [disabled]="currentIndex === 0">
+        &lt;
+      </button>
+      
+      <div class="slide-indicator">
+        <div *ngFor="let _ of [].constructor(blogs.length); let i = index" 
+             [class.active]="i === currentIndex"></div>
+      </div>
+      
+      <button class="nav-button next" (click)="nextSlide()" [disabled]="currentIndex === blogs.length - 1 && loadingBlogs">
+        &gt;
+      </button>
+    </div>
+    
+    <!-- Loading Indicator -->
+    <div *ngIf="loadingBlogs" class="loading-indicator">
+      Loading more blogs...
+    </div>
+  </div>
