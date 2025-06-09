@@ -126,7 +126,7 @@ export class ReadComponent implements OnInit, OnDestroy {
 
     this.subscriptions.add(
       this.searchSubject.pipe(
-        debounceTime(300),
+        debounceTime(1000),
         distinctUntilChanged()
       ).subscribe(query => {
         this.searchQuery = query;
@@ -163,7 +163,8 @@ export class ReadComponent implements OnInit, OnDestroy {
       this.isloadingblogs = true;
       this.readsevice.getpublishpostdata(this.start, this.limit).subscribe(
         (data: WriteModel[]) => {
-          this.blogs = this.blogs.concat(data);
+          // Append new posts to existing ones for infinite scroll
+          this.blogs = [...this.blogs, ...data];
           this.isloadingblogs = false;
           this.addUserEmotion();
           this.cdr.detectChanges();
@@ -181,16 +182,24 @@ export class ReadComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     }
   }
-
+  
   readqueryblogdata(): void {
     try {
       this.isloadingblogs = true;
       this.readsevice.getsearchpostdata(this.selectedTag, this.searchQuery).subscribe(
-        (data: WriteModel[]) => {
-          this.blogs = data;
+        (response: any) => {
+          if (this.start === 0) {
+            this.blogs = response?.posts || [];
+          } else {
+            this.blogs = [...this.blogs, ...(response?.posts || [])];
+          }
+
+          console.log(this.blogs);
+          
           this.isloadingblogs = false;
-          this.savesearchquery(this.searchQuery);
-          this.addUserEmotion();
+          if (this.searchQuery) {
+            this.savesearchquery(this.searchQuery);
+          }
           this.cdr.detectChanges();
         },
         (error) => {
@@ -206,7 +215,7 @@ export class ReadComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     }
   }
-
+  
   onSearchInput(query: string): void {
     this.searchSubject.next(query);
   }
@@ -271,7 +280,7 @@ export class ReadComponent implements OnInit, OnDestroy {
         this.userId = 'user_' + Math.random().toString(36).substr(2, 9);
       }
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      // console.error('Error fetching user data:', error);
       this.username = 'Guest_' + Math.random().toString(36).substr(2, 5);
       this.userId = 'user_' + Math.random().toString(36).substr(2, 9);
     }
@@ -288,7 +297,7 @@ export class ReadComponent implements OnInit, OnDestroy {
         this.toastr.error("You are not the author of this post");
       }
     } catch (error) {
-      console.error("Cannot delete post:", error);
+      // console.error("Cannot delete post:", error);
       this.toastr.error("Failed to delete post");
     }
   }
@@ -314,7 +323,7 @@ export class ReadComponent implements OnInit, OnDestroy {
         this.toastr.success("Bookmarked");
       },
       (error) => {
-        console.error("Error adding bookmark:", error.error.message);
+        // console.error("Error adding bookmark:", error.error.message);
         this.toastr.error(error.error.message);
       }
     );
@@ -328,7 +337,7 @@ export class ReadComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         },
         (error) => {
-          console.error(`Error fetching emotion for user ${blog.userId}:`, error);
+          // // console.error(`Error fetching emotion for user ${blog.userId}:`, error);
         }
       );
     });
@@ -345,7 +354,7 @@ export class ReadComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error fetching stories:', error);
+        // console.error('Error fetching stories:', error);
         this.toastr.error('Failed to load stories');
       }
     });
@@ -371,13 +380,13 @@ export class ReadComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       },
       error: (err: any) => {
-        console.error('Error loading rooms:', {
-          status: err.status,
-          statusText: err.statusText,
-          url: err.url,
-          message: err.message,
-          error: err.error
-        });
+        // console.error('Error loading rooms:', {
+        //   status: err.status,
+        //   statusText: err.statusText,
+        //   url: err.url,
+        //   message: err.message,
+        //   error: err.error
+        // });
         const errorMessage = err.error?.message || err.message || 'Failed to load chat rooms';
         this.error = errorMessage;
         this.toastr.error(errorMessage);
@@ -424,7 +433,7 @@ export class ReadComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       },
       error: (err: any) => {
-        console.error('Error creating room:', err);
+        // console.erro('Error creating room:', err);
         this.error = err.error?.message || 'Failed to create room';
         this.toastr.error(this.error);
         setTimeout(() => (this.error = ''), 5000);
@@ -453,7 +462,7 @@ export class ReadComponent implements OnInit, OnDestroy {
         this.toastr.success(successMessage);
       })
       .catch((error) => {
-        console.error('Error copying to clipboard:', error);
+        // console.erro('Error copying to clipboard:', error);
         this.toastr.error('Failed to copy link');
       });
   }
@@ -467,7 +476,6 @@ export class ReadComponent implements OnInit, OnDestroy {
             text: '👋 check out this story on berony',
             url: shareUrl,
         })
-        .catch((error) => console.error('Error sharing:', error));
     } else {
         const url = shareUrl;
         navigator.clipboard.writeText(url)
@@ -475,7 +483,7 @@ export class ReadComponent implements OnInit, OnDestroy {
                 this.toastr.success('URL copied to clipboard! 📋');
             })
             .catch((error) => {
-                console.error('Error copying to clipboard:', error);
+                // console.error('Error copying to clipboard:', error);
                 this.toastr.error('Failed to copy the URL.');
             });
     }
@@ -504,7 +512,7 @@ loadPolls(): void {
       this.cdr.detectChanges();
     },
     error: (error) => {
-      console.error('Error fetching polls:', error);
+      // console.error('Error fetching polls:', error);
       this.polls = []; // Ensure polls is an array on error
       this.toastr.error('Failed to load polls');
       this.cdr.detectChanges();
@@ -540,7 +548,7 @@ vote(pollId: string, optionIndex: number): void {
     },
     error: (error) => {
       this.toastr.error(error.error?.error || 'Failed to vote');
-      console.error(error);
+      // console.error(error);
     }
   });
 }
@@ -573,7 +581,7 @@ vote(pollId: string, optionIndex: number): void {
             },
             error: (error) => {
               this.toastr.error('Failed to generate summary. Please try again.');
-              console.error('AI Summary Error:', error);
+              // console.error('AI Summary Error:', error);
               this.isAiLoading = false;
               this.cdr.detectChanges();
             }
@@ -586,7 +594,7 @@ vote(pollId: string, optionIndex: number): void {
         }
       } catch (error) {
         this.toastr.error('Failed to generate summary. Please try again.');
-        console.error('AI Summary Error:', error);
+        // console.error('AI Summary Error:', error);
         this.isAiLoading = false;
         this.cdr.detectChanges();
       }

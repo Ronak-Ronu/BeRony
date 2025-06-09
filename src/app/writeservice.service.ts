@@ -313,6 +313,11 @@ export class WriteserviceService {
     // console.log("querying", params);
     return this.http.get<WriteModel[]>(this.findposturl, { params });
   }
+  // getsearchpostdata(tag: string | null, query: string | null): Observable<{ posts: any[], users: any[] }> {
+  //   return this.http.get<{ posts: any[], users: any[] }>(
+  //     `${this.baseurl}/api/findpost?q=${query}&tags=${tag}`
+  //   );
+  // }
 
   getpublishpostdatabyid(id: string): Observable<WriteModel> {
     return this.http.get<WriteModel>(this.url + "/" + id);
