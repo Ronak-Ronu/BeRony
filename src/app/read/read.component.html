@@ -84,6 +84,7 @@
   <!-- endoffilteritems -->
 
   <div class="readcontainer">
+
     <div
       class="blogscontainer"
       infiniteScroll
@@ -174,7 +175,29 @@
       <div *ngIf="isloadingblogs" class="loader">
         Loading beautiful blogs for {{ username }} ♥️
       </div>
+      <div *ngIf="searchUsers.length > 0" class="user-results-container">
+        <div class="suggestions-section">
+          <div class="horizontal-suggestions">
+            <div *ngFor="let user of searchUsers" class="suggestion-card"  (click)="goToAuthorProfile(user.userId)">
+              <div>
+                <img 
+                [src]="'https://cloud.appwrite.io/v1/storage/buckets/' + bucketName + '/files/' + user.userId + '/view?project=' + project + '&mode=' + mode" 
+                alt="{{ user.username }}"
+                (click)="goToAuthorProfile(user.userId)"
+                class="suggestion-avatar"
+              >
+              </div>
+              <div class="suggestion-info">
+                <strong style="line-clamp: 1;"  (click)="goToAuthorProfile(user.userId)">{{ user.username }}</strong>
+                <div class="mutual-count">{{ user.followers.length }} followers</div>
+                <div class="mutual-count">{{ user.following.length }} following</div>
 
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+        
       <div *ngFor="let item of blogs">
         <div class="contentdivs"
         (mousemove)="onMouseMove($event, $event.currentTarget)"

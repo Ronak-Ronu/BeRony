@@ -70,6 +70,7 @@ export class ReadComponent implements OnInit, OnDestroy {
   error: string = '';
   private subscriptions: Subscription = new Subscription();
   isTruncated: boolean = true;
+  searchUsers: any[] = [];
 
   polls: any[] = [];
   selectedPoll: any | null = null;
@@ -182,39 +183,48 @@ export class ReadComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     }
   }
-  
-  readqueryblogdata(): void {
-    try {
-      this.isloadingblogs = true;
-      this.readsevice.getsearchpostdata(this.selectedTag, this.searchQuery).subscribe(
-        (response: any) => {
-          if (this.start === 0) {
-            this.blogs = response?.posts || [];
-          } else {
-            this.blogs = [...this.blogs, ...(response?.posts || [])];
-          }
-
-          console.log(this.blogs);
-          
-          this.isloadingblogs = false;
-          if (this.searchQuery) {
-            this.savesearchquery(this.searchQuery);
-          }
-          this.cdr.detectChanges();
-        },
-        (error) => {
-          console.error('Error searching blogs:', error);
-          this.isloadingblogs = false;
-          this.toastr.error('Failed to search blogs');
-          this.cdr.detectChanges();
+// read.component.ts
+readqueryblogdata(): void {
+  try {
+    this.isloadingblogs = true;
+    this.readsevice.getsearchpostdata(this.selectedTag, this.searchQuery).subscribe(
+      (response: any) => {
+        console.log('Full search response:', response); // Debugging
+        
+        // Make sure we're accessing the correct properties
+        const posts = response?.posts || [];
+        const users = response?.users || [];
+        this.searchUsers= users;;
+        console.log('Found posts:', posts.length);
+        console.log('Found users:', users.length);
+        
+        
+        if (this.start === 0) {
+          this.blogs = posts;
+          this.searchUsers = users;
+        } else {
+          this.blogs = [...this.blogs, ...posts];
         }
-      );
-    } catch (error) {
-      console.error(error);
-      this.isloadingblogs = false;
-      this.cdr.detectChanges();
-    }
+        
+        this.isloadingblogs = false;
+        if (this.searchQuery) {
+          this.savesearchquery(this.searchQuery);
+        }
+        this.cdr.detectChanges();
+      },
+      (error) => {
+        console.error('Error searching blogs:', error);
+        this.isloadingblogs = false;
+        this.toastr.error('Failed to search blogs');
+        this.cdr.detectChanges();
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    this.isloadingblogs = false;
+    this.cdr.detectChanges();
   }
+}
   
   onSearchInput(query: string): void {
     this.searchSubject.next(query);
