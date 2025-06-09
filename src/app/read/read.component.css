@@ -90,9 +90,6 @@ input:focus{
   .filterbutton1 {
     background-color: #d5d8f9;
     min-width: auto;
-    min-height: 7vh;
-    max-height: 7vh;
-    height: 7vh;
     font-size: 27px;
     border: 1px solid black;
     border-radius: 50px;
@@ -102,9 +99,12 @@ input:focus{
     padding: 20px;
     animation: fadeIn 0.5s forwards;
 }
+.filterbutton1:hover{
+  background-color: #c2c7fe;
+}
 
 .reelitbtn{
-    background-color: #d5d8f9;
+    background: linear-gradient(135deg, #abb0e9 0%, #bfa7e9 50%, #b989d3 100%);
     min-width: auto;
     min-height: 3vh;
     max-height: 7vh;
@@ -116,6 +116,12 @@ input:focus{
     margin-top: 1%;
     cursor: pointer;
     padding: 17px;
+}
+.reelitbtn:hover{
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 15px rgba(110, 122, 249, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.3) inset;
 }
 
 .recommendationsbutton{
@@ -1596,6 +1602,9 @@ input:focus{
         border-radius: 0px;
         padding: 10px;
         border-bottom: 0.5px solid rgb(77, 77, 77);
+      }
+      .filterbutton1:hover{
+        background-color: #c2c7fe;
       }
       .reelitbtn{
         background-color: #d5d8f9;
