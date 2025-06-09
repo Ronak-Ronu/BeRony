@@ -9,6 +9,7 @@ import * as fabric from 'fabric';
 import { environment } from '../../environments/environment';
 import axios from 'axios';
 import { AiService } from '../services/ai.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-write',
@@ -83,15 +84,23 @@ export class WriteComponent implements OnInit, AfterViewInit {
   lastCursorPosition: number = 0;
   showPollModal: boolean = false;
   availablePolls: any[] = [];
-  newPollQuestion: string = ''; // Add property for poll question
-  newPollOptions: string[] = ['', '']; // Add property for poll options
-  isPollFormValid: boolean = false; // Add property to track form validity
-  selectedPollId: string | null = null; // Add property to store the selected poll ID
+  newPollQuestion: string = '';
+  newPollOptions: string[] = ['', '']; 
+  isPollFormValid: boolean = false; 
+  selectedPollId: string | null = null; 
 
-
+  showAIGenerateModal: boolean = false;
+  aiImagePrompt: string = '';
+  aiGeneratedImages: { url: string }[] = [];
+  isGeneratingImage: boolean = false;
+  modelList: { id: string, title: string }[] = [];
+  selectedModel: string = 'turbo';
+  private aiImageMarkers: Map<string, number> = new Map();
+  private promptChange = new Subject<string>();
   siteKey: string= ''; 
   captchaResponse: string | null = null; 
   isCaptchaVerified: boolean = false; 
+  private gifMarkers: Map<string, number> = new Map();
 
 
   constructor(
@@ -109,6 +118,7 @@ export class WriteComponent implements OnInit, AfterViewInit {
       console.error('reCAPTCHA site key is missing in environment configuration');
       this.toastr.error('reCAPTCHA configuration is missing');
     }
+
   }
 
   ngAfterViewInit() {
@@ -116,7 +126,7 @@ export class WriteComponent implements OnInit, AfterViewInit {
 
     // Set up placeholders
     this.setupPlaceholder(this.titleEditor.nativeElement, 'Title Goes Here');
-    this.setupPlaceholder(this.bodyEditor.nativeElement, 'Try @gif to add gifs');
+    this.setupPlaceholder(this.bodyEditor.nativeElement, 'Try @gif or @aiimage to add gifs and ai gen\' images');
     this.setupPlaceholder(this.endnoteEditor.nativeElement, 'Share your post script/ending note');
 
     // Set initial editor content
@@ -232,28 +242,173 @@ export class WriteComponent implements OnInit, AfterViewInit {
     const bodyEditor = this.bodyEditor.nativeElement;
     const text = bodyEditor.textContent || '';
     const cursorPos = this.getCaretPosition(bodyEditor);
-    this.lastCursorPosition = cursorPos; // Store the position
     const textBeforeCursor = text.substring(0, cursorPos);
-    const lastWord = textBeforeCursor.split(/\s+/).pop();
+    
+    // Check if we're at the end of a word boundary
+    if (textBeforeCursor.endsWith('@gif')) {
+      // Create unique marker ID
+      const markerId = `gif-marker-${Date.now()}`;
+      
+      // Insert invisible marker instead of removing '@gif'
+      const range = window.getSelection()?.getRangeAt(0);
+      if (range) {
+        range.setStart(range.endContainer, range.endOffset - 4);
+        range.deleteContents();
+        
+        const marker = document.createElement('span');
+        marker.id = markerId;
+        marker.style.display = 'none';
+        range.insertNode(marker);
+        
+        // Store marker position
+        this.gifMarkers.set(markerId, this.getCaretPosition(bodyEditor));
+      }
   
-    if (lastWord === '@gif') {
       this.showGifModal = true;
       this.gifSearchQuery = '';
       this.searchGifs();
-      
-      // Remove '@gif' from editor
-      const selection = window.getSelection();
-      if (selection && selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        range.setStart(range.endContainer, range.endOffset - 4);
+    } else if (textBeforeCursor.endsWith('@aiimage')) {
+      const markerId = `aiimage-marker-${Date.now()}`;
+      const range = window.getSelection()?.getRangeAt(0);
+      if (range) {
+        range.setStart(range.endContainer, range.endOffset - 8);
         range.deleteContents();
-        this.editbodycontent = bodyEditor.innerHTML;
-        this.lastCursorPosition -= 4;
-        this.cdr.detectChanges();
+        const marker = document.createElement('span');
+        marker.id = markerId;
+        marker.style.display = 'none';
+        range.insertNode(marker);
+        this.aiImageMarkers.set(markerId, this.getCaretPosition(bodyEditor));
       }
+      this.toggleAIGenerateImageModal();
+        }
+      }
+
+  async generateAIImage() {
+    if (!this.aiImagePrompt.trim()) {
+      this.toastr.warning('Please enter an image description');
+      return;
+    }
+    if (!this.selectedModel) {
+      this.toastr.warning('Please select an AI model');
+      return;
+    }
+    this.isGeneratingImage = true;
+    try {
+      const response = await axios.get(`https://image.pollinations.ai/prompt/${encodeURIComponent(this.aiImagePrompt)}`, {
+        params: { model: this.selectedModel }
+      });
+      this.aiGeneratedImages = [{ url: response.request.responseURL }];
+      this.isGeneratingImage = false;
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error generating AI image:', error);
+      this.toastr.error('Failed to generate AI image');
+      this.isGeneratingImage = false;
+      this.cdr.detectChanges();
     }
   }
+  updateModel(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    this.selectedModel = target.value;
+    if (this.aiImagePrompt.trim()) {
+      this.generateAIImagePreview(this.aiImagePrompt); // Regenerate preview with new model
+    }
+    this.cdr.detectChanges();
+  }
+  async generateAIImagePreview(prompt: string) {
+    if (!prompt.trim() || !this.selectedModel) return;
+    this.isGeneratingImage = true;
+    try {
+      const response = await axios.get(`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`, {
+        params: { model: this.selectedModel }
+      });
+      this.aiGeneratedImages = [{ url: response.request.responseURL }];
+      this.isGeneratingImage = false;
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error generating AI image:', error);
+      this.toastr.error('Failed to generate AI image');
+      this.isGeneratingImage = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  selectAIImage(imageUrl: string) {
+    fetch(imageUrl)
+      .then(response => response.blob())
+      .then(blob => {
+        const file = new File([blob], 'ai-generated-image.jpg', { type: blob.type });
+        const markerId = Array.from(this.aiImageMarkers.keys()).pop();
+        if (markerId) {
+          const marker = document.getElementById(markerId);
+          if (marker) {
+            const imgElement = document.createElement('img');
+            imgElement.src = URL.createObjectURL(file);
+            imgElement.alt = 'AI Generated Image';
+            imgElement.className = 'inserted-ai-image';
+            imgElement.style.display = 'block';
+            imgElement.style.margin = '10px 0';
+            marker.parentNode?.replaceChild(imgElement, marker);
+            this.editbodycontent = this.bodyEditor.nativeElement.innerHTML;
+            this.aiImageMarkers.delete(markerId);
+            this.cdr.detectChanges();
+          }
+        }
+        this.closeAIGenerateModal();
+      })
+      .catch(error => {
+        console.error('Error selecting AI image:', error);
+        this.toastr.error('Failed to insert AI image');
+      });
+  }
+  closeAIGenerateModal() {
+    this.showAIGenerateModal = false;
+    this.aiImagePrompt = '';
+    this.aiGeneratedImages = [];
+    this.isGeneratingImage = false;
+    
+    // Remove any unused markers
+    this.aiImageMarkers.forEach((_, markerId) => {
+      const marker = document.getElementById(markerId);
+      if (marker) {
+        // Replace marker with original '@aiimage' text
+        marker.outerHTML = '@aiimage';
+      }
+    });
+    
+    this.aiImageMarkers.clear();
+    this.cdr.detectChanges();
+  }
+  toggleAIGenerateImageModal() {
+    this.showAIGenerateModal = !this.showAIGenerateModal;
+    if (this.showAIGenerateModal) {
+      // Create a marker in the body editor at the current cursor position
+      const markerId = `aiimage-marker-${Date.now()}`;
+      this.insertMarkerAtCursor(this.bodyEditor.nativeElement, 'aiimage');
+      const bodyEditor = this.bodyEditor.nativeElement;
+      const selection = window.getSelection();
   
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const marker = document.createElement('span');
+        marker.id = markerId;
+        marker.style.display = 'none';
+        range.insertNode(marker);
+        this.aiImageMarkers.set(markerId, this.getCaretPosition(bodyEditor));
+      }
+    } else {
+      this.aiImagePrompt = '';
+      this.aiGeneratedImages = [];
+      this.isGeneratingImage = false;
+      this.aiImageMarkers.forEach((_, markerId) => {
+        const marker = document.getElementById(markerId);
+        marker?.parentNode?.removeChild(marker);
+      });
+      this.aiImageMarkers.clear();
+    }
+    this.cdr.detectChanges();
+  }
+
 
   getCaretPosition(element: HTMLElement): number {
     const selection = window.getSelection();
@@ -577,7 +732,19 @@ export class WriteComponent implements OnInit, AfterViewInit {
     }
     this.cdr.detectChanges();
   }
-
+  private insertMarkerAtCursor(element: HTMLElement, markerPrefix: string): string {
+    const markerId = `${markerPrefix}-marker-${Date.now()}`;
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const marker = document.createElement('span');
+      marker.id = markerId;
+      marker.style.display = 'none';
+      range.insertNode(marker);
+      this.aiImageMarkers.set(markerId, this.getCaretPosition(element));
+    }
+    return markerId;
+  }
   insertCode() {
     if (this.editCodeContent) {
       const formattedCode = this.formatCode(this.editCodeContent);
@@ -786,45 +953,37 @@ export class WriteComponent implements OnInit, AfterViewInit {
   }
   selectGif(gif: any) {
     const gifUrl = gif.images.fixed_height.url;
-    this.insertGifAtPosition(gifUrl);
-    this.showGifModal = false;
+    const markerId = Array.from(this.gifMarkers.keys()).pop();
     
-    // Refocus editor
-    setTimeout(() => {
-      this.bodyEditor.nativeElement.focus();
-      this.setCursorPosition(this.lastCursorPosition);
-    });
-  }
-  
-  private setCursorPosition(position: number) {
-    const editor = this.bodyEditor.nativeElement;
-    const range = document.createRange();
-    const sel = window.getSelection();
-    
-    // Find text node at position
-    let charCount = 0;
-    let node: any = editor.firstChild;
-  
-    while (node) {
-      if (node.nodeType === 3) { // Text node
-        const nextCharCount = charCount + node.length;
-        if (position <= nextCharCount) {
-          range.setStart(node, position - charCount);
-          range.collapse(true);
-          sel?.removeAllRanges();
-          sel?.addRange(range);
-          return;
-        }
-        charCount = nextCharCount;
+    if (markerId) {
+      const marker = document.getElementById(markerId);
+      if (marker) {
+        const gifElement = document.createElement('img');
+        gifElement.src = gifUrl;
+        gifElement.alt = 'GIF';
+        gifElement.className = 'inserted-gif';
+        gifElement.style.display = 'block';
+        gifElement.style.margin = '10px 0';
+        
+        marker.parentNode?.replaceChild(gifElement, marker);
+        
+        this.editbodycontent = this.bodyEditor.nativeElement.innerHTML;
+        this.cdr.detectChanges();
       }
-      node = node.nextSibling;
+      
+      this.gifMarkers.delete(markerId);
     }
     
-    // Fallback to end of editor
-    range.selectNodeContents(editor);
-    range.collapse(false);
-    sel?.removeAllRanges();
-    sel?.addRange(range);
+    this.showGifModal = false;
+  }
+  closeGifModal() {
+    this.gifMarkers.forEach((_, markerId) => {
+      const marker = document.getElementById(markerId);
+      marker?.parentNode?.removeChild(marker);
+    });
+    
+    this.gifMarkers.clear();
+    this.showGifModal = false;
   }
 
   insertGifAtPosition(gifUrl: string) {
@@ -1018,7 +1177,6 @@ export class WriteComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // Add trackBy function for ngFor
   trackByIndex(index: number, item: any): number {
     return index;
   }

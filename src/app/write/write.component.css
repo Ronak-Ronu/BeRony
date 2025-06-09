@@ -481,7 +481,7 @@
 
 /* Canvas Modal */
 .canvas-modal {
-  max-width: 1000px;
+  max-width: 2000px;
 }
 
 .canvas-controls {
@@ -622,7 +622,7 @@ canvas {
 
 /* Preview Modal */
 .preview-modal .modal-content {
-  max-width: 900px;
+  max-width: 1000px;
 }
 
 .preview-content {
@@ -854,12 +854,16 @@ canvas {
 .inserted-gif {
   max-width: 300px;
   max-height: 200px;
-  border-radius: 8px;
+  display: block;
   margin: 10px 0;
+  border-radius: 8px;
   border: 1px solid #e0e0e0;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+[hidden] {
+  display: none !important;
+}
 
 /* Modal Backdrop */
 .modal-backdrop {
@@ -880,8 +884,8 @@ canvas {
 .modal-content {
   background: white;
   border-radius: 16px;
-  width: 90%;
-  max-width: 500px;
+  width: 100%;
+  max-width: 1000px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 10px 25px rgba(110, 122, 249, 0.3);

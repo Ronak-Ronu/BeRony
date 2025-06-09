@@ -7,17 +7,14 @@
     <div class="container">
       <form #writecontentform="ngForm">
         <div class="toolbar">
-          <button type="button" class="toolbarbutton" (click)="toggleCodeEditor()">
-            <i class="fas fa-code"></i> Code
-          </button>
-          <button type="button" class="toolbarbutton" (click)="toggleImageUploadPopup()">
-            <i class="fas fa-image"></i> Image
-          </button>
           <button type="button" class="toolbarbutton" (click)="openCanvasModal()">
             <i class="fas fa-paint-brush"></i> Canvas
           </button>
           <button type="button" class="toolbarbutton" (click)="generateimagewindow()">
             <i class="fas fa-camera"></i> Unsplash
+          </button>
+          <button type="button" class="toolbarbutton" (click)="togglePollModal()">
+            <i class="fas fa-poll"></i> Poll
           </button>
           <button type="button" class="toolbarbutton" (click)="preview()">
             <i class="fas fa-eye"></i> Preview
@@ -29,8 +26,14 @@
             <i class="fas fa-robot"></i> 
             <span>AI Writer</span>
           </button>
+          <button type="button" class="toolbarbutton premium-ai-writer" (click)="toggleAIGenerateImageModal()">
+            <i class="fas fa-image"></i> AI Image
+          </button>
           <button type="button" class="toolbarbutton" (click)="togglePollModal()">
             <i class="fas fa-poll"></i> Poll
+          </button>
+          <button type="button" class="toolbarbutton" (click)="toggleCodeEditor()">
+            <i class="fas fa-code"></i> Code
           </button>
         </div>
 
@@ -304,7 +307,7 @@ function hello() {
     </div>
   </div>
 
-  <div class="modal-backdrop" *ngIf="showGifModal" [@modalAnimation]>
+  <div class="modal-backdrop" *ngIf="showGifModal" [@modalAnimation] (click)="closeGifModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>Add GIF to Content</h3>
@@ -387,7 +390,7 @@ function hello() {
               type="text"
               [(ngModel)]="newPollQuestion"
               placeholder="What would you like to ask your audience?"
-              maxlength="100"
+              maxlength="500"
               (ngModelChange)="validatePollForm()"
               class="poll-input"
             />
@@ -432,7 +435,36 @@ function hello() {
       </div>
     </div>
   </div>
-  
+  <div class="modal-backdrop fade show" id="aiImageModal" *ngIf="showAIGenerateModal" [@modalAnimation] (click)="toggleAIGenerateImageModal()">
+    <div class="modalDialog modal-dialog modal-lg" role="document" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Generate AI Image</h3>
+          <button type="close-btn btn btn-close" (click)="closeAIGenerateModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="search-bar">
+            <input type="text" class="form-control" id="aiImagePrompt" placeholder="Enter image description (e.g., 'A serene mountain landscape')" [(ngModel)]="aiImagePrompt" />
+            <button type="btn btn-primary" class="search-btn" (click)="generateAIImage()">
+              <i class="fas fa-magic"></i> Generate
+            </button>
+          </div>
+          <div *ngIf="isGeneratingImage" class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i> Generating Image...
+          </div>
+          <div *ngIf="aiGeneratedImages.length === 0 && !isGeneratingImage" class="empty-state">
+            <i class="fas fa-image"></i>
+            <p>Enter a description to generate an AI image</p>
+          </div>
+          <div *ngIf="aiGeneratedImages.length > 0" class="image-gallery">
+            <div *ngFor="let image of aiGeneratedImages" class="image-item">
+              <img [src]="image.url" (click)="selectAIImage(image.url)" alt="AI Generated Image" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="modal-backdrop preview-modal" *ngIf="ispreview" [@modalAnimation]>
     <div class="modal-content" (click)="$event.stopPropagation()">
