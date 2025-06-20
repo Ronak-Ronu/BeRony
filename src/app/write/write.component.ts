@@ -102,7 +102,11 @@ export class WriteComponent implements OnInit, AfterViewInit {
   isCaptchaVerified: boolean = false; 
   private gifMarkers: Map<string, number> = new Map();
 
-
+  showEmojiModal: boolean = false;
+  wordCount: number = 0;
+  emojiCategories = ['smileys', 'animals', 'food', 'travel', 'objects', 'symbols'];
+  emojis: string[] = ['😀', '😂', '😍', '🤩', '😎', '😜', '🙌', '👍', '👏', '❤️', '🔥', '✨', '🌈', '🎉', '💯', '👑', '💡', '🚀', '🎯', '📚', '✏️', '🔍', '💬', '🔔'];
+  
   constructor(
     private writeservice: WriteserviceService,
     private cdr: ChangeDetectorRef,
@@ -122,14 +126,10 @@ export class WriteComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-   
-
-    // Set up placeholders
     this.setupPlaceholder(this.titleEditor.nativeElement, 'Title Goes Here');
     this.setupPlaceholder(this.bodyEditor.nativeElement, 'Try @gif or @aiimage to add gifs and ai gen\' images');
     this.setupPlaceholder(this.endnoteEditor.nativeElement, 'Share your post script/ending note');
 
-    // Set initial editor content
     this.titleEditor.nativeElement.innerHTML = this.edittitle;
     this.bodyEditor.nativeElement.innerHTML = this.editbodycontent;
     this.endnoteEditor.nativeElement.innerHTML = this.editendnotecontent;
@@ -138,7 +138,6 @@ export class WriteComponent implements OnInit, AfterViewInit {
 
   }
 
-  // Add method to handle date formatting (from previous request)
   getFormattedDate(): string {
     const date = this.postScheduleTime || new Date();
     return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(date);
@@ -231,7 +230,11 @@ export class WriteComponent implements OnInit, AfterViewInit {
       document.execCommand('justifyRight', false);
     } else if (command === 'font-size' && resolvedValue) {
       document.execCommand('fontSize', false, resolvedValue);
-    } else {
+    } 
+    else if (command === 'highlight') {
+      document.execCommand('hiliteColor', false, '#babee8');
+    }
+    else {
       document.execCommand(command, false);
     }
     this.showFormatToolbar = false;
@@ -1216,5 +1219,71 @@ export class WriteComponent implements OnInit, AfterViewInit {
     console.log(`Resolved captcha with response: ${captchaResponse}`);
     this.cdr.detectChanges();
   }
+  updateWordCount() {
+    const text = this.bodyEditor.nativeElement.innerText || '';
+    this.wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
+  }
 
+  changeTextCase(caseType: string) {
+    const selection = window.getSelection();
+    if (!selection || selection.toString().length === 0) return;
+  
+    const range = selection.getRangeAt(0);
+    const selectedText = selection.toString();
+    
+    let transformedText = '';
+    switch(caseType) {
+      case 'sentence':
+        transformedText = selectedText.charAt(0).toUpperCase() + 
+                         selectedText.slice(1).toLowerCase();
+        break;
+      case 'lower':
+        transformedText = selectedText.toLowerCase();
+        break;
+      case 'upper':
+        transformedText = selectedText.toUpperCase();
+        break;
+      default:
+        transformedText = selectedText;
+    }
+    
+    range.deleteContents();
+    range.insertNode(document.createTextNode(transformedText));
+    this.showFormatToolbar = false;
+  }
+  
+  toggleEmojiModal() {
+    this.showEmojiModal = !this.showEmojiModal;
+    if (this.showEmojiModal) {
+      this.lastCursorPosition = this.getCaretPosition(this.bodyEditor.nativeElement);
+    }
+  }
+  
+  insertEmoji(emoji: string) {
+    const bodyEditor = this.bodyEditor.nativeElement;
+    bodyEditor.focus();
+    
+    // Insert at last known position
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      range.collapse(true);
+      range.insertNode(document.createTextNode(emoji));
+    }
+    
+    this.showEmojiModal = false;
+    this.editbodycontent = bodyEditor.innerHTML;
+    this.updateWordCount();
+  }
+  
+  undo() {
+    document.execCommand('undo', false);
+    this.updateWordCount();
+  }
+  
+  redo() {
+    document.execCommand('redo', false);
+    this.updateWordCount();
+  }
+  
 }

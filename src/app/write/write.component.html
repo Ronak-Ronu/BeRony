@@ -13,6 +13,9 @@
           <button type="button" class="toolbarbutton" (click)="generateimagewindow()">
             <i class="fas fa-camera"></i> Unsplash
           </button>
+          <button type="button" class="toolbarbutton" (click)="toggleImageUploadPopup()">
+            <i class="fas fa-file-upload"></i> Upload Media
+          </button>
           <button type="button" class="toolbarbutton" (click)="togglePollModal()">
             <i class="fas fa-poll"></i> Poll
           </button>
@@ -44,6 +47,12 @@
           <button (click)="formatText('bold')" title="Bold"><b>B</b></button>
           <button (click)="formatText('italic')" title="Italic"><i>I</i></button>
           <button (click)="formatText('code')" title="Code Block"><i class="fas fa-code"></i></button>
+          <button (click)="formatText('highlight')" title="Highlight">
+            <i class="fas fa-highlighter"></i>
+          </button>
+          <button (click)="toggleEmojiModal()" title="Insert Emoji">
+            <i class="far fa-smile"></i>
+          </button>
           <select (change)="formatText('color', $event)" title="Text Color">
             <option value="" disabled selected>Color</option>
             <option value="#000000">Black</option>
@@ -138,25 +147,50 @@
       </form>
     </div>
   </div>
+  
+  <div class="modal-backdrop emoji-modal" *ngIf="showEmojiModal" [@modalAnimation]>
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Select an Emoji</h3>
+        <button class="close-btn" (click)="showEmojiModal = false">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="emoji-grid">
+          <span *ngFor="let emoji of emojis" 
+                (click)="insertEmoji(emoji)"
+                class="emoji-item">
+            {{emoji}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="modal-backdrop" *ngIf="showImageUploadPopup" [@modalAnimation]>
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>Upload Featured Image</h3>
+        <h3>Upload Media</h3> 
         <button class="close-btn" (click)="closePopup()"><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body">
-        <p><i>Image size must be <b>less than 20MB</b></i></p>
+        <p><i>Media size must be <b>less than 20MB</b> (Images: jpg, jpeg, png, svg, gif | Videos: mp4, mpeg)</i></p>
         <div class="upload-area">
           <input type="file" id="imageUpload" (change)="handleImageUpload($event)" 
-                 accept="image/*" hidden />
+                 accept="image/jpeg,image/png,image/svg+xml,image/gif,video/mp4,video/mpeg" hidden />
           <label for="imageUpload" class="upload-btn" style="cursor: pointer;">
-            <i class="fas fa-cloud-upload-alt"></i> Choose Image
+            <i class="fas fa-cloud-upload-alt"></i> Choose Media
           </label>
           <p>or drag and drop here</p>
         </div>
         <div *ngIf="imageUrl" class="image-preview">
-          <img [src]="imageUrl" alt="Preview" />
+          <ng-container *ngIf="selectedimagefile?.type?.startsWith('video'); else imagePreview">
+            <video [src]="imageUrl" controls width="100%"></video>
+          </ng-container>
+          <ng-template #imagePreview>
+            <img [src]="imageUrl" alt="Preview" />
+          </ng-template>
         </div>
       </div>
     </div>
