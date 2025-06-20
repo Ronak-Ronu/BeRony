@@ -61,15 +61,11 @@
 }
 
 .centerelements {
-  position: sticky;
-  position: -webkit-sticky;
   top: 20rem; 
   margin-top: 15vh;
   text-align: center;
   line-height: 0;
   font-size: 96px;
-  animation: fade-out linear;
-  animation-timeline: view();
 }
 .centerbelow{
   font-size: 32px;
@@ -368,21 +364,6 @@
   flex-direction: column;
 }
 
-.centerelements {
-  position: sticky;
-  position: -webkit-sticky;
-  top: 20rem; 
-  margin-top: 15vh;
-  text-align: center;
-  line-height: 0;
-  font-size: 96px;
-  animation: fade-out linear;
-  animation-timeline: view();
-}
-.centerbelow{
-  font-size: 32px;
-  position: sticky;
-}
 
 @keyframes fade-out {
   0%{
