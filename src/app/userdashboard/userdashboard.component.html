@@ -70,6 +70,10 @@
         *ngIf="activeSection === 'overview'"
         [userBio]="userBio"
         [username]="username"
+        [userId]="userId"
+        [isViewingOwnProfile]="isViewingOwnProfile"
+        [userData]="userData"
+        [userPosts]="posts"
       >
       <app-activity-heatmap [userId]="userId"></app-activity-heatmap>
     </app-overview>
@@ -92,6 +96,8 @@
         *ngIf="isViewingOwnProfile && activeSection === 'settings'"
         [userId]="userId"
         [isEmailVerified]="isEmailVerified"
+        [isViewingOwnProfile]="isViewingOwnProfile"
+
       ></app-settings>
     </div>
   </div>
@@ -110,7 +116,7 @@
         <div>{{ username == "" ? "guest 🫣" : userData.username }}</div>
       </div>
       <div class="userfollowanalytics">
-        <div class="usebrpostsdetail">0 Posts</div>
+        <div class="usebrpostsdetail">{{ posts.length }} Posts</div>
         <div class="userfollowers">
           {{ userData.followers.length }} Followers <br />
           {{ userData.following.length }} Following
@@ -118,9 +124,9 @@
       </div>
     </div>
     <div>
-      <div class="userbiodetail">
+      <!-- <div class="userbiodetail">
         {{ userData.userBio }}
-      </div>
+      </div> -->
       <div class="followuserbutton">
         <button (click)="profilecard()">Profile Card</button>
         <button
@@ -155,7 +161,7 @@
             id="story-upload"
             style="display: none"
           />
-          <label for="story-upload" class="upload-btn">
+          <label for="story-upload">
             Add Story
           </label>
           <br />

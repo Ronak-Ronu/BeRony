@@ -6,7 +6,6 @@ import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
 import * as fabric from 'fabric';
 import axios from 'axios';
-
 @Component({
   selector: 'app-userdashboard',
   templateUrl: './userdashboard.component.html',
@@ -53,6 +52,7 @@ export class UserdashboardComponent implements OnInit {
   showVideoDescriptionPopup: boolean = false; 
   videoPreviewUrl: string | null = null; 
   suggestedConnections: any[] = [];
+
 
   constructor(
     private service: WriteserviceService,
@@ -252,6 +252,8 @@ export class UserdashboardComponent implements OnInit {
     this.service.getPostsByUsername(this.username).subscribe({
       next: (data) => {
         this.posts = data;
+        console.log('Fetched posts:', this.posts);
+        
       },
       error: (err) => {
         this.error = 'Error fetching posts.';
@@ -551,5 +553,6 @@ export class UserdashboardComponent implements OnInit {
   goToAuthorProfile(authorUserId: string): void {
     this.router.navigate(['/profile/', authorUserId]);
   }
+
 
 }

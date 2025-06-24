@@ -93,7 +93,7 @@
     width: 65%;
     font-size: 25px;
 }
-.followuserbutton button, .upload-btn{
+.followuserbutton button,label, .upload-btn{
     font-size: 23px;
     background-color: rgb(143, 159, 233);
     padding: 10px;
@@ -104,6 +104,13 @@
     margin-right: 2px;
 }
 
+.followuserbutton button:hover{
+  background-color: rgb(105, 124, 208);
+}
+
+.followuserbutton label:hover{
+  background-color: rgb(105, 124, 208);
+}
 .userprofileimage img {
     width: 100%; 
     height: 100%; 
