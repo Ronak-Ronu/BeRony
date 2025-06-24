@@ -21,7 +21,8 @@ import { Observable } from 'rxjs';
 })
 
 export class ReadingComponent implements OnInit {
-  @ViewChild('postBody') postBody!: ElementRef<HTMLDivElement>; // Add ViewChild to reference the body content
+  @ViewChild('postBody') postBody!: ElementRef<HTMLDivElement>;
+  
   post!:WriteModel
   username!:string
   postadmin!:string

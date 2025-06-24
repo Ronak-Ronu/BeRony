@@ -16,7 +16,8 @@
         [srcset]="post.imageUrl + ' 600w, ' + post.imageUrl + ' 1200w'" 
         sizes="(max-width: 600px) 600px, 1200px" 
         width="600" 
-        height="400" />      </div>
+        height="400" />  
+      </div>
       
       <div *ngIf="post.videoUrl && !post.imageUrl" >
         <video [src]="post.videoUrl" controls >

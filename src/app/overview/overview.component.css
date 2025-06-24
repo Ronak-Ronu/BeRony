@@ -1,92 +1,312 @@
-.useraboutoverview{
+.user-profile-overview {
     width: 100%;
     padding: 2rem;
-    background-color: rgb(0, 0, 0,0.2);
-}
-.overviewprofileiamge{
-    width: 30rem;
-    height: 31rem;
-    background-color: grey;
-}
-.overviewfollowdetails{
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
-    font-size: 26px;
-    padding: 10px;
-}
-.insta{
-    width: 30px;
-    height: 30px;
-    border-radius: 100px;
-    background-color: grey;
-}
-.overviewconnectwithuser{
-    display: flex;
-    flex-direction: row;
-    gap: 2%;
-    font-size: 20px;
-    margin-top: 2rem;
-}
-.connectsocialproof{
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .profile-actions {
+    margin-bottom: 1.5rem;
+  }
+  
+  .ai-bio-btn {
+    background-color: #8f9fe9;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    font-size: 1rem;
     cursor: pointer;
-}
-.overviewuserbio{
-    width: 60%;
-    font-size: 30px;
-    margin-top: 1rem;
-}
-.connecttext{
-    font-size: 26px;
-}
-@media (max-width: 600px) {
-    .useraboutoverview{
-        width: auto;
-        padding: 1rem;
-        background-color: rgb(0, 0, 0,0.2);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(143, 159, 233, 0.3);
+  }
+  
+  .ai-bio-btn:hover {
+    background-color: #6a7bd9;
+    transform: translateY(-2px);
+  }
+  
+  .profile-stats {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+    padding: 1rem 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #4a5568;
+  }
+  
+  .stat-label {
+    font-size: 0.9rem;
+    color: #718096;
+  }
+  
+  .stat-divider {
+    color: #cbd5e0;
+    font-weight: bold;
+  }
+  
+  .profile-bio {
+    width: 100%;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #4a5568;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background-color: rgba(143, 159, 233, 0.05);
+    border-radius: 8px;
+    border-left: 4px solid #8f9fe9;
+  }
+  
+  .social-connect {
+    margin-top: 2rem;
+  }
+  
+  .connect-title {
+    font-size: 1.3rem;
+    color: #4a5568;
+    margin-bottom: 1rem;
+  }
+  
+  .social-icons {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .social-icon:hover {
+    transform: scale(1.1);
+  }
+  
+  .instagram {
+    background-color: #E1306C;
+  }
+  
+  .twitter {
+    background-color: #1DA1F2;
+  }
+  
+  .linkedin {
+    background-color: #0077B5;
+  }
+  
+  .bio-generator-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    font-family: "Julius Sans One", sans-serif;
+  }
+  
+  .modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    padding: 2rem;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #5a67d8;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #718096;
+    transition: color 0.2s;
+  }
+  
+  .close-btn:hover {
+    color: #4a5568;
+  }
+  
+  .instruction-text {
+    margin-bottom: 1.5rem;
+    color: #4a5568;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  .bio-textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    resize: vertical;
+    min-height: 120px;
+    font-family: Arial, sans-serif;
+    transition: border 0.2s;
+  }
+  
+  .bio-textarea:focus {
+    outline: none;
+    border-color: #8f9fe9;
+    box-shadow: 0 0 0 2px rgba(143, 159, 233, 0.2);
+  }
+  
+  .generate-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: #8f9fe9;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+  }
+  
+  .generate-btn:hover {
+    background-color: #6a7bd9;
+  }
+  
+  .generate-btn:disabled {
+    background-color: #cbd5e0;
+    cursor: not-allowed;
+  }
+  
+  .generated-bio-container {
+    background: #f8f9ff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #8f9fe9;
+    margin-top: 1.5rem;
+  }
+  
+  .bio-preview-title {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #4a5568;
+    font-size: 1.1rem;
+  }
+  
+  .generated-bio-text {
+    margin: 0;
+    color: #4a5568;
+    line-height: 1.6;
+  }
+  
+  .bio-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .action-btn {
+    flex: 1;
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .action-btn.primary {
+    background-color: #8f9fe9;
+    color: white;
+  }
+  
+  .action-btn.primary:hover {
+    background-color: #6a7bd9;
+  }
+  
+  .action-btn.secondary {
+    background-color: #edf2f7;
+    color: #4a5568;
+  }
+  
+  .action-btn.secondary:hover {
+    background-color: #e2e8f0;
+  }
+  
+  @media (max-width: 768px) {
+    .user-profile-overview {
+      padding: 1.5rem;
     }
-    .overviewprofileiamge{
-        width: 10rem;
-        height: 11rem;
-        background-color: grey;
+    
+    .profile-bio {
+      font-size: 1.1rem;
     }
-    .overviewfollowdetails{
-        margin-top: 1rem;
-        display: flex;
-        flex-direction: row;
-        gap: 2rem;
-        font-size: 17px;
-        padding: 2px;
+    
+    .connect-title {
+      font-size: 1.2rem;
     }
-    .insta{
-        width: 20px;
-        height: 20px;
-        border-radius: 100px;
-        background-color: grey;
+  }
+  
+  @media (max-width: 480px) {
+    .user-profile-overview {
+      padding: 1rem;
     }
-    .overviewconnectwithuser{
-        display: flex;
-        flex-direction: row;
-        gap: 2%;
-        font-size: 20px;
-        margin-top: 1rem;
+    
+    .profile-stats {
+      gap: 1rem;
     }
-    .connectsocialproof{
-        display: flex;
-        flex-direction: row;
-        gap: 5px;
-        cursor: pointer;
+    
+    .stat-number {
+      font-size: 1.3rem;
     }
-    .overviewuserbio{
-        width: 100%;
-        font-size: 21px;
-        margin-top: 1rem;
+    
+    .profile-bio {
+      font-size: 1rem;
+      padding: 0.8rem;
     }
-    .connecttext{
-        font-size: 18px;
+    
+    .modal-content {
+      padding: 1.5rem;
     }
-}
+    
+    .bio-actions {
+      flex-direction: column;
+    }
+    
+    .action-btn {
+      width: 100%;
+    }
+  }

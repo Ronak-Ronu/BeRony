@@ -768,6 +768,165 @@
         0 0 0 1px rgba(255, 255, 255, 0.1) inset;
     }
   }
+
+
+  /* Video container styles */
+.video-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(110, 122, 249, 0.2);
+    background-color: #f9f9f9;
+  }
+  
+  .video-container video {
+    width: 100%;
+    height: auto;
+    display: block;
+    cursor: pointer;
+  }
+  
+  /* Video controls styles */
+  .video-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    padding: 15px;
+    transition: opacity 0.3s ease;
+    opacity: 1;
+  }
+  
+  .video-controls.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .video-controls:hover {
+    opacity: 1;
+  }
+  
+  /* Progress bar styles */
+  .progress-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  progress {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.2);
+    -webkit-appearance: none;
+  }
+  
+  progress::-webkit-progress-bar {
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+  }
+  
+  progress::-webkit-progress-value {
+    background: linear-gradient(to right, #a1a1ff, #6e7af9);
+    border-radius: 3px;
+  }
+  
+  input[type="range"] {
+    position: absolute;
+    width: 100%;
+    height: 6px;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+  
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #6e7af9;
+    cursor: pointer;
+  }
+  
+  .time-display {
+    position: absolute;
+    right: 0;
+    top: -20px;
+    color: white;
+    font-size: 12px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+  
+  /* Bottom controls */
+  .controls-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .left-controls, .right-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .control-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+  
+  .control-btn:hover {
+    background: rgba(255,255,255,0.2);
+  }
+  
+  .control-btn i {
+    font-size: 24px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+  
+  .volume-slider {
+    width: 80px;
+    height: 4px;
+    -webkit-appearance: none;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+  }
+  
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #6e7af9;
+    cursor: pointer;
+  }
+  
+  /* Fullscreen styles */
+  :fullscreen .video-controls {
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  }
+  
+  :fullscreen .control-btn i {
+    font-size: 28px;
+  }
+  
+  :fullscreen .volume-slider {
+    width: 100px;
+  }
+  
   
   @media (max-width: 600px) {
     .poll-card {

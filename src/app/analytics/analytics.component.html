@@ -1,7 +1,7 @@
 <div class="container">
   <h2>Posts Reaction Analytics</h2>
   <div *ngFor="let postData of reactionCountsData" class="chart-container">
-    <div>Post: <p style="font-size: 1.5rem;">{{ postData.title }}</p></div>
+    <div>Post: <p style="font-size: 1.5rem;" [innerHTML]="postData.title"></p></div>
     <ngx-charts-bar-vertical
       [results]="[
         { name: 'Funny', value: postData.counts.Funny },

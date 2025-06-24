@@ -1,33 +1,72 @@
-<div class="useraboutoverview">
-    <!-- <div class="overviewprofileiamge"> -->
-        <ng-content></ng-content> 
-    <!-- </div> -->
-    <div class="overviewfollowdetails">
-        <div class="followersdetail"> 
-            
-            193 Followers
-        </div> |
-        <div class="followigndetails">
-            70 Following
-        </div>
-    </div>
-    <div class="overviewuserbio">
-            {{userBio}}
-    </div>
-    <div class="overviewconnectwithuser">
-        <div class="connecttext">
-            Connect with {{username}}
-        </div>
-        <div class="connectsocialproof">
-            <div class="insta">
 
-            </div>
-            <div class="insta">
-                
-            </div>
-            <div class="insta">
-                
-            </div>
-        </div>
+<div class="user-profile-overview">
+    <ng-content></ng-content> 
+    <br/>
+
+    <div class="profile-actions" *ngIf="isViewingOwnProfile">
+      <button class="ai-bio-btn" (click)="toggleAIBIOPopup()">
+        Write AI Bio ✨
+      </button>
     </div>
-</div>
+  
+    <div class="profile-stats">
+      <div class="stat-item">
+        <span class="stat-number">{{ userData?.followers?.length || 0 }}</span>
+        <span class="stat-label">Followers</span>
+      </div>
+      <div class="stat-divider">|</div>
+      <div class="stat-item">
+        <span class="stat-number">{{ userData?.following?.length || 0 }}</span>
+        <span class="stat-label">Following</span>
+      </div>
+    </div>
+  
+    <div class="profile-bio" [innerHTML]="userBio"></div>
+  
+    <div class="social-connect">
+      <h3 class="connect-title">Connect with {{username}}</h3>
+      <div class="social-icons">
+        <div class="social-icon instagram"></div>
+        <div class="social-icon twitter"></div>
+        <div class="social-icon linkedin"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="showAIBioPopup" class="bio-generator-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>AI Bio</h3>
+        <button class="close-btn" (click)="toggleAIBIOPopup()">✕</button>
+      </div>
+      
+      <div class="modal-body">
+        <p class="instruction-text">Tell us something i dont know about yourself to generate a personalized bio:</p>
+        
+        <textarea 
+          [(ngModel)]="aiBioPrompt"
+          placeholder="E.g., I love coding, hiking, and coffee. Work as a developer. Passionate about open source."
+          rows="4"
+          class="bio-textarea"
+        ></textarea>
+        
+        <button 
+          (click)="generateAIBio()"
+          [disabled]="generatingBio"
+          class="generate-btn"
+        >
+          {{ generatingBio ? 'Generating...' : 'Generate Bio' }}
+        </button>
+        
+        <div *ngIf="aiGeneratedBio" class="generated-bio-container">
+          <h4 class="bio-preview-title">Your AI-Generated Bio:</h4>
+          <p class="generated-bio-text">{{ aiGeneratedBio }}</p>
+          
+          <div class="bio-actions">
+            <button class="action-btn primary" (click)="useAIBio()">Use This Bio</button>
+            <button class="action-btn secondary" (click)="aiGeneratedBio = ''">Didn't Like?</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
