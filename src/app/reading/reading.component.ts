@@ -98,9 +98,10 @@ export class ReadingComponent implements OnInit {
       }
 
 
-  ngOnInit(): void {
-  
-
+    ngOnInit(): void {
+        
+        
+    this.addJsonLdSchema();
     this.readblogdatabyid()
     this.getloggedinuserdata()
     this.checkUserReactions();
@@ -108,40 +109,57 @@ export class ReadingComponent implements OnInit {
     window.speechSynthesis.onvoiceschanged = () => this.setVoice();
     const url = this.post.imageUrl || this.post.videoUrl;
     this.filetype = url.split('.').pop()?.toLowerCase();
-    this.addJsonLdSchema();
   }
-
-  addJsonLdSchema() {
+  private addJsonLdSchema() {
+    if (!this.post) return;
+  
     const script = this.renderer.createElement('script');
     script.type = 'application/ld+json';
-    script.text = JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      'headline': this.post.title,
-      'author': {
-        '@type': 'Person',
-        'name': this.post.username
+    
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": this.stripHTML(this.post.title),
+      "description": this.stripHTML(this.post.bodyofcontent).substring(0, 160),
+      "author": {
+        "@type": "Person",
+        "name": this.post.username,
+        "url": `https://berony.com/profile/${this.post.userId}`
       },
-      'publisher': {
-        '@type': 'Organization',
-        'name': 'BeRony',
-        'logo': {
-          '@type': 'ImageObject',
-          'url': 'https://berony.com/logo.png'
+      "datePublished": this.post.createdAt || new Date().toISOString(),
+      "dateModified": this.post.createdAt || new Date().toISOString(),
+      "publisher": {
+        "@type": "Organization",
+        "name": "BeRony",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://berony.web.app/logo.png",
+          "width": 600,
+          "height": 60
         }
       },
-      'datePublished': this.post.createdAt || new Date().toISOString(),
-      'description': this.post.bodyofcontent || this.stripHTML(this.post.bodyofcontent).substring(0, 160),
-      'keywords': this.post.tags.join(', '),
-      'image': this.post.imageUrl,
-      'mainEntityOfPage': {
-        '@type': 'WebPage',
-        '@id': `https://berony.web.app/blog/${this.postid}`
+      "image": {
+        "@type": "ImageObject",
+        "url": this.post.imageUrl,
+        "width": 1200,
+        "height": 800
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `https://berony.web.app/reading/${this.postid}`
       }
-    });
+    };
+  
+    script.text = JSON.stringify(schema);
+    
+    // Remove existing schema if any
+    const existingSchema = document.querySelector('script[type="application/ld+json"]');
+    if (existingSchema) {
+      document.head.removeChild(existingSchema);
+    }
+    
     this.renderer.appendChild(document.head, script);
   }
-
 
   private setVoice(): void {
     const voices = this.synth.getVoices();
@@ -225,8 +243,8 @@ readblogdatabyid() {
           { property: 'og:description', content: data.bodyofcontent },
           { name: 'keywords', content: `${data.tags.toLocaleString()}` },
           { property: 'og:image', content: data.imageUrl },
-          { property: 'og:url', content: `https://berony.web.app/blog/${this.postid}` },
-            { name: 'canonical', content: `https://berony.web.app/blog/${this.postid}` }
+          { property: 'og:url', content: `https://berony.web.app/reading/${this.postid}` },
+          { name: 'canonical', content: `https://berony.web.app/reading/${this.postid}` }
         ]);
         this.tagsarray = this.post.tags;
         this.collabos = this.post.collaborators;
@@ -245,7 +263,6 @@ readblogdatabyid() {
     });
   });
 }
-
 
 async getloggedinuserdata (){
     this.loggedInUserAccount = await account.get();
