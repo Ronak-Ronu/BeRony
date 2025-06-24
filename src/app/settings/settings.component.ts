@@ -37,14 +37,13 @@ export class SettingsComponent {
     this.selectedEmoji=emoji
   }
   updateBio() {
-    console.log('userBio before update:', this.userBio);
+    // console.log('userBio before update:', this.userBio);
     if (this.userBio==="") {
       this.toastr.error("cannot update empty field");
     }
     else{
-      console.log(this.userId);
-      console.log(this.userBio);
-      
+      // console.log(this.userId);
+      // console.log(this.userBio);
       this.service.updateuserBio(this.userId,this.userBio).subscribe(
         ()=>{
           this.toastr.success("bio updated")

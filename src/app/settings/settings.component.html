@@ -1,29 +1,28 @@
-
 <div class="updatebio">
-    <b>Update Bio</b> <br>
-     
-    <textarea 
+  <b>Update Bio</b> <br />
+
+  <textarea
     rows="17"
     maxlength="3000"
     placeholder="Write Your Bio Beautifully !"
     name="userBio"
     #uesrBio="ngModel"
     [(ngModel)]="userBio"
-    ></textarea>  
-    <br/>
-    <button (click)="updateBio()">Update</button>
-    <br/>
+  ></textarea>
+  <br />
+  <button (click)="updateBio()">Update</button>
+  <br />
 
-    <div class="updatemail">
-      <b>Update Email</b> <br>
-      <textarea 
+  <div class="updatemail">
+    <b>Update Email</b> <br />
+    <textarea
       rows="1"
       maxlength="100"
       placeholder="Update Email"
       name="userEmail"
       [(ngModel)]="userEmail"
-      ></textarea>  
-      <button (click)="updateEmail()">Update Email</button>
+    ></textarea>
+    <button (click)="updateEmail()">Update Email</button>
   </div>
 </div>
 <div class="updateprofileimage">
@@ -31,29 +30,24 @@
   <button (click)="uploadProfileImage()">Update Profile Image</button>
 </div>
 <div class="updateemotion">
-    <div>
-        <b>How are you feeling?</b> 
-    </div>
-    <div>
-        <span *ngFor="let emoji of emojis" 
-        
-        (click)="selectEmoji(emoji)" 
-        [class.selected]="selectedEmoji === emoji">
-        {{ emoji }}
-            </span>
-            <button (click)="updateEmotion()">Update</button>
-        </div>
-        
-    </div>
+  <div>
+    <b>How are you feeling?</b>
+  </div>
+  <div>
+    <span
+      *ngFor="let emoji of emojis"
+      (click)="selectEmoji(emoji)"
+      [class.selected]="selectedEmoji === emoji"
+    >
+      {{ emoji }}
+    </span>
+    <button (click)="updateEmotion()">Update</button>
+  </div>
+</div>
 
-    <div class="followuserbutton">
-        <button 
-          (click)="sendVerificationEmail()" 
-          [disabled]="isEmailVerified"  
-        >
-          {{ isEmailVerified ? 'Email Verified' : 'Verify Email' }}
-        </button>
-        <p *ngIf="verificationMessage">{{ verificationMessage }}</p>
-      </div>
-
-    
+<div class="followuserbutton">
+  <button (click)="sendVerificationEmail()" [disabled]="isEmailVerified">
+    {{ isEmailVerified ? "Email Verified" : "Verify Email" }}
+  </button>
+  <p *ngIf="verificationMessage">{{ verificationMessage }}</p>
+</div>
