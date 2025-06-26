@@ -50,7 +50,6 @@
     margin: 0 auto;
     padding: 3rem 2rem;
     box-sizing: border-box;
-    
     font-family: 'Georgia', serif; 
     font-size: clamp(2rem, 5vw, 3.5rem); 
     font-weight: 400; 

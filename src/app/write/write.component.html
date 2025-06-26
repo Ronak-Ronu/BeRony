@@ -74,13 +74,31 @@
         </div>
         
         <div class="writecontentarea paper-style">
-          <div
+          <div class="font-selector-container">
+            <div class="font-selector-header">
+              <i class="fas fa-font"></i>
+              <span>Title Style</span>
+            </div>
+            <div class="font-options-grid">
+              <div 
+                *ngFor="let font of availableFonts" 
+                class="font-option"
+                [class.active]="selectedFont === font.name"
+                (click)="changeFont(font.name)"
+              >
+                <div class="font-preview" [style.font-family]="font.name">Aa</div>
+                <div class="font-name">{{ font.displayName }}</div>
+              </div>
+            </div>
+          </div>
+          
+          <div 
             #titleEditor
             class="editor"
             contenteditable="true"
             (input)="updateTitle($event)"
+            [style.font-family]="selectedFont"
           ></div>
-
           <div
             #bodyEditor
             class="editor"

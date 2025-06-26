@@ -42,7 +42,92 @@
   overflow: hidden;
   border: 1px solid #e0e0e0;
 }
+/* Font Selector Styles */
+.font-selector-container {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(210, 214, 255, 0.5);
+  backdrop-filter: blur(8px);
+}
 
+.font-selector-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  color: #4a4e69;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+}
+
+.font-selector-header i {
+  font-size: 18px;
+  color: #6e7af9;
+}
+
+.font-options-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.font-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background: rgba(240, 242, 255, 0.5);
+  border: 1px solid rgba(210, 214, 255, 0.3);
+}
+
+.font-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(110, 122, 249, 0.15);
+  background: rgba(224, 228, 255, 0.6);
+}
+
+.font-option.active {
+  background: linear-gradient(135deg, rgba(110, 122, 249, 0.1), rgba(178, 108, 215, 0.1));
+  border: 1px solid rgba(110, 122, 249, 0.3);
+  box-shadow: 0 0 0 2px rgba(110, 122, 249, 0.2);
+}
+
+.font-preview {
+  font-size: 24px;
+  line-height: 1;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  transition: transform 0.3s ease;
+}
+
+.font-option:hover .font-preview {
+  transform: scale(1.1);
+}
+
+.font-name {
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  color: #4a4e69;
+  text-align: center;
+}
+
+/* Animation for active state */
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 0 0 rgba(110, 122, 249, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(110, 122, 249, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(110, 122, 249, 0); }
+}
+
+.font-option.active {
+  animation: pulse-glow 1.5s infinite;
+}
 .toolbar {
   display: flex;
   justify-content: flex-start;

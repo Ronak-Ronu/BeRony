@@ -357,6 +357,16 @@ speakInChunks(text: string) {
   }
 }
 
+getStyledTitle(title: string): SafeHtml {
+  if (title.includes('font-family')) {
+    return this.sanitizer.bypassSecurityTrustHtml(title);
+  }
+  const defaultFont = 'Arial'; 
+  return this.sanitizer.bypassSecurityTrustHtml(
+    `<span style="font-family: ${defaultFont};">${title}</span>`
+  );
+}
+
 
 readblogdatabyid() {
   this.router.paramMap.subscribe(params => {

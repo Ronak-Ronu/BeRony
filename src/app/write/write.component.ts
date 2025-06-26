@@ -106,7 +106,21 @@ export class WriteComponent implements OnInit, AfterViewInit {
   wordCount: number = 0;
   emojiCategories = ['smileys', 'animals', 'food', 'travel', 'objects', 'symbols'];
   emojis: string[] = ['😀', '😂', '😍', '🤩', '😎', '😜', '🙌', '👍', '👏', '❤️', '🔥', '✨', '🌈', '🎉', '💯', '👑', '💡', '🚀', '🎯', '📚', '✏️', '🔍', '💬', '🔔'];
-  
+  selectedFont: string = 'Arial';
+  availableFonts = [
+    { name: 'Arial', displayName: 'Arial' },
+    { name: 'BluePrinted', displayName: 'BluePrinted' },
+    { name: 'Cheri', displayName: 'Cheri' },
+    { name: 'GhastlyPanic', displayName: 'GhastryPanic' },
+    { name: 'HarryPotter', displayName: 'HarryPotter' },
+    { name: 'HitMePunk', displayName: 'HitMePunk' },
+    { name: 'LaMachineCompany', displayName: 'LaMachineCompany' },
+    { name: 'Milven', displayName: 'Milven' },
+    { name: 'PrettyGirlsScript', displayName: 'PrettyGirlsScript' },
+    { name: 'Snowboarding', displayName: 'Snowboarding' },
+  ];
+ 
+
   constructor(
     private writeservice: WriteserviceService,
     private cdr: ChangeDetectorRef,
@@ -434,7 +448,8 @@ export class WriteComponent implements OnInit, AfterViewInit {
     const scheduleDate = this.postScheduleTime || new Date();
     const bdy = this.formatCode(this.editCodeContent) + this.editbodycontent;
 
-    formData.append('title', this.edittitle);
+    const styledTitle = `<span style="font-family: ${this.selectedFont}">${this.edittitle}</span>`;
+    formData.append('title', styledTitle);
     formData.append('bodyofcontent', bdy);
     formData.append('endnotecontent', this.editendnotecontent);
     formData.append('tags', JSON.stringify(this.tags));
@@ -1285,5 +1300,15 @@ export class WriteComponent implements OnInit, AfterViewInit {
     document.execCommand('redo', false);
     this.updateWordCount();
   }
-  
+  async loadFont(fontName: string) {
+    try {
+      await document.fonts.load(`1em ${fontName}`);
+      this.selectedFont = fontName;
+    } catch (error) {
+      console.error('Failed to load font:', error);
+    }
+  }
+  changeFont(fontName: string) {
+    this.loadFont(fontName);
+  }
 }

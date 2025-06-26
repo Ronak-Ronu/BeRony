@@ -27,3 +27,44 @@
     font-size: 16px;
     border-radius: 8px;
   }
+
+  /* Define custom fonts */
+@font-face {
+  font-family: 'BluePrinted';
+  src: url('/assets/fonts/blueprinted/BluePrinted.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Cheri';
+  src: url('/assets/fonts/cheri/CHERI___.TTF') format('truetype');
+}
+
+@font-face {
+  font-family: 'GhastlyPanic';
+  src: url('/assets/fonts/ghastly_panic/Ghastly Panic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'HarryPotter';
+  src: url('/assets/fonts/harry_p/HARRYP__.TTF') format('truetype');
+}
+@font-face {
+  font-family: 'HitMePunk';
+  src: url('/assets/fonts/hit_me_punk/Hit me, punk! 04.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'LaMachineCompany';
+  src: url('/assets/fonts/la_machine_company/La Machine Company.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Milven';
+  src: url('/assets/fonts/milven/Milven-Regular.otf') format('truetype');
+}
+@font-face {
+  font-family: 'PrettyGirlsScript';
+  src: url('/assets/fonts/pretty_girls_script/Pretty Girls Script Demo.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Snowboarding';
+  src: url('/assets/fonts/snowboarding_2/Snowboarding.ttf') format('truetype');
+}
