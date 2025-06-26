@@ -1,4 +1,4 @@
-import { Component, OnInit,ChangeDetectorRef,Renderer2, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef,Renderer2, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WriteModel } from '../Models/writemodel';
 import { WriteserviceService } from '../writeservice.service';
@@ -20,7 +20,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./reading.component.css']
 })
 
-export class ReadingComponent implements OnInit {
+export class ReadingComponent implements OnInit, AfterViewInit {
   @ViewChild('postBody') postBody!: ElementRef<HTMLDivElement>;
   
   post!:WriteModel
@@ -110,6 +110,131 @@ export class ReadingComponent implements OnInit {
     const url = this.post.imageUrl || this.post.videoUrl;
     this.filetype = url.split('.').pop()?.toLowerCase();
   }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (this.postBody?.nativeElement) {
+        this.setupSentenceHighlightListeners();
+        this.cdr.detectChanges();
+      }
+    }, 1000); // Increased delay
+  }
+
+  addSentenceHighlights(content: string): string {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = content;
+    
+    // Process text nodes, skipping certain elements
+    const walker = document.createTreeWalker(
+      tempDiv,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode: (node) => {
+          const parent = node.parentElement;
+          if (!parent || parent.closest('pre,code,script,style,[contenteditable]')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return node.nodeValue?.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      }
+    );
+  
+    const textNodes: Node[] = [];
+    let node;
+    while ((node = walker.nextNode())) {
+      textNodes.push(node);
+    }
+  
+    textNodes.forEach(textNode => {
+      const text = textNode.nodeValue;
+      if (!text) return;
+  
+      const fragment = document.createDocumentFragment();
+      const sentences = text.split(/(?<=[.!?])\s+/);
+  
+      sentences.forEach(sentence => {
+        if (sentence.trim().length > 0) {
+          const span = document.createElement('span');
+          span.className = 'sentence-highlight';
+          
+          // Preserve whitespace
+          if (sentence.startsWith(' ')) span.prepend(document.createTextNode(' '));
+          span.append(document.createTextNode(sentence.trim()));
+          if (sentence.endsWith(' ')) span.append(document.createTextNode(' '));
+          
+          fragment.appendChild(span);
+        }
+      });
+  
+      if (textNode.parentNode) {
+        textNode.parentNode.replaceChild(fragment, textNode);
+      }
+    });
+  
+    return tempDiv.innerHTML;
+  }
+
+
+  getTextNodes(element: HTMLElement): Node[] {
+    const textNodes: Node[] = [];
+    const walker = document.createTreeWalker(
+      element,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode: (node) => {
+          // Skip text nodes inside <pre> and <code> to avoid breaking formatting
+          if (node.parentElement?.closest('pre,code')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return node.nodeValue?.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      }
+    );
+    let node;
+    while ((node = walker.nextNode())) {
+      textNodes.push(node);
+    }
+    return textNodes;
+  }
+
+  setupSentenceHighlightListeners() {
+    const postBody = this.postBody.nativeElement;
+    const spans = postBody.querySelectorAll('.sentence-highlight');
+    // console.log('Found sentence-highlight spans:', spans.length);
+  
+    // Inject global CSS to bypass encapsulation
+    const styleElement = this.renderer.createElement('style');
+    const css = `
+      .bodycontentsection .sentence-highlight {
+        background-color: transparent;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+        padding: 4px;
+        display: inline;
+        border-radius: 8px;
+      }
+      .bodycontentsection .sentence-highlight:hover,
+      .bodycontentsection .sentence-highlight.active {
+        background-color: rgba(161, 161, 255, 0.6) !important;
+      }
+    `;
+    this.renderer.appendChild(styleElement, this.renderer.createText(css));
+    this.renderer.appendChild(document.head, styleElement);
+  
+    spans.forEach((span, index) => {
+      // console.log(`Span ${index}:`, span.textContent);
+      this.renderer.listen(span, 'mouseenter', () => {
+        // console.log('Hover on sentence:', span.textContent);
+        this.renderer.addClass(span, 'active');
+        this.cdr.detectChanges();
+      });
+      this.renderer.listen(span, 'mouseleave', () => {
+        // console.log('Mouse leave on sentence:', span.textContent);
+        this.renderer.removeClass(span, 'active');
+        this.cdr.detectChanges();
+      });
+    });
+  }
   private addJsonLdSchema() {
     if (!this.post) return;
   
@@ -174,39 +299,46 @@ export class ReadingComponent implements OnInit {
     }
   }
   
-
-
-sanitizeContent(content: string): SafeHtml {
-  const sanitized = sanitizeHtml(content, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat([
-      'img', 'iframe', 'pre', 'code', 'table', 'tr', 'td', 'th', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-      'div', 'p', 'b', 'i', 'u', 'strong', 'em', 'font', 'br', 'hr', 'center'
-    ]),
-    allowedAttributes: {
-      '*': ['style', 'align', 'bgcolor', 'width', 'height', 'border', 'cellpadding', 'cellspacing'],
-      'img': ['src', 'alt', 'style', 'width', 'height'],
-      'iframe': ['src', 'width', 'height', 'style', 'frameborder', 'allowfullscreen'],
-      'font': ['color', 'size', 'face'],
-      'table': ['bgcolor', 'border', 'width', 'style', 'align'],
-      'td': ['bgcolor', 'width', 'height', 'style', 'align'],
-      'tr': ['bgcolor', 'style', 'align'],
-      'div': ['style', 'align', 'bgcolor', 'width', 'height'],
-      'p': ['style', 'align'],
-      'h1': ['style', 'align'],
-      'h2': ['style', 'align'],
-      'pre': ['style'],
-      'code': ['style']
-    },
-    allowedIframeHostnames: ['www.youtube.com', 'giphy.com'],
-    allowedSchemes: ['http', 'https'],
-    selfClosing: ['img', 'br', 'hr'],
-    parseStyleAttributes: true,
-  });
-
-  return this.sanitizer.bypassSecurityTrustHtml(sanitized);
-}
+  sanitizeContent(content: string): SafeHtml {
+    const sanitized = sanitizeHtml(content, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat([
+        'img', 'iframe', 'pre', 'code', 'table', 'tr', 'td', 'th', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'div', 'p', 'b', 'i', 'u', 'strong', 'em', 'font', 'br', 'hr', 'center', 'span'
+      ]),
+      allowedAttributes: {
+        '*': ['style', 'align', 'bgcolor', 'width', 'height', 'border', 'cellpadding', 'cellspacing', 'class'],
+        'img': ['src', 'alt', 'style', 'width', 'height'],
+        'iframe': ['src', 'width', 'height', 'style', 'frameborder', 'allowfullscreen'],
+        'font': ['color', 'size', 'face'],
+        'table': ['bgcolor', 'border', 'width', 'style', 'align'],
+        'td': ['bgcolor', 'width', 'height', 'style', 'align'],
+        'tr': ['bgcolor', 'style', 'align'],
+        'div': ['style', 'align', 'bgcolor', 'width', 'height'],
+        'p': ['style', 'align'],
+        'h1': ['style', 'align'],
+        'h2': ['style', 'align'],
+        'pre': ['style'],
+        'code': ['style'],
+        'span': ['class', 'style']
+      },
+      allowedIframeHostnames: ['www.youtube.com', 'giphy.com'],
+      allowedSchemes: ['http', 'https'],
+      selfClosing: ['img', 'br', 'hr'],
+      parseStyleAttributes: true,
+    });
+  
+    return this.sanitizer.bypassSecurityTrustHtml(sanitized);
+  }
 sanitizeBodyContent() {
-  this.sanitizedBodyContent = this.sanitizeContent(this.post.bodyofcontent);
+  if (!this.post?.bodyofcontent) {
+    console.error('No content available in post.bodyofcontent');
+    this.sanitizedBodyContent = this.sanitizeContent('');
+    return;
+  }
+  const highlightedContent = this.addSentenceHighlights(this.post.bodyofcontent);
+  // console.log('Highlighted content:', highlightedContent);
+  this.sanitizedBodyContent = this.sanitizeContent(highlightedContent);
+  //('Sanitized content:', this.sanitizedBodyContent); // Debug sanitized output
 }
 
 getSanitizedHtml(text: string): SafeHtml {

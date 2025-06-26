@@ -1,60 +1,66 @@
 <div class="headingwrite" [innerHTML]="post.title">
-  <!-- <p>{{}}</p> -->
 </div>
 
-<div class="containerforeading"  >
+<div class="containerforeading">
   <div class="leftreadingsection">
-
-
-
     <div class="imagesection">
       <div *ngIf="post.imageUrl">
-        <img 
-        [src]="post.imageUrl" 
-        [alt]="post.title" 
-        loading="lazy" 
-        [srcset]="post.imageUrl + ' 600w, ' + post.imageUrl + ' 1200w'" 
-        sizes="(max-width: 600px) 600px, 1200px" 
-        width="600" 
-        height="400" />  
+        <img
+          [src]="post.imageUrl"
+          [alt]="post.title"
+          loading="lazy"
+          [srcset]="post.imageUrl + ' 600w, ' + post.imageUrl + ' 1200w'"
+          sizes="(max-width: 600px) 600px, 1200px"
+          width="600"
+          height="400"
+        />
       </div>
-      
-      <div *ngIf="post.videoUrl && !post.imageUrl" >
-        <video [src]="post.videoUrl" controls >
+
+      <div *ngIf="post.videoUrl && !post.imageUrl">
+        <video [src]="post.videoUrl" controls>
           Your browser does not support the video tag.
         </video>
       </div>
-    
     </div>
-    <div class="ai-insights-section" style="margin: 20px 0; padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
+    <div
+      class="ai-insights-section"
+      style="
+        margin: 20px 0;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+      "
+    >
       <h3>Talk To AI for getting more insights about this blog:</h3>
-      <div class="ai-buttons" style="display: flex; gap: 10px; margin-bottom: 10px;">
+      <div
+        class="ai-buttons"
+        style="display: flex; gap: 10px; margin-bottom: 10px"
+      >
         <button
-          class="footerbutton "
-          style="color: white;"
+          class="footerbutton"
+          style="color: white"
           [disabled]="isAiLoading"
           (click)="generateInsight('summary')"
         >
-          {{ isAiLoading ? 'thinking...' : 'Summarize Post' }}
+          {{ isAiLoading ? "thinking..." : "Summarize Post" }}
         </button>
         <button
           class="footerbutton"
-          style="color: white;"
+          style="color: white"
           [disabled]="isAiLoading"
           (click)="generateInsight('keyPoints')"
         >
-          {{ isAiLoading ? 'thinking...' : 'Key Points' }}
+          {{ isAiLoading ? "thinking..." : "Key Points" }}
         </button>
         <button
           class="footerbutton"
-          style="color: white;"
+          style="color: white"
           [disabled]="isAiLoading"
           (click)="generateInsight('sentiment')"
         >
-          {{ isAiLoading ? 'thinking...' : 'Sentiment Analysis' }}
+          {{ isAiLoading ? "thinking..." : "Sentiment Analysis" }}
         </button>
       </div>
-
 
       <div *ngIf="aiInsights.summary" class="insight">
         <h4>Summary:</h4>
@@ -69,37 +75,59 @@
         <div [innerHTML]="aiInsights.sentiment"></div>
       </div>
 
-      <div class="ai-question" style="margin-top: 15px;">
+      <div class="ai-question" style="margin-top: 15px">
         <h4>Ask About This Post</h4>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 10px">
           <input
             type="text"
             [(ngModel)]="aiQuestion"
             placeholder="Why i should read this blog?"
-            style="flex: 1; padding: 8px; border-radius: 4px; border: 1px solid #ccc;"
+            style="
+              flex: 1;
+              padding: 8px;
+              border-radius: 4px;
+              border: 1px solid #ccc;
+            "
             (keydown.enter)="askAiQuestion()"
           />
           <button
-            class="footerbutton premium-ai-writer "
+            class="footerbutton premium-ai-writer"
             [disabled]="isAiLoading"
             (click)="askAiQuestion()"
           >
-            {{ isAiLoading ? 'thinking...' : 'Ask' }}
+            {{ isAiLoading ? "thinking..." : "Ask" }}
           </button>
         </div>
-        <div *ngIf="aiAnswer" class="answer" style="margin-top: 10px;">
+        <div *ngIf="aiAnswer" class="answer" style="margin-top: 10px">
           <h4>Answer:</h4>
           <div [innerHTML]="aiAnswer"></div>
         </div>
       </div>
     </div>
 
-
     <div class="buttonsection">
       <div class="footerbuttonsgrey">
         <div>
-          <button class="footerbutton" [disabled]="isAiLoading" (click)="readingblog ? (isPaused ? resume() : pause()) : start(post.bodyofcontent)">
-            {{ isAiLoading ? 'LOADING...' : (readingblog ? (isPaused ? 'RESUME' : 'STOP') : 'LISTEN') }}
+          <button
+            class="footerbutton"
+            [disabled]="isAiLoading"
+            (click)="
+              readingblog
+                ? isPaused
+                  ? resume()
+                  : pause()
+                : start(post.bodyofcontent)
+            "
+          >
+            {{
+              isAiLoading
+                ? "LOADING..."
+                : readingblog
+                ? isPaused
+                  ? "RESUME"
+                  : "STOP"
+                : "LISTEN"
+            }}
           </button>
         </div>
         <!-- <div>
@@ -110,130 +138,162 @@
         </div>
         <div>
           <button class="footerbutton" (click)="downloadBlog()">
-            <img  style="width: 27px;" src="../../assets/img/download-blog-pdf.png" alt=""  /></button>
-          </div>
-            <div>
-    
-              <button class="footerbutton" (click)="bookmarkthispost()">
-                <img style="transform: rotate(180deg);width: 27px;" src="../../assets/img/bookmark.png" alt=""  /> 
-              </button>
-            </div>
+            <img
+              style="width: 27px"
+              src="../../assets/img/download-blog-pdf.png"
+              alt=""
+            />
+          </button>
+        </div>
+        <div>
+          <button class="footerbutton" (click)="bookmarkthispost()">
+            <img
+              style="transform: rotate(180deg); width: 27px"
+              src="../../assets/img/bookmark.png"
+              alt=""
+            />
+          </button>
+        </div>
       </div>
       <div class="audio-progress" *ngIf="readingblog">
-        <progress [value]="audio.currentTime" [max]="audio.duration || 100"></progress>
+        <progress
+          [value]="audio.currentTime"
+          [max]="audio.duration || 100"
+        ></progress>
       </div>
       <div class="likebuttons">
-
-      <div>
-        <button
-          class="funnybutton"
-          [class.liked]="userReactions['funny']"
-          (click)="addLike('funny')"
-        >
-          🤣
-        </button>
-        <span style="font-size: 25px">
-          {{ funnycount }}
-        </span>
-      </div>
-      <div>
-        <button
-          class="sadbutton"
-          [class.liked]="userReactions['sad']"
-          (click)="addLike('sad')"
-        >
-          😟
-        </button>
-        <span style="font-size: 25px">
-          {{ sadcount }}
-        </span>
-      </div>
-      <div>
-        <button
-          class="loveitbutton"
-          [class.liked]="userReactions['loveit']"
-          (click)="addLike('loveit')"
-        >
-          😘
-        </button>
-        <span style="font-size: 25px">
-          {{ loveitcount }}
-        </span>
-      </div>
-  
-    </div>
-
-    </div>
-    <br>
-    <br>
-    <div #postBody class="post-body bodycontentsection" [innerHTML]="sanitizedBodyContent" (mouseup)="highlightText()">
-    
-    <div [innerHTML]="sanitizedBodyContent"></div>
-         <!-- <p>{{post.bodyofcontent}}</p>  -->
-       
-        </div> 
-        <div *ngIf="poll" class="poll-card">
-          <div class="poll-header">
-            <h3>{{ poll.question }}</h3>
-            <div class="poll-tag">Live Poll</div>
-          </div>
-          
-          <div class="poll-options">
-            <div *ngFor="let option of poll.options; let i = index" class="poll-option">
-              <div class="option-content" (click)="!poll.hasVoted && vote(poll._id, i)">
-                <div class="option-text">{{ option }}</div>
-                <div class="option-stats">
-                  <div class="vote-percentage">{{ getVotePercentage(poll.votes, i) }}%</div>
-                  <div class="vote-count">{{ poll.votes[i] }} vote{{ poll.votes[i] !== 1 ? 's' : '' }}</div>
-                </div>
-              </div>
-              
-              <div class="vote-progress">
-                <div class="progress-bar" [style.width]="getVotePercentage(poll.votes, i) + '%'"></div>
-              </div>
-              
-              <button
-                class="vote-btn"
-                (click)="vote(poll._id, i)"
-                [disabled]="poll.hasVoted"
-                [ngClass]="{ 'voted': poll.hasVoted }"
-              >
-                {{ poll.hasVoted ? '✓ Voted' : 'Vote' }}
-              </button>
-            </div>
-          </div>
-          
-          <div class="poll-footer">
-            <div class="total-votes">
-              <span class="vote-icon"></span> 
-              <span>{{ getTotalVotes(poll.votes) }} votes</span>
-            </div>
-            <div class="poll-time">polled with ♥️ by {{post.username}}</div>
-          </div>
+        <div>
+          <button
+            class="funnybutton"
+            [class.liked]="userReactions['funny']"
+            (click)="addLike('funny')"
+          >
+            🤣
+          </button>
+          <span style="font-size: 25px">
+            {{ funnycount }}
+          </span>
         </div>
-
-        
-    <div class="endofnotesection" [innerHTML]="post.endnotecontent">
+        <div>
+          <button
+            class="sadbutton"
+            [class.liked]="userReactions['sad']"
+            (click)="addLike('sad')"
+          >
+            😟
+          </button>
+          <span style="font-size: 25px">
+            {{ sadcount }}
+          </span>
+        </div>
+        <div>
+          <button
+            class="loveitbutton"
+            [class.liked]="userReactions['loveit']"
+            (click)="addLike('loveit')"
+          >
+            😘
+          </button>
+          <span style="font-size: 25px">
+            {{ loveitcount }}
+          </span>
+        </div>
+      </div>
     </div>
-    <div style="height: 1px; background-color: grey;width: 70%;margin-left: 17%;margin-top: 2%;margin-bottom: 2%;"></div>
-    <div class="postadmindetails">Written with ♥️ by - {{ post.username }} 
+    <br />
+    <br />
+    <div
+      #postBody
+      class="post-body bodycontentsection"
+      [innerHTML]="sanitizedBodyContent"
+      (mouseup)="highlightText()"
+    ></div>
+
+    <div *ngIf="poll" class="poll-card">
+      <div class="poll-header">
+        <h3>{{ poll.question }}</h3>
+        <div class="poll-tag">Live Poll</div>
+      </div>
+
+      <div class="poll-options">
+        <div
+          *ngFor="let option of poll.options; let i = index"
+          class="poll-option"
+        >
+          <div
+            class="option-content"
+            (click)="!poll.hasVoted && vote(poll._id, i)"
+          >
+            <div class="option-text">{{ option }}</div>
+            <div class="option-stats">
+              <div class="vote-percentage">
+                {{ getVotePercentage(poll.votes, i) }}%
+              </div>
+              <div class="vote-count">
+                {{ poll.votes[i] }} vote{{ poll.votes[i] !== 1 ? "s" : "" }}
+              </div>
+            </div>
+          </div>
+
+          <div class="vote-progress">
+            <div
+              class="progress-bar"
+              [style.width]="getVotePercentage(poll.votes, i) + '%'"
+            ></div>
+          </div>
+
+          <button
+            class="vote-btn"
+            (click)="vote(poll._id, i)"
+            [disabled]="poll.hasVoted"
+            [ngClass]="{ voted: poll.hasVoted }"
+          >
+            {{ poll.hasVoted ? "✓ Voted" : "Vote" }}
+          </button>
+        </div>
+      </div>
+
+      <div class="poll-footer">
+        <div class="total-votes">
+          <span class="vote-icon"></span>
+          <span>{{ getTotalVotes(poll.votes) }} votes</span>
+        </div>
+        <div class="poll-time">polled with ♥️ by {{ post.username }}</div>
+      </div>
+    </div>
+
+    <div class="endofnotesection" [innerHTML]="post.endnotecontent"></div>
+    <div
+      style="
+        height: 1px;
+        background-color: grey;
+        width: 70%;
+        margin-left: 17%;
+        margin-top: 2%;
+        margin-bottom: 2%;
+      "
+    ></div>
+    <div class="postadmindetails">
+      Written with ♥️ by - {{ post.username }}
       <div class="followunfolloebuttons">
-
         <div class="followuserunfollowuserbtn">
-          <button (click)="followUser(loggedinuserid,post.userId)">Follow {{post.username}} </button>
+          <button (click)="followUser(loggedinuserid, post.userId)">
+            Follow {{ post.username }}
+          </button>
         </div>
         <div class="followuserunfollowuserbtn">
-          <button (click)="unfollowUser(loggedinuserid,post.userId)">UnFollow {{post.username}}</button>
+          <button (click)="unfollowUser(loggedinuserid, post.userId)">
+            UnFollow {{ post.username }}
+          </button>
         </div>
       </div>
-  
     </div>
     <div class="collaborators-section">
       <h3>Collaborators:</h3>
       <div class="collaborators">
         <div *ngFor="let username of collaboratorsUsernames; let i = index">
-          <a [routerLink]="'/profile/' +post.collaborators[i]" >
-          <div class="collaborator">
+          <a [routerLink]="'/profile/' + post.collaborators[i]">
+            <div class="collaborator">
               <p>{{ username }}</p>
             </div>
           </a>
@@ -243,86 +303,88 @@
     <div class="gist-container">
       <div id="gist-placeholder"></div>
     </div>
-    
+
     <div *ngIf="tagsarray.length" class="tagslist">
       <div class="tags">
         <span *ngFor="let tag of tagsarray" class="tag">{{ tag }}</span>
       </div>
     </div>
-  
   </div>
-
-  
 </div>
 
-<button class="floating-chat-btn" (click)="toggleDiscussion()">
-  💬
-</button>
+<button class="floating-chat-btn" (click)="toggleDiscussion()">💬</button>
 <div *ngIf="isDiscussionOpen" class="rightcommentsection">
   <div class="discussionheader">
-    <h1>DISCUSSION</h1><div (click)="refreshcomponent()" class="refreshbtn">⟳</div>
+    <h1>DISCUSSION</h1>
+    <div (click)="refreshcomponent()" class="refreshbtn">⟳</div>
   </div>
   <div class="addcommentsection">
     <div *ngIf="loggedInUserAccount">
       <h2>Leave a Comment</h2>
-      <div *ngIf="isCommentBoxOpen" >
+      <div *ngIf="isCommentBoxOpen">
         <span class="showhighlightTextInCommentStyle">
-          {{showhighlightTextInComment}}
+          {{ showhighlightTextInComment }}
         </span>
-    </div> 
+      </div>
       <div class="inputbox">
         <div class="textarea-container">
-            <textarea
-                [(ngModel)]="newCommentText"
-                name="newCommentText"
-                maxlength="1000"
-                placeholder="What's your thought on this :)"
-                (keydown.enter)="addComment()"
-            ></textarea>
+          <textarea
+            [(ngModel)]="newCommentText"
+            name="newCommentText"
+            maxlength="1000"
+            placeholder="What's your thought on this :)"
+            (keydown.enter)="addComment()"
+          ></textarea>
         </div>
         <div class="button-container">
-            <button class="submitComment" (click)="addComment()">Post</button>
+          <button class="submitComment" (click)="addComment()">Post</button>
         </div>
-    </div>
+      </div>
 
-    <div>
-      <input class="inputgifstyle"
-        type="text" 
-        [(ngModel)]="gifSearchQuery" 
-        (input)="searchGifs()" 
-        placeholder="Comment gif?" 
-      />
-      
-      <div *ngIf="gifs.length">
-        <div class="gif-container">
-          <div  style="background-color: rgb(190, 190, 190);"
-            class="gif" 
-            *ngFor="let gif of gifs" 
-            (click)="selectGif(gif)">
-            <img [src]="gif.images.fixed_height_small.url" [alt]="gif.title" loading="lazy" style="image-rendering: optimizeSpeed;"/>
+      <div>
+        <input
+          class="inputgifstyle"
+          type="text"
+          [(ngModel)]="gifSearchQuery"
+          (input)="searchGifs()"
+          placeholder="Comment gif?"
+        />
+
+        <div *ngIf="gifs.length">
+          <div class="gif-container">
+            <div
+              style="background-color: rgb(190, 190, 190)"
+              class="gif"
+              *ngFor="let gif of gifs"
+              (click)="selectGif(gif)"
+            >
+              <img
+                [src]="gif.images.fixed_height_small.url"
+                [alt]="gif.title"
+                loading="lazy"
+                style="image-rendering: optimizeSpeed"
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
-    </div>
-   
   </div>
 
   <div *ngIf="!loggedInUserAccount">
     <p>Please log in to leave a comment</p>
   </div>
-  
+
   <div *ngFor="let comment of comments" class="userandcomments">
     <div class="user1">
       <div class="userdata">
         <div class="userprofile"></div>
-        <div class="username">{{comment.username}}
+        <div class="username">
+          {{ comment.username }}
 
-          <br>
-          <small>{{ comment.createdAt | date:'short' }}</small>
-
+          <br />
+          <small>{{ comment.createdAt | date : "short" }}</small>
         </div>
-        
       </div>
       <div class="usercomment">
         <p [innerHTML]="getSanitizedHtml(comment.commentText)">
@@ -330,9 +392,5 @@
         </p>
       </div>
     </div>
-
   </div>
-  
 </div>
-
-
