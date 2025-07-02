@@ -240,6 +240,24 @@
             Spray
           </button>
           <button (click)="addText()">Text</button>
+
+          <div
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+          [ngClass]="{ 'drag-over': isDragging }"
+        >
+          <input
+            type="file"
+            accept="image/*,video/*"
+            (change)="onFileSelected($event)"
+            [disabled]="uploading"
+            id="story-upload1"
+            style="display: none"
+          />
+          <label for="story-upload1">
+            Add Image +
+          </label>
         </div>
       </div>
       <div class="tool-section">
@@ -264,6 +282,7 @@
           [disabled]="uploading"
         />
       </div>
+
       <div class="tool-section" *ngIf="canvas && canvas.getActiveObject()">
         <span>Layer Control:</span>
         <div class="layer-buttons">

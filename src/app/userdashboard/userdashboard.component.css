@@ -209,7 +209,16 @@
   border: none;
   touch-action: manipulation;
 }
-
+.addmoreimage{
+  font-size: 1rem;
+  background-color: rgb(143, 159, 233);
+  padding: 8px 12px;
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+  border: none;
+  touch-action: manipulation;
+}
 .tool-section button.active-brush {
   background-color: rgb(102, 116, 175);
   color: #fff;
