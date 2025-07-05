@@ -76,7 +76,8 @@ export class ReadingComponent implements OnInit, AfterViewInit {
   audioChunks: string[] | undefined;
   poll: any = null;
   userId: string = ''; 
-
+    isExplanationLoading = false;
+    aiExplanation = ''; 
 
   constructor(private service:WriteserviceService,private cdr: ChangeDetectorRef,private router:ActivatedRoute,
     // private ngnavigateservice:NgNavigatorShareService,
@@ -690,12 +691,14 @@ highlightText() {
 
 
 }
+
 showTooltip(rect: DOMRect, selectedText: string) {
   const tooltip = document.createElement('div');
   tooltip.innerHTML = `
     <div style="display: flex; gap: 10px;">
       <button style="background-color: #bdc2fb; padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer;">Comment</button>
       <button style="background-color: #f0ad4e; padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer;">Meaning</button>
+      <button style="background-color: #6e7af9; color: white; padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer;">Explain AI</button>
     </div>
   `;
   tooltip.style.position = 'absolute';
@@ -710,6 +713,7 @@ showTooltip(rect: DOMRect, selectedText: string) {
 
   const commentButton = tooltip.querySelector('button:nth-child(1)');
   const meaningButton = tooltip.querySelector('button:nth-child(2)');
+  const explainButton = tooltip.querySelector('button:nth-child(3)');
 
   commentButton?.addEventListener('click', () => {
     this.isCommentBoxOpen = !this.isCommentBoxOpen;
@@ -719,6 +723,11 @@ showTooltip(rect: DOMRect, selectedText: string) {
 
   meaningButton?.addEventListener('click', () => {
     this.fetchWordMeaning(selectedText, rect);
+    document.body.removeChild(tooltip);
+  });
+
+  explainButton?.addEventListener('click', () => {
+    this.getAiExplanation(selectedText, rect);
     document.body.removeChild(tooltip);
   });
 
@@ -733,6 +742,98 @@ showTooltip(rect: DOMRect, selectedText: string) {
     const outsideClickListener = (event: MouseEvent) => {
       if (!tooltip.contains(event.target as Node)) {
         document.body.removeChild(tooltip);
+        document.removeEventListener('click', outsideClickListener);
+      }
+    };
+    document.addEventListener('click', outsideClickListener);
+  }, 0);
+}
+
+
+getAiExplanation(text: string, rect: DOMRect) {
+  if (!this.loggedInUserAccount) {
+    this.toastr.warning('Please log in to use professional AI explanations');
+    return;
+  }
+
+  this.isExplanationLoading = true;
+  
+  const explanationPopup = document.createElement('div');
+  explanationPopup.style.position = 'absolute';
+  explanationPopup.style.fontSize = '16px';
+  explanationPopup.style.top = `${rect.top + window.scrollY + 20}px`; 
+  explanationPopup.style.left = `${Math.min(rect.left + window.scrollX, window.innerWidth - 360)}px`; 
+  explanationPopup.style.backgroundColor = '#ffffff'; 
+  explanationPopup.style.padding = '15px'; 
+  explanationPopup.style.borderRadius = '8px';
+  explanationPopup.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)'; 
+  explanationPopup.style.zIndex = '1000';
+  explanationPopup.style.maxWidth = '90%';
+  explanationPopup.style.maxHeight = '60%';
+  explanationPopup.style.overflowY = 'auto'; 
+  explanationPopup.innerHTML = `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+      <h3 style="color: #6e7af9; margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+        <i class="fas fa-brain" style="margin-right: 8px;"></i>
+        Explain AI
+      </h3>
+      <div class="loading-spinner" style="display: flex; flex-direction: column; align-items: center; padding: 20px;">
+        <p style="color: #666;">Analyzing...</p>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(explanationPopup);
+
+  // Get professional AI explanation
+  const context = `From the professional blog post titled "${this.post.title}" by ${this.post.username}, explain the following text: "${text}".`;
+  
+  this.aiService.getProfessionalExplanation(text, context).subscribe({
+    next: (response) => {
+      explanationPopup.innerHTML = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <h3 style="color: #6e7af9; margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+            <i class="fas fa-brain" style="margin-right: 8px;"></i>
+            Explain AI
+          </h3>
+          <div style="margin-top: 10px; padding: 5px; width:50vw">
+            <p style="font-weight: bold; color: #444;">Selected Text:</p>
+            <blockquote style="background-color: #f9f9f9; padding: 10px; border-left: 3px solid #6e7af9; margin: 10px 0;">
+              "${text}"
+            </blockquote>
+            <div style="margin-top: 15px;">
+              ${response}
+            </div>
+          </div>
+        </div>
+      `;
+      this.isExplanationLoading = false;
+    },
+    error: (error) => {
+      explanationPopup.innerHTML = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <h3 style="color: #6e7af9; margin-top: 0;">Professional Analysis</h3>
+          <div style="margin-top: 15px; padding: 10px; background-color: #fff8f8; border-left: 3px solid #ff6b6b;">
+            <p style="color: #d32f2f;">Our analysis system is currently unavailable.</p>
+            <p>Key points about the selected text:</p>
+            <ul style="margin-top: 5px;">
+              <li>This passage relates to ${this.post.title}'s main topic</li>
+              <li>Contains specialized terminology that may require domain knowledge</li>
+              <li>Appears to discuss ${text.split(' ').length > 5 ? 'multiple concepts' : 'a specific concept'}</li>
+            </ul>
+          </div>
+        </div>
+      `;
+      this.isExplanationLoading = false;
+      console.error('Professional Analysis Error:', error);
+    }
+  });
+
+  // Click outside to close
+  setTimeout(() => {
+    const outsideClickListener = (event: MouseEvent) => {
+      if (!explanationPopup.contains(event.target as Node)) {
+        document.body.removeChild(explanationPopup);
         document.removeEventListener('click', outsideClickListener);
       }
     };

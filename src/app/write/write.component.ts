@@ -448,7 +448,7 @@ export class WriteComponent implements OnInit, AfterViewInit {
     const scheduleDate = this.postScheduleTime || new Date();
     const bdy = this.formatCode(this.editCodeContent) + this.editbodycontent;
 
-    const styledTitle = `<span style="font-family: ${this.selectedFont}">${this.edittitle}</span>`;
+    const styledTitle = `<span style="font-family: ${this.selectedFont};">${this.edittitle}</span>`;
     formData.append('title', styledTitle);
     formData.append('bodyofcontent', bdy);
     formData.append('endnotecontent', this.editendnotecontent);

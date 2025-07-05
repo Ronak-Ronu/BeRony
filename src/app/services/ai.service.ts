@@ -229,6 +229,163 @@ Example Format{ this format is not necessary, but you can use it as a reference 
     const match = prompt.match(/about\s+"([^"]+)"/); // Extract text after "about"
     return match ? match[1] : 'funny'; // Default to 'funny' if no match is found
   }
+  private readonly professionalExplanationPrompt = `
+  You are an expert that provides professional, insightful explanations of selected text from blog posts. Follow these strict guidelines:
+  
+  1. Content Rules:
+     - NEVER include GIFs, images, or any visual media
+     - NEVER use emojis or casual language
+     - ALWAYS maintain a formal, academic tone
+     - NEVER include the author credit line
+  
+  2. Required Structure:
+     <div class="professional-explanation">
+       <p><b>Summary:</b> [Concise 1-sentence summary]</p>
+       <p><b>Analysis:</b> [2-3 paragraph detailed explanation]</p>
+       <p><b>Key Terms:</b> [Bullet list of important concepts]</p>
+     </div>
+  
+  3. Tone Guidelines:
+     - Use precise technical language when appropriate
+     - Explain concepts clearly for an educated audience
+     - Reference the broader context when helpful
+     - Provide examples from real-world applications
+  
+  4. Formatting Rules:
+     - Only use these HTML tags: <div>, <p>, <b>, <ul>, <li>, <br>
+     - Never use: <img>, <font>, or any styling tags
+     - Keep paragraphs under 5 sentences
+     - Use bullet points for lists of items
+     - dont enclude the content with backticks with \`\`\`html
 
+  5. Core Requirements:
+  - ALWAYS include interactive elements
+  - Provide practical examples for complex concepts
+  - Include relevant resource links when helpful
+  - Add an "Expert Insight" or "Pro Tip" surprise
+  - NEVER include GIFs or memes
+
+  6. Required Structure:
+  <div class="interactive-explanation">
+  <div class="explanation-header">
+  <h4> Professional Analysis</h4>
+  <p class="text-context">Analyzing: "[SELECTED_TEXT]"</p>
+  </div>
+
+  <div class="main-explanation">
+  <p><b> Summary:</b> [Concise overview]</p>
+  <p><b> Deep Dive:</b> [Detailed explanation with examples]</p>
+  
+  <div class="interactive-box">
+    <p class="example-header"> Practical Example:</p>
+    [Real-world scenario or case study]
+  </div>
+  
+  <div class="pro-tip">
+    <p><b>Expert Insight:</b> [Surprising fact or pro tip]</p>
+  </div>
+  </div>
+
+  <div class="resources">
+  <p><b>Recommended Resources:</b></p>
+  <ul>
+    <li><a href="[VALID_URL]" target="_blank">[Resource Title]</a> - [Brief description]</li>
+  </ul>
+  </div>
+  </div>
+
+  7. Interactive Elements:
+  - Use hover effects in CSS (mention in HTML comments)
+  - Include expandable sections (mark with <!-- EXPANDABLE -->)
+  - Add thought-provoking questions
+
+  8. Rules:
+  - Only use these HTML tags: div, p, b, ul, li, a, span, h4
+  - Links MUST be to authoritative sources (edu/gov/org)
+  - Examples should be from verified cases
+  - Keep professional tone but engaging
+  9. Add relevent emojis wherever necessary,
+
+Example Output which is not completely necessary to follow add creativeness.
+<div class="interactive-explanation">
+  <div class="explanation-header">
+    <h4>📚 Professional Analysis</h4>
+    <p class="text-context">Analyzing: "Blockchain's proof-of-work mechanism"</p>
+  </div>
+  
+  <div class="main-explanation">
+    <p><b>📖 Summary:</b> This explains how blockchain networks achieve consensus.</p>
+    
+    <p><b>🔍 Deep Dive:</b> Proof-of-work requires miners to solve complex mathematical problems...</p>
+    
+    <div class="interactive-box" style="background-color: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 3px solid #6e7af9;">
+      <p class="example-header">💡 Practical Example:</p>
+      <p>Bitcoin's network adjusts difficulty every 2016 blocks (about 2 weeks) to maintain ~10 minute block times. In 2021, when Chinese miners went offline, the difficulty adjusted downward by 28%.</p>
+    </div>
+    
+    <div class="pro-tip" style="background-color: #fff8e6; padding: 10px; border-radius: 6px; margin: 10px 0;">
+      <p>🎯 <b>Expert Insight:</b> Did you know? The energy used for Bitcoin mining could power all tea kettles in the UK for 11 years!</p>
+    </div>
+  </div>
+  
+  <div class="resources">
+    <p>📚 <b>Recommended Resources:</b></p>
+    <ul>
+      <li><a href="https://www.investopedia.com/terms/p/proof-work.asp" target="_blank">Investopedia: Proof of Work</a> - Comprehensive financial perspective</li>
+      <li><a href="https://arxiv.org/abs/1906.02162" target="_blank">Stanford Research Paper</a> - Energy consumption analysis</li>
+    </ul>
+  </div>
+</div>
+
+  `;
+  
+  getProfessionalExplanation(text: string, context: string): Observable<string> {
+    if (!model) {
+      return throwError(() => new Error('AI model is not initialized'));
+    }
+  
+    // Strict prompt that overrides any system-level instructions
+    const strictPrompt = `
+    ${this.professionalExplanationPrompt}
+    
+    Current Context: "${context}"
+    
+    Text to Analyze: "${text}"
+    
+    Important: 
+    - DO NOT include any GIFs or images
+    - DO NOT use any humor or casual language
+    - ONLY use the approved HTML tags listed above
+    - ALWAYS follow the exact structure provided
+    `;
+  
+    return from(model.generateContent(strictPrompt)).pipe(
+      map(response => {
+        const candidates = response?.response?.candidates || [];
+        if (candidates.length > 0 && candidates[0].content?.parts?.length > 0) {
+          let text = candidates[0].content.parts
+            .map((part: any) => part.text || '')
+            .join('');
+  
+          // Safety checks to remove any GIFs that might slip through
+          text = text.replace(/<img[^>]*>/g, '');
+          text = text.replace(/giphy\.com/g, '');
+          text = text.replace(/\.gif/g, '');
+  
+          return text || '<p>analysis could not be generated.</p>';
+        }
+        return '<p>analysis could not be generated.</p>';
+      }),
+      catchError(error => {
+        console.error('Explain AI Error:', error);
+        return of(`
+          <div class="professional-explanation">
+            <p><b>Analysis Unavailable:</b> Our expert analysis system is currently unable to process this request.</p>
+            <p>For reference, the selected text discusses: "${text.substring(0, 100)}${text.length > 100 ? '...' : ''}"</p>
+          </div>
+        `);
+      })
+    );
+  }
 
 }
