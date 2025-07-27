@@ -12,19 +12,7 @@ import jsPDF from 'jspdf';
 import sanitizeHtml from 'sanitize-html';
 import { AiService } from '../services/ai.service';
 import { Observable } from 'rxjs';
-import { Howl } from 'howler'; // For better audio handling
 
-const VOICES = [
-  { name: 'Alex', gender: 'male', rate: 1.0, pitch: 1.0 },
-  { name: 'Samantha', gender: 'female', rate: 0.95, pitch: 1.1 },
-  { name: 'Daniel', gender: 'male', rate: 1.05, pitch: 0.95 }
-];
-
-const BACKGROUND_SOUNDS = {
-  cafe: 'assets/audio/cafe-ambience.mp3',
-  nature: 'assets/audio/nature-ambience.mp3',
-  none: null
-};
 
 interface PodcastSegment {
   speaker: 'host' | 'guest';
