@@ -12,6 +12,7 @@ import jsPDF from 'jspdf';
 import sanitizeHtml from 'sanitize-html';
 import { AiService } from '../services/ai.service';
 import { Observable } from 'rxjs';
+import { Howl } from 'howler'; 
 
 const VOICES = [
   { name: 'Alex', gender: 'male', rate: 1.0, pitch: 1.0 },
