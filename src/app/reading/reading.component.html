@@ -105,36 +105,71 @@
     </div>
 
     <div class="buttonsection">
+      <div *ngIf="isPodcastMode || isGeneratingPodcast" class="podcast-status">
+        
+        
+        <div class="podcast-progress">
+          <div class="progress-bar-container">
+            <div class="progress-bar" [style.width]="podcastProgress + '%'"></div>
+          </div>
+          <div class="progress-text">
+            {{ currentSegmentIndex + 1 }} / {{ podcastSegments.length }} segments
+          </div>
+        </div>
+      </div>
+    
       <div class="footerbuttonsgrey">
         <div>
           <button
-            class="footerbutton"
-            [disabled]="isAiLoading"
+            class="footerbutton podcast-button"
+            [disabled]="isGeneratingPodcast"
+            [class.active]="isPodcastMode"
             (click)="
-              readingblog
+              isPodcastMode
                 ? isPaused
-                  ? resume()
-                  : pause()
+                  ? resumePodcast()
+                  : pausePodcast()
                 : start(post.bodyofcontent)
             "
           >
+            <i class="fas" [ngClass]="{
+              'fa-spinner fa-spin': isGeneratingPodcast,
+              'fa-pause': isPodcastMode && !isPaused,
+              'fa-play': isPodcastMode && isPaused,
+              'fa-podcast': !isPodcastMode && !isGeneratingPodcast
+            }"></i>
             {{
-              isAiLoading
-                ? "LOADING..."
-                : readingblog
+              isGeneratingPodcast
+                ? "GENERATING..."
+                : isPodcastMode
                 ? isPaused
-                  ? "RESUME"
-                  : "STOP"
-                : "LISTEN"
+                  ? "RESUME PODCAST"
+                  : "PAUSE PODCAST"
+                : "START PODCAST"
             }}
           </button>
         </div>
+        
+        <div *ngIf="isPodcastMode">
+          <button class="footerbutton stop-button" (click)="stopPodcastMode()">
+            <i class="fas fa-stop"></i>
+            STOP PODCAST
+          </button>
+        </div>
+    
         <!-- <div>
           <button class="footerbutton" (click)="stop()">STOP</button>
         </div> -->
         <div>
           <button class="footerbutton" (click)="share()">SHARE</button>
         </div>
+        <!-- <div>
+          <select [(ngModel)]="ambientSoundType" class="footerbutton">
+            <option value="cafe">Cafe Ambience</option>
+            <option value="nature">Nature Ambience</option>
+            <option value="none">No Ambience</option>
+          </select>
+        </div> -->
         <div>
           <button class="footerbutton" (click)="downloadBlog()">
             <img

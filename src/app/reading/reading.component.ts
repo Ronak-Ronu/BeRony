@@ -12,7 +12,26 @@ import jsPDF from 'jspdf';
 import sanitizeHtml from 'sanitize-html';
 import { AiService } from '../services/ai.service';
 import { Observable } from 'rxjs';
+import { Howl } from 'howler'; // For better audio handling
 
+const VOICES = [
+  { name: 'Alex', gender: 'male', rate: 1.0, pitch: 1.0 },
+  { name: 'Samantha', gender: 'female', rate: 0.95, pitch: 1.1 },
+  { name: 'Daniel', gender: 'male', rate: 1.05, pitch: 0.95 }
+];
+
+const BACKGROUND_SOUNDS = {
+  cafe: 'assets/audio/cafe-ambience.mp3',
+  nature: 'assets/audio/nature-ambience.mp3',
+  none: null
+};
+
+interface PodcastSegment {
+  speaker: 'host' | 'guest';
+  text: string;
+  voice: SpeechSynthesisVoice | null;
+  duration?: number;
+}
 
 @Component({
   selector: 'app-reading',
@@ -76,8 +95,43 @@ export class ReadingComponent implements OnInit, AfterViewInit {
   audioChunks: string[] | undefined;
   poll: any = null;
   userId: string = ''; 
-    isExplanationLoading = false;
-    aiExplanation = ''; 
+  isExplanationLoading = false;
+  aiExplanation = ''; 
+
+   currentVoiceIndex = 0;
+   backgroundSound: Howl | null = null;
+   audioQueue: Howl[] = [];
+   isPlaying = false;
+   currentAudio: Howl | null = null;
+   ambientSoundType: keyof typeof BACKGROUND_SOUNDS = 'cafe';
+
+
+   podcastSegments: PodcastSegment[] = [];
+  currentSegmentIndex = 0;
+  isPodcastMode = false;
+  isGeneratingPodcast = false;
+  podcastProgress = 0;
+  currentPodcastAudio: HTMLAudioElement | null = null;
+private podcastVoices = {
+  host: {
+    name: 'Alex',
+    gender: 'male',
+    rate: 0.95,
+    pitch: 0.1,
+    volume: 1.0,
+    personality: 'curious and engaging host',
+    voicePreferences: ['Google UK English Male', 'Microsoft Mark', 'Alex', 'Daniel']
+  },
+  guest: {
+    name: 'Samantha', 
+    gender: 'female',
+    rate: 1.0,
+    pitch: 1.2,
+    volume: 1.0,
+    personality: 'knowledgeable and explanatory expert',
+    voicePreferences: ['Google US English Female', 'Microsoft Zira', 'Samantha', 'Victoria']
+  }
+};
 
   constructor(private service:WriteserviceService,private cdr: ChangeDetectorRef,private router:ActivatedRoute,
     // private ngnavigateservice:NgNavigatorShareService,
@@ -125,7 +179,6 @@ export class ReadingComponent implements OnInit, AfterViewInit {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = content;
     
-    // Process text nodes, skipping certain elements
     const walker = document.createTreeWalker(
       tempDiv,
       NodeFilter.SHOW_TEXT,
@@ -158,7 +211,6 @@ export class ReadingComponent implements OnInit, AfterViewInit {
           const span = document.createElement('span');
           span.className = 'sentence-highlight';
           
-          // Preserve whitespace
           if (sentence.startsWith(' ')) span.prepend(document.createTextNode(' '));
           span.append(document.createTextNode(sentence.trim()));
           if (sentence.endsWith(' ')) span.append(document.createTextNode(' '));
@@ -174,6 +226,572 @@ export class ReadingComponent implements OnInit, AfterViewInit {
   
     return tempDiv.innerHTML;
   }
+
+  async generatePodcastConversation(blogContent: string): Promise<PodcastSegment[]> {
+    this.isGeneratingPodcast = true;
+    
+    try {
+      console.log('Starting podcast generation...');
+      console.log('Blog content length:', blogContent.length);
+      
+      // Generate conversation script using AI
+      const podcastScript = await this.createPodcastScript(blogContent);
+      console.log('Generated script:', podcastScript);
+      
+      if (!podcastScript || podcastScript.trim().length === 0) {
+        throw new Error('Empty script generated');
+      }
+      
+      // Convert script to segments with voices
+      const segments = await this.createVoiceSegments(podcastScript);
+      console.log('Generated segments:', segments.length);
+      
+      if (segments.length === 0) {
+        throw new Error('No segments created from script');
+      }
+      
+      return segments;
+    } catch (error) {
+      console.error('Error generating podcast:', error);
+      this.toastr.error(`Failed to generate podcast conversation: ${(error as Error).message || error}`);
+      
+      // Return fallback segments instead of empty array
+      return this.createFallbackSegments();
+    } finally {
+      this.isGeneratingPodcast = false;
+    }
+  }
+  private async createVoiceSegments(script: string): Promise<PodcastSegment[]> {
+    const segments: PodcastSegment[] = [];
+    
+    try {
+      console.log('Creating voice segments from script...');
+      
+      const lines = script.split('\n').filter(line => line.trim());
+      console.log('Script lines:', lines.length);
+      
+      if (lines.length === 0) {
+        throw new Error('No lines found in script');
+      }
+      
+      // Wait for voices to load with timeout
+      await this.waitForVoicesWithTimeout();
+      
+      const voices = window.speechSynthesis.getVoices();
+      console.log('Available voices:', voices.length);
+      
+      if (voices.length === 0) {
+        console.warn('No voices available, will use default');
+      }
+      
+      // Find best voices with fallbacks
+      const hostVoice = this.findBestVoice(voices, this.podcastVoices.host.voicePreferences, 'male');
+      const guestVoice = this.findBestVoice(voices, this.podcastVoices.guest.voicePreferences, 'female');
+  
+      console.log('Selected host voice:', hostVoice?.name || 'default');
+      console.log('Selected guest voice:', guestVoice?.name || 'default');
+  
+      for (const line of lines) {
+        const trimmedLine = line.trim();
+        
+        if (trimmedLine.startsWith('HOST:')) {
+          const text = trimmedLine.replace('HOST:', '').trim();
+          if (text.length > 0) {
+            segments.push({
+              speaker: 'host',
+              text: text,
+              voice: hostVoice
+            });
+          }
+        } else if (trimmedLine.startsWith('GUEST:')) {
+          const text = trimmedLine.replace('GUEST:', '').trim();
+          if (text.length > 0) {
+            segments.push({
+              speaker: 'guest', 
+              text: text,
+              voice: guestVoice
+            });
+          }
+        }
+      }
+      
+      console.log('Created segments:', segments.length);
+      
+      if (segments.length === 0) {
+        throw new Error('No valid segments created from script');
+      }
+      
+      return segments;
+    } catch (error) {
+      console.error('Error creating voice segments:', error);
+      throw error;
+    }
+  }
+  
+  // Enhanced voice waiting with timeout
+  private waitForVoicesWithTimeout(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        console.warn('Voice loading timeout, proceeding anyway');
+        resolve();
+      }, 3000); // 3 second timeout
+  
+      if (window.speechSynthesis.getVoices().length > 0) {
+        clearTimeout(timeout);
+        resolve();
+      } else {
+        window.speechSynthesis.onvoiceschanged = () => {
+          clearTimeout(timeout);
+          resolve();
+        };
+      }
+    });
+  }
+  
+  // Create fallback segments when everything else fails
+  private createFallbackSegments(): PodcastSegment[] {
+    const fallbackScript = this.createEnhancedFallbackScript();
+    
+    try {
+      const lines = fallbackScript.split('\n').filter(line => line.trim());
+      const segments: PodcastSegment[] = [];
+      
+      for (const line of lines) {
+        const trimmedLine = line.trim();
+        
+        if (trimmedLine.startsWith('HOST:')) {
+          segments.push({
+            speaker: 'host',
+            text: trimmedLine.replace('HOST:', '').trim(),
+            voice: null // Will use default
+          });
+        } else if (trimmedLine.startsWith('GUEST:')) {
+          segments.push({
+            speaker: 'guest',
+            text: trimmedLine.replace('GUEST:', '').trim(),
+            voice: null // Will use default
+          });
+        }
+      }
+      
+      return segments;
+    } catch (error) {
+      console.error('Error creating fallback segments:', error);
+      
+      // Ultimate fallback - simple segments
+      return [
+        {
+          speaker: 'host',
+          text: `Welcome everyone! Today we're discussing "${this.stripHTML(this.post.title)}" by ${this.post.username}.`,
+          voice: null
+        },
+        {
+          speaker: 'guest',
+          text: `Thanks for having me! This is a really interesting piece that covers some great insights.`,
+          voice: null
+        },
+        {
+          speaker: 'host',
+          text: `Absolutely! The author really knows how to engage their audience. What stood out to you most?`,
+          voice: null
+        },
+        {
+          speaker: 'guest',
+          text: `The practical approach and clear explanations make this content really valuable for readers.`,
+          voice: null
+        }
+      ];
+    }
+  }
+  
+  // Enhanced script creation with better error handling
+  private async createPodcastScript(content: string): Promise<string> {
+    const title = this.stripHTML(this.post.title);
+    const author = this.post.username;
+    const authorEmotion = this.post.userEmotion || '😊';
+    const views = this.post.pageviews || 0;
+    const likes = (this.post.funnycount || 0) + (this.post.loveitcount || 0) + (this.post.sadcount || 0);
+    const tags = this.post.tags?.join(', ') || 'general topics';
+    const createdDate = new Date(this.post.createdAt).toLocaleDateString();
+  
+    const prompt = `Create a dynamic, engaging podcast conversation between David (male host) and Sarah (female expert) discussing this blog post. Make it sound like a live, spontaneous discussion with natural interruptions, agreements, and excitement.
+  
+  BLOG DETAILS:
+  - Title: ${title}
+  - Author: ${author} ${authorEmotion}
+  - Views: ${views.toLocaleString()}
+  - Likes: ${likes}
+  - Published: ${createdDate}
+  - Topics: ${tags}
+  - Content: ${this.stripHTML(content).substring(0, 1500)}
+  
+  CONVERSATION STYLE:
+  - Make it feel like a live podcast recording
+  - Include natural reactions like "Oh wow!", "That's fascinating!", "I love that point!"
+  - Reference the author by name frequently
+  - Mention the engagement stats
+  - Include some friendly debate or different perspectives
+  - Add personal anecdotes or examples
+  - Make it conversational with overlapping thoughts
+  
+  FORMAT: Each line should start with either "HOST:" or "GUEST:"
+  Keep responses 1-2 sentences each for natural flow.
+  Total conversation should be 8-12 exchanges.`;
+  
+    return new Promise((resolve, reject) => {
+      console.log('Calling AI service...');
+      
+      // Add timeout to prevent hanging
+      const timeout = setTimeout(() => {
+        reject(new Error('AI service timeout - falling back to default script'));
+      }, 10000); // 10 second timeout
+  
+      this.aiService.generateBlogInsights(prompt, 'summary').subscribe({
+        next: (response) => {
+          clearTimeout(timeout);
+          console.log('AI service response:', response);
+          
+          if (!response || response.trim().length === 0) {
+            console.warn('Empty AI response, using fallback');
+            resolve(this.createEnhancedFallbackScript());
+          } else {
+            resolve(response);
+          }
+        },
+        error: (error) => {
+          clearTimeout(timeout);
+          console.error('AI service error:', error);
+          console.log('Using fallback script due to AI error');
+          resolve(this.createEnhancedFallbackScript());
+        }
+      });
+    });
+  }
+  
+  private createEnhancedFallbackScript(): string {
+    const title = this.stripHTML(this.post.title);
+    const author = this.post.username;
+    const authorEmotion = this.post.userEmotion || '😊';
+    const views = this.post.pageviews || 0;
+    const likes = (this.post.funnycount || 0) + (this.post.loveitcount || 0) + (this.post.sadcount || 0);
+    const tags = this.post.tags?.slice(0, 3).join(', ') || 'interesting topics';
+    const createdDate = new Date(this.post.createdAt).toLocaleDateString();
+    
+    return `HOST: Hey everyone! Welcome back to Be Rony's Blog Spotlight! I'm Ronu, and today we're diving into an absolutely fascinating piece titled "${title}" by ${author} ${authorEmotion}. Sarah, this post has already gotten ${views.toLocaleString()} views and ${likes} reactions - people are really connecting with this!
+  
+  GUEST: Ronu, I'm so excited to discuss this! When I first read ${author}'s work, I was immediately struck by their unique perspective. The way they tackle ${tags} is refreshingly honest and practical.
+  
+  HOST: Right? And what I love about ${author} is how they published this on ${createdDate} and it's still generating buzz! There's something timeless about their approach. What stood out to you most?
+  
+  GUEST: Oh, absolutely! The depth of research ${author} put into this is incredible. You can tell they really understand their audience. I particularly loved how they break down complex concepts into digestible insights.
+  
+  HOST: That's such a great point! And speaking of insights, ${author} doesn't just theorize - they provide actionable takeaways. Our listeners are going to love the practical applications mentioned throughout the piece.
+  
+  GUEST: Exactly! Plus, ${author} ${authorEmotion} has this wonderful way of writing that feels like you're having a conversation with a knowledgeable friend. It's educational but never condescending.
+  
+  HOST: You know what's impressive? The engagement on this post shows people aren't just reading - they're truly resonating with ${author}'s message. That's the mark of authentic, valuable content.
+  
+  GUEST: I couldn't agree more, Ronu. ${author} has created something that clearly strikes a chord with readers. The ${likes} reactions speak volumes about the impact of their work.
+  
+  HOST: Absolutely! If you haven't checked out "${title}" by ${author} yet, you're missing out on some serious insights. The way they explore ${tags} will definitely give you a fresh perspective.
+  
+  GUEST: And that's what makes great content creators like ${author} so valuable - they don't just share information, they inspire new ways of thinking. This piece is definitely worth your time!
+  
+  HOST: Perfectly said, Sarah! Thanks to ${author} ${authorEmotion} for creating such thought-provoking content, and thanks to all our listeners for joining us today. Until next time, keep exploring and keep learning!
+  
+  GUEST: It's been a pleasure discussing ${author}'s excellent work! Don't forget to check out the full post - there's so much more depth and detail that we couldn't cover in our time together today.`;
+  }
+  
+
+// Helper method to wait for voices to load
+private waitForVoices(): Promise<void> {
+  return new Promise((resolve) => {
+    if (window.speechSynthesis.getVoices().length > 0) {
+      resolve();
+    } else {
+      window.speechSynthesis.onvoiceschanged = () => {
+        resolve();
+      };
+    }
+  });
+}
+
+// Enhanced voice selection method
+private findBestVoice(voices: SpeechSynthesisVoice[], preferences: string[], gender: string): SpeechSynthesisVoice | null {
+  // Try to find voice by preference order
+  for (const preference of preferences) {
+    const voice = voices.find(v => v.name.includes(preference));
+    if (voice) return voice;
+  }
+  
+  // Fallback to gender-based selection
+  const genderVoices = voices.filter(v => {
+    const voiceName = v.name.toLowerCase();
+    if (gender === 'male') {
+      return voiceName.includes('male') || 
+             voiceName.includes('mark') || 
+             voiceName.includes('david') || 
+             voiceName.includes('alex') ||
+             voiceName.includes('daniel');
+    } else {
+      return voiceName.includes('female') || 
+             voiceName.includes('zira') || 
+             voiceName.includes('samantha') || 
+             voiceName.includes('susan') ||
+             voiceName.includes('victoria');
+    }
+  });
+  
+  if (genderVoices.length > 0) {
+    return genderVoices[0];
+  }
+  
+  // Final fallback - use any available voice
+  return voices.find(v => v.lang.startsWith('en')) || voices[0] || null;
+}
+
+async startPodcastMode(content: string) {
+  console.log('Starting podcast mode...');
+  
+  if (this.isPodcastMode) {
+    this.stopPodcastMode();
+    return;
+  }
+
+  this.toastr.info('Generating podcast conversation...', '', { timeOut: 3000 });
+  
+  try {
+    // Validate content
+    if (!content || content.trim().length === 0) {
+      throw new Error('No content available for podcast generation');
+    }
+    
+    if (!this.post) {
+      throw new Error('Post data not available');
+    }
+    
+    console.log('Post data available:', !!this.post);
+    console.log('Content length:', content.length);
+    
+    // Generate podcast conversation
+    this.podcastSegments = await this.generatePodcastConversation(content);
+    
+    if (this.podcastSegments.length === 0) {
+      throw new Error('No podcast segments generated');
+    }
+
+    this.isPodcastMode = true;
+    this.currentSegmentIndex = 0;
+    this.podcastProgress = 0;
+    
+    // Start ambient sound if selected
+    if (this.ambientSoundType !== 'none' && BACKGROUND_SOUNDS[this.ambientSoundType]) {
+      try {
+        this.backgroundSound = new Howl({
+          src: [BACKGROUND_SOUNDS[this.ambientSoundType]],
+          loop: true,
+          volume: 0.2
+        });
+        this.backgroundSound.play();
+      } catch (audioError) {
+        console.warn('Failed to load background sound:', audioError);
+        // Continue without background sound
+      }
+    }
+
+    this.toastr.success('Podcast conversation ready! Starting playback...', '', { timeOut: 2000 });
+    
+    // Start playing segments
+    await this.playPodcastSegments();
+    
+  } catch (error) {
+    console.error('Error starting podcast mode:', error);
+    this.toastr.error(`Failed to start podcast mode: ${(error as Error).message || 'Unknown error'}`);
+    this.isPodcastMode = false;
+    this.isGeneratingPodcast = false;
+  }
+}
+private async playPodcastSegments() {
+  for (let i = this.currentSegmentIndex; i < this.podcastSegments.length; i++) {
+    if (!this.isPodcastMode) break;
+    
+    const segment = this.podcastSegments[i];
+    this.currentSegmentIndex = i;
+    
+    // Update progress
+    this.podcastProgress = (i / this.podcastSegments.length) * 100;
+    
+    // Visual feedback for current speaker
+    this.highlightCurrentSpeaker(segment.speaker);
+    
+    // Wait for pause if needed
+    if (this.isPaused) {
+      await this.waitForResume();
+    }
+    
+    // Play the segment
+    await this.playPodcastSegment(segment);
+    
+    // Add natural pause between speakers
+    await this.addNaturalPause(segment.speaker, i);
+  }
+  
+  // Podcast finished
+  this.completePodcast();
+}
+private async playPodcastSegment(segment: PodcastSegment): Promise<void> {
+  return new Promise((resolve) => {
+    const utterance = new SpeechSynthesisUtterance(segment.text);
+    
+    if (segment.voice) {
+      utterance.voice = segment.voice;
+    }
+    
+    const voiceConfig = this.podcastVoices[segment.speaker];
+    
+    utterance.rate = voiceConfig.rate;
+    utterance.pitch = voiceConfig.pitch;
+    utterance.volume = voiceConfig.volume;
+    
+    if (segment.speaker === 'host') {
+      utterance.rate += (Math.random() - 0.5) * 0.05; // Less variation
+      utterance.pitch += (Math.random() - 0.5) * 0.1; // Slight pitch variation
+    } else {
+      utterance.rate += (Math.random() - 0.5) * 0.08;
+      utterance.pitch += (Math.random() - 0.5) * 0.15; // More pitch variation
+    }
+    
+    utterance.pitch = Math.max(0.5, Math.min(2.0, utterance.pitch));
+    utterance.rate = Math.max(0.5, Math.min(2.0, utterance.rate));
+    
+    utterance.onend = () => {
+      resolve();
+    };
+    
+    utterance.onerror = (event) => {
+      console.error('Speech synthesis error for segment:', segment.text, event);
+      resolve();
+    };
+    
+    window.speechSynthesis.speak(utterance);
+  });
+}
+
+private highlightCurrentSpeaker(speaker: 'host' | 'guest') {
+  const speakerElements = document.querySelectorAll('.podcast-speaker');
+  speakerElements.forEach(el => el.classList.remove('active'));
+  
+  const currentSpeakerEl = document.querySelector(`.podcast-speaker.${speaker}`);
+  if (currentSpeakerEl) {
+    currentSpeakerEl.classList.add('active');
+  }
+  
+  const speakerInfo = speaker === 'host' 
+    ? 'Ronu (Host) discussing...' 
+    : `Sarah (Expert) analyzing ${this.post.username}'s insights...`;
+    
+  this.toastr.info(speakerInfo, '', { 
+    timeOut: 2000, 
+    positionClass: 'toast-bottom-right' 
+  });
+}
+
+
+private async addNaturalPause(speaker: 'host' | 'guest', segmentIndex: number): Promise<void> {
+  if (segmentIndex < this.podcastSegments.length - 1) {
+    const nextSpeaker = this.podcastSegments[segmentIndex + 1].speaker;
+    
+    // Longer pause when switching speakers
+    const pauseDuration = speaker !== nextSpeaker ? 1500 : 800;
+    
+    await new Promise(resolve => setTimeout(resolve, pauseDuration));
+  }
+}
+
+private async waitForResume(): Promise<void> {
+  return new Promise(resolve => {
+    const interval = setInterval(() => {
+      if (!this.isPaused || !this.isPodcastMode) {
+        clearInterval(interval);
+        resolve();
+      }
+    }, 100);
+  });
+}
+
+private completePodcast() {
+  this.isPodcastMode = false;
+  this.podcastProgress = 100;
+  this.currentSegmentIndex = 0;
+  
+  if (this.backgroundSound) {
+    this.backgroundSound.stop();
+    this.backgroundSound = null;
+  }
+  
+  // Clear speaker highlights
+  const speakerElements = document.querySelectorAll('.podcast-speaker');
+  speakerElements.forEach(el => el.classList.remove('active'));
+  
+  this.toastr.success('Podcast conversation completed! 🎉');
+  this.cdr.detectChanges();
+}
+
+stopPodcastMode() {
+  this.isPodcastMode = false;
+  this.isGeneratingPodcast = false;
+  this.podcastProgress = 0;
+  this.currentSegmentIndex = 0;
+  this.podcastSegments = [];
+  
+  // Stop all speech
+  window.speechSynthesis.cancel();
+  
+  if (this.backgroundSound) {
+    this.backgroundSound.stop();
+    this.backgroundSound = null;
+  }
+  
+  // Clear any audio
+  if (this.currentPodcastAudio) {
+    this.currentPodcastAudio.pause();
+    this.currentPodcastAudio = null;
+  }
+  
+  this.toastr.info('Podcast mode stopped');
+  this.cdr.detectChanges();
+}
+
+pausePodcast() {
+  this.isPaused = true;
+  window.speechSynthesis.pause();
+  
+  if (this.backgroundSound) {
+    this.backgroundSound.pause();
+  }
+  
+  this.toastr.info('Podcast paused');
+}
+
+resumePodcast() {
+  this.isPaused = false;
+  window.speechSynthesis.resume();
+  
+  if (this.backgroundSound) {
+    this.backgroundSound.play();
+  }
+  
+  this.toastr.info('Podcast resumed');
+}
+
+// Update your existing start method to use podcast mode
+async start(text: string): Promise<void> {
+  if (this.isPodcastMode) {
+    this.stopPodcastMode();
+  } else {
+    await this.startPodcastMode(text);
+  }
+}
 
 
   getTextNodes(element: HTMLElement): Node[] {
@@ -948,52 +1566,167 @@ stripHTML(html:string) {
   return html.replace(/<\/?[^>]+(>|$)/g, "");
 }
 
+private getNextVoice() {
+  this.currentVoiceIndex = (this.currentVoiceIndex + 1) % VOICES.length;
+  return VOICES[this.currentVoiceIndex];
+}
 
-async start(text: string): Promise<void> {
-  try {
-    this.isAiLoading = true;
-    this.readingblog = true;
-    this.isPaused = false;
-    const cleanText = this.stripHTML(text);
-    const cacheKey = `tts_${this.postid}`;
-    const cachedAudio = localStorage.getItem(cacheKey);
+private createUtterance(text: string, voiceConfig: any): SpeechSynthesisUtterance {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.voice = window.speechSynthesis.getVoices().find(v => v.name.includes(voiceConfig.name)) || 
+                   window.speechSynthesis.getVoices().find(v => v.lang === 'en-US') || 
+                   window.speechSynthesis.getVoices()[0];
+  utterance.rate = voiceConfig.rate;
+  utterance.pitch = voiceConfig.pitch;
+  utterance.volume = 1;
+  return utterance;
+}
 
-    if (cachedAudio) {
-      this.audio.src = cachedAudio;
-      this.audio.playbackRate = this.getPlaybackRate();
-      try {
-        await this.audio.play();
-        this.renderer.addClass(document.querySelector('.bodycontentsection'), 'reading-active');
-        this.audio.onended = () => this.endReading();
-        this.isAiLoading = false;
-        this.cdr.detectChanges();
-        return;
-      } catch (error) {
-        // console.error('Audio playback error:', error);
-        this.toastr.error('Failed to play cached audio. Falling back to browser TTS.');
-        this.fallbackToSpeechSynthesis(cleanText);
-        return;
-      }
+private playTextChunk(text: string) {
+  return new Promise<void>((resolve) => {
+    const voiceConfig = this.getNextVoice();
+    const utterance = this.createUtterance(text, voiceConfig);
+    
+    utterance.onend = () => {
+      resolve();
+    };
+    
+    window.speechSynthesis.speak(utterance);
+  });
+}
+
+async startPodcastReading(text: string) {
+  if (this.isPlaying) {
+    this.stopReading();
+    return;
+  }
+
+  this.isPlaying = true;
+  this.readingblog = true;
+  this.isPaused = false;
+  
+  // Start ambient sound if selected
+  if (this.ambientSoundType !== 'none') {
+    this.backgroundSound = new Howl({
+      src: [BACKGROUND_SOUNDS[this.ambientSoundType]],
+      loop: true,
+      volume: 0.3
+    });
+    this.backgroundSound.play();
+  }
+
+  // Process text into paragraphs
+  const paragraphs = this.stripHTML(text)
+    .split('\n')
+    .filter(p => p.trim().length > 0);
+  
+  // Read paragraphs with alternating voices
+  for (const paragraph of paragraphs) {
+    if (!this.isPlaying) break;
+    if (this.isPaused) {
+      await new Promise(resolve => {
+        const interval = setInterval(() => {
+          if (!this.isPaused) {
+            clearInterval(interval);
+            resolve(null);
+          }
+        }, 100);
+      });
     }
+    
+    await this.playTextChunk(paragraph);
+    // Add a slight pause between paragraphs
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
 
-    this.textChunks = cleanText.match(/.{1,1000}/g) || [cleanText];
-    this.currentChunk = 0;
-    this.renderer.addClass(document.querySelector('.bodycontentsection'), 'reading-active');
+  this.stopReading();
+}
 
-    // Preload all audio chunks
-    await this.preloadAudioChunks();
+stopReading() {
+  this.isPlaying = false;
+  this.readingblog = false;
+  window.speechSynthesis.cancel();
+  if (this.backgroundSound) {
+    this.backgroundSound.stop();
+    this.backgroundSound = null;
+  }
+  this.cdr.detectChanges();
+}
 
-    // Start playing the first chunk
-    await this.playNextChunk();
-  } catch (error) {
-    // console.error('TTS Error:', error);
-    this.toastr.error('Failed to generate audio. Falling back to browser TTS.');
-    this.fallbackToSpeechSynthesis(this.textChunks.join(' '));
-  } finally {
-    this.isAiLoading = false;
-    this.cdr.detectChanges();
+pauseReading() {
+  this.isPaused = true;
+  window.speechSynthesis.pause();
+  if (this.backgroundSound) {
+    this.backgroundSound.pause();
   }
 }
+
+resumeReading() {
+  this.isPaused = false;
+  window.speechSynthesis.resume();
+  if (this.backgroundSound) {
+    this.backgroundSound.play();
+  }
+}
+
+
+stop() {
+  this.stopReading();
+}
+
+pause() {
+  this.pauseReading();
+}
+
+resume() {
+  this.resumeReading();
+}
+
+// async start(text: string): Promise<void> {
+//   try {
+//     this.isAiLoading = true;
+//     this.readingblog = true;
+//     this.isPaused = false;
+//     const cleanText = this.stripHTML(text);
+//     const cacheKey = `tts_${this.postid}`;
+//     const cachedAudio = localStorage.getItem(cacheKey);
+
+//     if (cachedAudio) {
+//       this.audio.src = cachedAudio;
+//       this.audio.playbackRate = this.getPlaybackRate();
+//       try {
+//         await this.audio.play();
+//         this.renderer.addClass(document.querySelector('.bodycontentsection'), 'reading-active');
+//         this.audio.onended = () => this.endReading();
+//         this.isAiLoading = false;
+//         this.cdr.detectChanges();
+//         return;
+//       } catch (error) {
+//         // console.error('Audio playback error:', error);
+//         this.toastr.error('Failed to play cached audio. Falling back to browser TTS.');
+//         this.fallbackToSpeechSynthesis(cleanText);
+//         return;
+//       }
+//     }
+
+//     this.textChunks = cleanText.match(/.{1,1000}/g) || [cleanText];
+//     this.currentChunk = 0;
+//     this.renderer.addClass(document.querySelector('.bodycontentsection'), 'reading-active');
+
+//     // Preload all audio chunks
+//     await this.preloadAudioChunks();
+
+//     // Start playing the first chunk
+//     await this.playNextChunk();
+//   } catch (error) {
+//     // console.error('TTS Error:', error);
+//     this.toastr.error('Failed to generate audio. Falling back to browser TTS.');
+//     this.fallbackToSpeechSynthesis(this.textChunks.join(' '));
+//   } finally {
+//     this.isAiLoading = false;
+//     this.cdr.detectChanges();
+//   }
+// }
 
 private async preloadAudioChunks(): Promise<void> {
   this.audioChunks = [];
@@ -1117,41 +1850,41 @@ private fallbackToSpeechSynthesis(text: string): void {
   };
 }
 
-pause(): void {
-  if (!this.isPaused) {
-    this.audio.pause();
-    window.speechSynthesis.pause();
-    this.isPaused = true;
-    this.readingblog = false;
-    this.cdr.detectChanges();
-  }
-}
+// pause(): void {
+//   if (!this.isPaused) {
+//     this.audio.pause();
+//     window.speechSynthesis.pause();
+//     this.isPaused = true;
+//     this.readingblog = false;
+//     this.cdr.detectChanges();
+//   }
+// }
 
-resume(): void {
-  if (this.isPaused) {
-    if (this.audio.src) {
-      this.audio.play();
-    } else {
-      window.speechSynthesis.resume();
-    }
-    this.isPaused = false;
-    this.readingblog = true;
-    this.cdr.detectChanges();
-  }
-}
+// resume(): void {
+//   if (this.isPaused) {
+//     if (this.audio.src) {
+//       this.audio.play();
+//     } else {
+//       window.speechSynthesis.resume();
+//     }
+//     this.isPaused = false;
+//     this.readingblog = true;
+//     this.cdr.detectChanges();
+//   }
+// }
 
-stop(): void {
-  this.audio.pause();
-  this.audio.currentTime = 0;
-  window.speechSynthesis.cancel();
-  this.readingblog = false;
-  this.isPaused = false;
-  this.currentChunk = 0;
-  this.textChunks = [];
-  this.renderer.removeClass(document.querySelector('.bodycontentsection'), 'reading-active');
-  URL.revokeObjectURL(this.audio.src);
-  this.cdr.detectChanges();
-}
+// stop(): void {
+//   this.audio.pause();
+//   this.audio.currentTime = 0;
+//   window.speechSynthesis.cancel();
+//   this.readingblog = false;
+//   this.isPaused = false;
+//   this.currentChunk = 0;
+//   this.textChunks = [];
+//   this.renderer.removeClass(document.querySelector('.bodycontentsection'), 'reading-active');
+//   URL.revokeObjectURL(this.audio.src);
+//   this.cdr.detectChanges();
+// }
 
 setVoiceStyle(): void {
   if (this.audio.src) {

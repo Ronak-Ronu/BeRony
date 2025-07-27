@@ -73,7 +73,30 @@
     text-align: center;
     padding: 20px;
   }
+  /* Add to your reading.component.css */
+select.footerbutton {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 8px 12px;
+    background-color: #6e7af9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
   
+  /* Audio progress indicator */
+  .audio-progress {
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .audio-progress progress {
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+  }
   .professional-loading .spinner {
     border: 4px solid #f3f3f3;
     border-top: 4px solid #6e7af9;
