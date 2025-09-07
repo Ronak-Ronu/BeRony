@@ -1,10 +1,15 @@
 // src/app/services/ai.service.ts
 import { Injectable } from '@angular/core';
-import { Observable, from, of, throwError } from 'rxjs';
-import { catchError, delayWhen, map,retryWhen, delay, scan, switchMap } from 'rxjs/operators';
+import { Observable, from, of, throwError, timer } from 'rxjs';
+import { catchError, delayWhen, map,retryWhen, delay, scan, switchMap, concatMap, reduce, mergeMap, retry } from 'rxjs/operators';
 import { model } from '../../../firebase-config';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+
+
+function splitIntoChunks(text: string): string[] {
+  return text.match(/[^.!?]+[.!?]+/g) || [text];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -193,7 +198,7 @@ Example Format{ this format is not necessary, but you can use it as a reference 
     const params = {
       api_key: 'yjwN0kfk4xk2BHKeuuoEts36Pdx80oJH',
       q: keyword,
-      limit: '5', // Increase limit for better results
+      limit: '5',
       rating: 'g',
       lang: 'en'
     };
@@ -387,5 +392,75 @@ Example Output which is not completely necessary to follow add creativeness.
       })
     );
   }
+  generateHumanPodcastScript(blogContent: string, characters = ['Host', 'Guest']): Observable<string> {
+    const chunks = splitIntoChunks(blogContent);
+
+    // Use RxJS to process each chunk in sequence
+    return from(chunks).pipe(
+      mergeMap((chunk, idx) => {
+        const speaker = idx % 2 === 0 ? characters[0] : characters[1];
+        const streak = idx > 0 ? `Previous: ${chunks[idx - 1]}` : '';
+        const personalityPrompt = `
+          Play the role of a lively, opinionated YouTuber in a podcast.
+          React conversationally to the following point, adding humor, surprise, and personal anecdotes where possible.
+          Maintain a natural flow, referencing previous comments when needed.
+          Use an informal, energetic style. Make it engaging, like a popular podcast or YouTube banter.
+          
+          ${streak}
+          
+          ${speaker}, react to this: "${chunk.trim()}"
+        `;
+        return this.generateContent(personalityPrompt);
+      },2),
+      reduce((acc, val) => `${acc}\n${val}`, '')
+    );
+  }
+// ai.service.ts
+generatePlainText(prompt: string): Observable<string> {
+  if (!model) return throwError(() => new Error('AI model is not initialized'));
+  return from(model.generateContent(prompt)).pipe(
+    map((response: any) => {
+      const parts: string[] = response?.response?.candidates?.[0]?.content?.parts || [];
+      const text = parts.map((p: any) => p.text || '').join('').trim();
+      return text.replace(/<[^>]+>/g, '');
+    }),
+    // retry w/ backoff: 200ms, 400ms, 800ms
+    // RxJS 7+ supports retry({ count, delay })
+    // import { timer } from 'rxjs';
+    retry({
+      count: 3,
+      delay: (_err, retryIndex) => timer(Math.pow(2, retryIndex - 1) * 200)
+    })
+  );
+}
+
+
+generatePodcastScriptStrict(blog: {
+  title: string; author: string; views: number; likes: number; tags: string; createdDate: string; content: string;
+}): Observable<string> {
+// ai.service.ts — generatePodcastScriptStrict
+const prompt = `
+Create a dynamic, engaging podcast conversation with exactly 14–16 back-and-forth lines.
+Output MUST be PLAIN TEXT ONLY.
+Each line MUST start with either "HOST:" or "GUEST:" followed by a space and 1–2 sentences.
+Do NOT include HTML, images, GIFs, or markdown.
+Use the details, but keep it conversational, with brief reactions and occasional friendly debate.
+
+BLOG DETAILS:
+- Title: ${blog.title}
+- Author: ${blog.author}
+- Views: ${blog.views}
+- Likes: ${blog.likes}
+- Topics: ${blog.tags}
+- Published: ${blog.createdDate}
+- Content: ${blog.content.substring(0, 1500)}
+
+FORMAT EXAMPLE:
+HOST: Short reaction or question.
+GUEST: Short response with an example.
+`;
+  return this.generatePlainText(prompt);
+}
 
 }
+

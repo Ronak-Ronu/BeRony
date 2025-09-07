@@ -261,92 +261,77 @@ private podcastVoices = {
       this.isGeneratingPodcast = false;
     }
   }
+  private normalizeScript(s: string): string {
+    return s
+      .replace(/<[^>]*>/g, '')
+      .replace(/\r\n?/g, '\n')
+      .replace(/\u00A0/g, ' ')
+      .replace(/[\u200B-\u200D\uFEFF]/g, '');
+  }
+
   private async createVoiceSegments(script: string): Promise<PodcastSegment[]> {
-    const segments: PodcastSegment[] = [];
-    
-    try {
-      console.log('Creating voice segments from script...');
-      
-      const lines = script.split('\n').filter(line => line.trim());
-      console.log('Script lines:', lines.length);
-      
-      if (lines.length === 0) {
-        throw new Error('No lines found in script');
-      }
-      
-      // Wait for voices to load with timeout
-      await this.waitForVoicesWithTimeout();
-      
-      const voices = window.speechSynthesis.getVoices();
-      console.log('Available voices:', voices.length);
-      
-      if (voices.length === 0) {
-        console.warn('No voices available, will use default');
-      }
-      
-      // Find best voices with fallbacks
-      const hostVoice = this.findBestVoice(voices, this.podcastVoices.host.voicePreferences, 'male');
-      const guestVoice = this.findBestVoice(voices, this.podcastVoices.guest.voicePreferences, 'female');
-  
-      console.log('Selected host voice:', hostVoice?.name || 'default');
-      console.log('Selected guest voice:', guestVoice?.name || 'default');
-  
-      for (const line of lines) {
-        const trimmedLine = line.trim();
-        
-        if (trimmedLine.startsWith('HOST:')) {
-          const text = trimmedLine.replace('HOST:', '').trim();
-          if (text.length > 0) {
-            segments.push({
-              speaker: 'host',
-              text: text,
-              voice: hostVoice
-            });
-          }
-        } else if (trimmedLine.startsWith('GUEST:')) {
-          const text = trimmedLine.replace('GUEST:', '').trim();
-          if (text.length > 0) {
-            segments.push({
-              speaker: 'guest', 
-              text: text,
-              voice: guestVoice
-            });
-          }
-        }
-      }
-      
-      console.log('Created segments:', segments.length);
-      
-      if (segments.length === 0) {
-        throw new Error('No valid segments created from script');
-      }
-      
-      return segments;
-    } catch (error) {
-      console.error('Error creating voice segments:', error);
-      throw error;
+  const segments: PodcastSegment[] = [];
+  const cleaned = this.normalizeScript(script);
+
+  await this.waitForVoicesWithTimeout();
+  const voices = window.speechSynthesis.getVoices();
+  const hostVoice = this.findBestVoice(voices, this.podcastVoices.host.voicePreferences, 'male');
+  const guestVoice = this.findBestVoice(voices, this.podcastVoices.guest.voicePreferences, 'female');
+
+  // 2 capture groups: [1]=label, [2]=text
+  const re = /(HOST|GUEST)\s*:\s*([\s\S]*?)(?=(?:^|\n)\s*(?:HOST|GUEST)\s*:|$)/gi;
+
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(cleaned)) !== null) {
+    const roleLabel = m[1];                // FIX: was m[22]
+    const role = roleLabel.toUpperCase() === 'HOST' ? 'host' : 'guest';
+    const text = (m[2] || '')              // FIX: was m[23]
+      .replace(/\s*\n\s*/g, ' ')
+      .trim();
+    if (text) {
+      segments.push({
+        speaker: role,
+        text,
+        voice: role === 'host' ? hostVoice : guestVoice
+      });
     }
   }
-  
-  // Enhanced voice waiting with timeout
-  private waitForVoicesWithTimeout(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        console.warn('Voice loading timeout, proceeding anyway');
-        resolve();
-      }, 3000); // 3 second timeout
-  
-      if (window.speechSynthesis.getVoices().length > 0) {
-        clearTimeout(timeout);
-        resolve();
-      } else {
-        window.speechSynthesis.onvoiceschanged = () => {
-          clearTimeout(timeout);
-          resolve();
-        };
-      }
-    });
+
+  // Keep your existing padding to minimum 8 segments
+  if (segments.length < 8) {
+    const sents = cleaned.split(/(?<=[.!?])\s+/).filter(Boolean);
+    let i = 0;
+    while (segments.length < 8 && i < sents.length) {
+      const role = segments.length % 2 === 0 ? 'host' : 'guest';
+      segments.push({ speaker: role, text: sents[i++], voice: role === 'host' ? hostVoice : guestVoice });
+    }
   }
+  if (segments.length < 8) {
+    const fillers = [
+      'Big takeaway here is practical and clear.',
+      'Right, and a quick example drives it home.'
+    ];
+    while (segments.length < 8) {
+      const role = segments.length % 2 === 0 ? 'host' : 'guest';
+      const text = fillers[segments.length % fillers.length];
+      segments.push({ speaker: role, text, voice: role === 'host' ? hostVoice : guestVoice });
+    }
+  }
+  return segments;
+}
+
+private waitForVoicesWithTimeout(): Promise<void> {
+  return new Promise((resolve) => {
+    if (window.speechSynthesis.getVoices().length > 0) return resolve();
+    const timer = setTimeout(() => resolve(), 3000);
+    const handler = () => {
+      clearTimeout(timer);
+      window.speechSynthesis.removeEventListener('voiceschanged', handler);
+      resolve();
+    };
+    window.speechSynthesis.addEventListener('voiceschanged', handler);
+  });
+}
   
   // Create fallback segments when everything else fails
   private createFallbackSegments(): PodcastSegment[] {
@@ -403,70 +388,66 @@ private podcastVoices = {
       ];
     }
   }
-  
-  // Enhanced script creation with better error handling
-  private async createPodcastScript(content: string): Promise<string> {
-    const title = this.stripHTML(this.post.title);
-    const author = this.post.username;
-    const authorEmotion = this.post.userEmotion || '😊';
-    const views = this.post.pageviews || 0;
-    const likes = (this.post.funnycount || 0) + (this.post.loveitcount || 0) + (this.post.sadcount || 0);
-    const tags = this.post.tags?.join(', ') || 'general topics';
-    const createdDate = new Date(this.post.createdAt).toLocaleDateString();
-  
-    const prompt = `Create a dynamic, engaging podcast conversation between David (male host) and Sarah (female expert) discussing this blog post. Make it sound like a live, spontaneous discussion with natural interruptions, agreements, and excitement.
-  
-  BLOG DETAILS:
-  - Title: ${title}
-  - Author: ${author} ${authorEmotion}
-  - Views: ${views.toLocaleString()}
-  - Likes: ${likes}
-  - Published: ${createdDate}
-  - Topics: ${tags}
-  - Content: ${this.stripHTML(content).substring(0, 1500)}
-  
-  CONVERSATION STYLE:
-  - Make it feel like a live podcast recording
-  - Include natural reactions like "Oh wow!", "That's fascinating!", "I love that point!"
-  - Reference the author by name frequently
-  - Mention the engagement stats
-  - Include some friendly debate or different perspectives
-  - Add personal anecdotes or examples
-  - Make it conversational with overlapping thoughts
-  
-  FORMAT: Each line should start with either "HOST:" or "GUEST:"
-  Keep responses 1-2 sentences each for natural flow.
-  Total conversation should be 8-12 exchanges.`;
-  
-    return new Promise((resolve, reject) => {
-      console.log('Calling AI service...');
-      
-      // Add timeout to prevent hanging
-      const timeout = setTimeout(() => {
-        reject(new Error('AI service timeout - falling back to default script'));
-      }, 10000); // 10 second timeout
-  
-      this.aiService.generateBlogInsights(prompt, 'summary').subscribe({
-        next: (response) => {
-          clearTimeout(timeout);
-          console.log('AI service response:', response);
-          
-          if (!response || response.trim().length === 0) {
-            console.warn('Empty AI response, using fallback');
-            resolve(this.createEnhancedFallbackScript());
-          } else {
-            resolve(response);
-          }
-        },
-        error: (error) => {
-          clearTimeout(timeout);
-          console.error('AI service error:', error);
-          console.log('Using fallback script due to AI error');
-          resolve(this.createEnhancedFallbackScript());
-        }
-      });
-    });
+
+
+private isValidLabeledScript(s: string): boolean {
+  const lines = s.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const labeled = lines.filter(l => /^(HOST|GUEST)\s*:/.test(l));
+  return labeled.length >= 8; // require a healthy conversation length
+}
+
+private buildLocalPodcastScript(): string {
+  const title = this.stripHTML(this.post.title);
+  const author = this.post.username;
+  const tags = (this.post.tags?.slice(0,3).join(', ')) || 'general topics';
+  const created = new Date(this.post.createdAt).toLocaleDateString();
+  const likes = (this.post.funnycount||0)+(this.post.loveitcount||0)+(this.post.sadcount||0);
+  const views = this.post.pageviews || 0;
+
+  const bullets = this.stripHTML(this.post.bodyofcontent)
+    .split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 12);
+
+  const lines: string[] = [];
+  for (let i = 0; i < Math.max(10, bullets.length); i++) {
+    const role = i % 2 === 0 ? 'HOST' : 'GUEST';
+    const text = bullets[i] || (i % 2 === 0
+      ? `Quick thought on "${title}" by ${author}—that hook works.` 
+      : `Agree, and published on ${created}, it still resonates across ${tags}.`);
+    lines.push(`${role}: ${text}`);
   }
+  return lines.slice(0, 12).join('\n');
+}
+
+private async createPodcastScript(content: string): Promise<string> {
+  const payload = {
+    title: this.stripHTML(this.post.title),
+    author: this.post.username,
+    views: this.post.pageviews || 0,
+    likes: (this.post.funnycount||0)+(this.post.loveitcount||0)+(this.post.sadcount||0),
+    tags: (this.post.tags?.slice(0,5).join(', ')) || 'general topics',
+    createdDate: new Date(this.post.createdAt).toLocaleDateString(),
+    content: this.stripHTML(content)
+  };
+
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => resolve(this.buildLocalPodcastScript()), 8000);
+    this.aiService.generatePodcastScriptStrict(payload).subscribe({
+      next: (raw) => {
+        clearTimeout(timer);
+        const cleaned = raw
+          .replace(/<[^>]*>/g, '')
+          .replace(/\r\n?/g, '\n')
+          .replace(/\u00A0/g, ' ')
+          .replace(/[\u200B-\u200D\uFEFF]/g, '')
+          .split('\n').map(l => l.trim()).filter(Boolean).join('\n');
+        resolve(this.isValidLabeledScript(cleaned) ? cleaned : this.buildLocalPodcastScript());
+      },
+      error: () => { clearTimeout(timer); resolve(this.buildLocalPodcastScript()); }
+    });
+  });
+}
+
+    
   
   private createEnhancedFallbackScript(): string {
     const title = this.stripHTML(this.post.title);
@@ -552,6 +533,7 @@ private findBestVoice(voices: SpeechSynthesisVoice[], preferences: string[], gen
 
 async startPodcastMode(content: string) {
   console.log('Starting podcast mode...');
+  window.speechSynthesis.cancel();
   
   if (this.isPodcastMode) {
     this.stopPodcastMode();
