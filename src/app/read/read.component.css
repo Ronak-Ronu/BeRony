@@ -267,7 +267,7 @@ input:focus{
     align-items: stretch;
     margin-top: 7%;
     padding: 20px;
-    /* border: 0.5px solid grey; */
+    border: 0.1px solid #bfc3eb; 
     border-radius: 20px;
     cursor: pointer;
     position: relative;
@@ -276,6 +276,7 @@ input:focus{
     --y: 50%;
     transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
+
 
 .contentdivs:hover {
     background-color: #bfc3eb;
@@ -312,6 +313,201 @@ input:focus{
     width: 500px;
     text-wrap: pretty;
 }
+
+.blogscontainer.grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 20px;
+}
+
+.grid-view .contentdivs {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e0e0ff;
+}
+
+.grid-view .contentdivs:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(110, 122, 249, 0.2);
+}
+
+.grid-view .thumbnail {
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px 16px 0 0;
+}
+
+.grid-view .rightcontentthumbnail {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.grid-view .thumbnailname {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.4;
+}
+
+.grid-view .thumbnailname p {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.grid-view .profilenameimg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.grid-view .footerbuttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.grid-view .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .blogscontainer.grid-view {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .grid-view .thumbnail {
+    height: 180px;
+  }
+
+  .grid-view .thumbnailname {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .blogscontainer.grid-view {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .grid-view .thumbnail {
+    height: 160px;
+  }
+}
+
+
+.blogscontainer.magazine-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 30px;
+  padding: 30px;
+}
+
+.magazine-view .contentdivs {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.magazine-view .contentdivs:nth-child(3n + 1) {
+  grid-row: span 2;
+}
+
+.magazine-view .contentdivs:hover {
+  transform: translateY(-8px);
+}
+
+.magazine-view .thumbnail {
+  width: 100%;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px 20px 0 0;
+}
+
+.magazine-view .contentdivs:nth-child(3n + 1) .thumbnail {
+  height: 400px;
+}
+
+.magazine-view .rightcontentthumbnail {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.magazine-view .thumbnailname {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: 'Julius Sans One', sans-serif;
+  color: #333;
+}
+
+.magazine-view .thumbnailname p {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.magazine-view .footerbuttons {
+  flex-direction: row;
+  gap: 12px;
+}
+
+.magazine-view .tags {
+  gap: 10px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .magazine-view .contentdivs {
+    grid-template-columns: 1fr;
+  }
+
+  .magazine-view .contentdivs:nth-child(3n + 1) {
+    grid-row: span 1;
+  }
+
+  .magazine-view .thumbnail {
+    height: 250px;
+  }
+
+  .magazine-view .contentdivs:nth-child(3n + 1) .thumbnail {
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .magazine-view .thumbnailname {
+    font-size: 1.5rem;
+  }
+
+  .magazine-view .thumbnailname p {
+    font-size: 0.9rem;
+  }
+}
+
+
 .footerbuttons{
     display: flex;
     align-items: flex-start;
@@ -627,6 +823,42 @@ input:focus{
 {
     font-size: 30px;
 }
+
+/* Display Style Selector */
+.display-style-selector {
+  margin: 15px 0;
+  padding: 0 4%;
+}
+
+.style-options {
+  display: flex;
+  gap: 10px;
+}
+
+.style-options button {
+  background: #f0f0f0;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.style-options button:hover {
+  background: #d5d8f9;
+}
+
+.style-options button.active {
+  background: #6e7af9;
+  color: white;
+}
+
+
+
 .pickprofileblog{
     height: auto;
     width: 35px;

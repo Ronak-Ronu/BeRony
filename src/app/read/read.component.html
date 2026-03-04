@@ -78,15 +78,19 @@
       Games
     </button>
   </div>
+
   <a routerLink="/blogreel">
     <button class="reelitbtn">Reel it</button>
   </a>
+
   <!-- endoffilteritems -->
 
   <div class="readcontainer">
-
     <div
       class="blogscontainer"
+      [class.grid-view]="currentView === 'grid'"
+      [class.magazine-view]="currentView === 'magazine'"
+      [@viewTransition]="currentView"
       infiniteScroll
       [infiniteScrollDistance]="4"
       [infiniteScrollThrottle]="30"
@@ -94,7 +98,9 @@
     >
       <div class="stories-container">
         <div class="chatroombutton">
-          <button (click)="showChatRoom()" class="create-button showchatroom">CHAT ROOM 🚪</button>
+          <button (click)="showChatRoom()" class="create-button showchatroom">
+            CHAT ROOM 🚪
+          </button>
         </div>
 
         <div class="stories-scroll">
@@ -129,15 +135,28 @@
         >
           <div class="fullscreen-content">
             <div class="storyinfo">
-              <div (click)="goToAuthorProfile(selectedStory.userId)" class="userstoryname" >
+              <div
+                (click)="goToAuthorProfile(selectedStory.userId)"
+                class="userstoryname"
+              >
                 {{ selectedStory.username || "Guest" }}
               </div>
-              <div class="datecreatedstory"> 
-                {{selectedStory.createdAt | date:'mediumDate'}}  
+              <div class="datecreatedstory">
+                {{ selectedStory.createdAt | date : "mediumDate" }}
               </div>
-      
-              <button class="share-button" (click)="share(selectedStory)" aria-label="Share story" >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+              <button
+                class="share-button"
+                (click)="share(selectedStory)"
+                aria-label="Share story"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
                   <circle cx="18" cy="5" r="3"></circle>
                   <circle cx="6" cy="12" r="3"></circle>
                   <circle cx="18" cy="19" r="3"></circle>
@@ -146,7 +165,6 @@
                 </svg>
                 Share
               </button>
-
             </div>
             <img
               *ngIf="selectedStory.fileType === 'image'"
@@ -161,16 +179,20 @@
               muted
             ></video>
             <div class="story-description" *ngIf="selectedStory.description">
-              <p [class.truncated]="isTruncated">{{ selectedStory.description }}</p>
-              <button *ngIf="selectedStory.description.length > 100" (click)="toggleTruncate()" class="see-more-btn">
-                {{ isTruncated ? 'See More' : 'See Less' }}
+              <p [class.truncated]="isTruncated">
+                {{ selectedStory.description }}
+              </p>
+              <button
+                *ngIf="selectedStory.description.length > 100"
+                (click)="toggleTruncate()"
+                class="see-more-btn"
+              >
+                {{ isTruncated ? "See More" : "See Less" }}
               </button>
             </div>
           </div>
         </div>
       </div>
-
-
 
       <div *ngIf="isloadingblogs" class="loader">
         Loading beautiful blogs for {{ username }} ♥️
@@ -178,30 +200,51 @@
       <div *ngIf="searchUsers.length > 0" class="user-results-container">
         <div class="suggestions-section">
           <div class="horizontal-suggestions">
-            <div *ngFor="let user of searchUsers" class="suggestion-card"  (click)="goToAuthorProfile(user.userId)">
+            <div
+              *ngFor="let user of searchUsers"
+              class="suggestion-card"
+              (click)="goToAuthorProfile(user.userId)"
+            >
               <div>
-                <img 
-                [src]="'https://cloud.appwrite.io/v1/storage/buckets/' + bucketName + '/files/' + user.userId + '/view?project=' + project + '&mode=' + mode" 
-                alt="{{ user.username }}"
-                (click)="goToAuthorProfile(user.userId)"
-                class="suggestion-avatar"
-              >
+                <img
+                  [src]="
+                    'https://cloud.appwrite.io/v1/storage/buckets/' +
+                    bucketName +
+                    '/files/' +
+                    user.userId +
+                    '/view?project=' +
+                    project +
+                    '&mode=' +
+                    mode
+                  "
+                  alt="{{ user.username }}"
+                  (click)="goToAuthorProfile(user.userId)"
+                  class="suggestion-avatar"
+                />
               </div>
               <div class="suggestion-info">
-                <strong style="line-clamp: 1;"  (click)="goToAuthorProfile(user.userId)">{{ user.username }}</strong>
-                <div class="mutual-count">{{ user.followers.length }} followers</div>
-                <div class="mutual-count">{{ user.following.length }} following</div>
-
+                <strong
+                  style="line-clamp: 1"
+                  (click)="goToAuthorProfile(user.userId)"
+                  >{{ user.username }}</strong
+                >
+                <div class="mutual-count">
+                  {{ user.followers.length }} followers
+                </div>
+                <div class="mutual-count">
+                  {{ user.following.length }} following
+                </div>
               </div>
-            </div>
             </div>
           </div>
         </div>
-        
+      </div>
+
       <div *ngFor="let item of blogs">
-        <div class="contentdivs"
-        (mousemove)="onMouseMove($event, $event.currentTarget)"
-        (mouseleave)="onMouseLeave($event.currentTarget)"
+        <div
+          class="contentdivs"
+          (mousemove)="onMouseMove($event, $event.currentTarget)"
+          (mouseleave)="onMouseLeave($event.currentTarget)"
         >
           <div
             [routerLink]="'/reading/' + item._id"
@@ -280,19 +323,45 @@
             </div>
 
             <div class="footerbuttons">
-              <button *ngIf="this.loggedInUserAccount" class="footerbutton" (click)="addPostBookmark(item._id)">
-                <img style="cursor: pointer; transform: rotate(180deg)" src="../../assets/img/bookmark.png" alt="" />
+              <button
+                *ngIf="this.loggedInUserAccount"
+                class="footerbutton"
+                (click)="addPostBookmark(item._id)"
+              >
+                <img
+                  style="cursor: pointer; transform: rotate(180deg)"
+                  src="../../assets/img/bookmark.png"
+                  alt=""
+                />
               </button>
-              <button class="ai-summary-button" (click)="generateAndReadSummary(item)" [disabled]="isAiLoading">
+              <button
+                class="ai-summary-button"
+                (click)="generateAndReadSummary(item)"
+                [disabled]="isAiLoading"
+              >
                 <i class="fas fa-robot"></i>
               </button>
-              <div *ngIf="item.userId === this.userId && this.loggedInUserAccount">
+              <div
+                *ngIf="item.userId === this.userId && this.loggedInUserAccount"
+              >
                 <button class="footerbutton">
-                  <img style="cursor: pointer" (click)="deletepost(item)" src="../../assets/img/binicon.png" alt="" />
+                  <img
+                    style="cursor: pointer"
+                    (click)="deletepost(item)"
+                    src="../../assets/img/binicon.png"
+                    alt=""
+                  />
                 </button>
               </div>
-              <div *ngIf="item.userId === this.userId && this.loggedInUserAccount">
-                <img style="cursor: pointer; width: 47px; height: auto" [routerLink]="'/collab/' + userId + '/' + item._id" src="../../assets/img/editiconberony.png" alt="" />
+              <div
+                *ngIf="item.userId === this.userId && this.loggedInUserAccount"
+              >
+                <img
+                  style="cursor: pointer; width: 47px; height: auto"
+                  [routerLink]="'/collab/' + userId + '/' + item._id"
+                  src="../../assets/img/editiconberony.png"
+                  alt=""
+                />
               </div>
             </div>
           </div>
@@ -349,31 +418,50 @@
         <span class="recommendationtitle">Quick Poll</span>
       </div>
       <div class="polls-container">
-        <div class="poll-card" *ngFor="let poll of polls" (click)="openPoll(poll)">
+        <div
+          class="poll-card"
+          *ngFor="let poll of polls"
+          (click)="openPoll(poll)"
+        >
           <div class="poll-card-content">
             <div class="poll-header">
               <h3>{{ poll.question }}</h3>
               <div class="poll-tag">Live Poll</div>
             </div>
             <div class="poll-options">
-              <div *ngFor="let option of poll.options; let i = index" class="poll-option">
+              <div
+                *ngFor="let option of poll.options; let i = index"
+                class="poll-option"
+              >
                 <div class="option-content">
                   <div class="option-text">{{ option }}</div>
                   <div *ngIf="poll.hasVoted" class="option-stats">
-                    <div class="vote-percentage">{{ getVotePercentage(poll.votes, i) }}%</div>
-                    <div class="vote-count">{{ poll.votes[i] }} vote{{ poll.votes[i] !== 1 ? 's' : '' }}</div>
+                    <div class="vote-percentage">
+                      {{ getVotePercentage(poll.votes, i) }}%
+                    </div>
+                    <div class="vote-count">
+                      {{ poll.votes[i] }} vote{{
+                        poll.votes[i] !== 1 ? "s" : ""
+                      }}
+                    </div>
                   </div>
                 </div>
                 <div class="vote-progress" *ngIf="poll.hasVoted">
-                  <div class="progress-bar" [style.width]="getVotePercentage(poll.votes, i) + '%'"></div>
+                  <div
+                    class="progress-bar"
+                    [style.width]="getVotePercentage(poll.votes, i) + '%'"
+                  ></div>
                 </div>
               </div>
             </div>
- 
           </div>
         </div>
       </div>
-      <div *ngIf="selectedPoll" class="fullscreen-overlay" (click)="closePoll($event)">
+      <div
+        *ngIf="selectedPoll"
+        class="fullscreen-overlay"
+        (click)="closePoll($event)"
+      >
         <div class="poll-fullscreen" (click)="$event.stopPropagation()">
           <div class="poll-header">
             <h2>{{ selectedPoll.question }}</h2>
@@ -382,13 +470,16 @@
               <i class="fas fa-times"></i>
             </button>
           </div>
-          
+
           <div class="poll-options">
-            <div *ngFor="let option of selectedPoll.options; let i = index" class="poll-option">
+            <div
+              *ngFor="let option of selectedPoll.options; let i = index"
+              class="poll-option"
+            >
               <button
                 class="option-btn"
                 [disabled]="selectedPoll.hasVoted"
-                [ngClass]="{'voted': selectedPoll.hasVoted}"
+                [ngClass]="{ voted: selectedPoll.hasVoted }"
                 (click)="vote(selectedPoll._id, i); $event.stopPropagation()"
               >
                 {{ option }}
@@ -397,14 +488,17 @@
                 </span>
               </button>
               <div class="vote-progress" *ngIf="selectedPoll.hasVoted">
-                <div class="progress-bar" [style.width]="getVotePercentage(selectedPoll.votes, i) + '%'"></div>
+                <div
+                  class="progress-bar"
+                  [style.width]="getVotePercentage(selectedPoll.votes, i) + '%'"
+                ></div>
               </div>
             </div>
           </div>
-          
+
           <div class="poll-footer">
             <div class="total-votes">
-              <span class="vote-icon"></span> 
+              <span class="vote-icon"></span>
               <span>{{ getTotalVotes(selectedPoll.votes) }} votes</span>
             </div>
           </div>
@@ -427,90 +521,154 @@
           </div>
           <div class="readtime">Jan 21, 2024 · 6 min read</div>
         </div>
-        
-        <div class="seeall">See all (12)</div><hr><br>
-    
-        <div *ngIf="ischatroomvisible" class="chat-rooms-popup" [@popupAnimation] (click)="showChatRoom()">
-          <div class="chat-rooms-popup-content" (click)="$event.stopPropagation()">
-            <button class="close-popup-button" (click)="showChatRoom()" style="position: fixed;margin-top: 10%;z-index: 10;">Close</button>
+
+        <div class="seeall">See all (12)</div>
+        <hr />
+        <br />
+
+        <div
+          *ngIf="ischatroomvisible"
+          class="chat-rooms-popup"
+          [@popupAnimation]
+          (click)="showChatRoom()"
+        >
+          <div
+            class="chat-rooms-popup-content"
+            (click)="$event.stopPropagation()"
+          >
+            <button
+              class="close-popup-button"
+              (click)="showChatRoom()"
+              style="position: fixed; margin-top: 10%; z-index: 10"
+            >
+              Close
+            </button>
             <h1 class="chat-rooms-title">CHAT ROOMS</h1>
             <div class="create-room-panel">
               <h2 class="create-room-heading">New Chat Room</h2>
               <div class="create-room-form">
-                <input type="text" [(ngModel)]="newRoomId" placeholder="Room ID (e.g., my-room)" class="form-input">
-                <input type="text" [(ngModel)]="newRoomTitle" placeholder="Room Title (e.g., My Chat Room)" class="form-input">
-                <button (click)="createRoom()" class="create-button">Create Room</button>
+                <input
+                  type="text"
+                  [(ngModel)]="newRoomId"
+                  placeholder="Room ID (e.g., my-room)"
+                  class="form-input"
+                />
+                <input
+                  type="text"
+                  [(ngModel)]="newRoomTitle"
+                  placeholder="Room Title (e.g., My Chat Room)"
+                  class="form-input"
+                />
+                <button (click)="createRoom()" class="create-button">
+                  Create Room
+                </button>
                 <div *ngIf="error" class="error-note">{{ error }}</div>
               </div>
             </div>
-            <hr><br>
-            <div *ngIf="rooms.length === 0" class="no-rooms-note">No chat rooms yet. Create one to get started!</div>
+            <hr />
+            <br />
+            <div *ngIf="rooms.length === 0" class="no-rooms-note">
+              No chat rooms yet. Create one to get started!
+            </div>
             <div class="rooms-grid">
-              <div *ngFor="let room of rooms" class="room-card"
+              <div
+                *ngFor="let room of rooms"
+                class="room-card"
                 (mousemove)="onMouseMove($event, $event.currentTarget)"
-                (mouseleave)="onMouseLeave($event.currentTarget)">
+                (mouseleave)="onMouseLeave($event.currentTarget)"
+              >
                 <h3 class="room-name">{{ room.title }}</h3>
                 <p class="room-info">ID: {{ room.roomId }}</p>
                 <p class="room-info">Created by: {{ room.creatorUsername }}</p>
-                <p class="room-date">{{ room.createdAt | date:'medium' }}</p>
-                <button (click)="joinRoom(room.roomId, room.title)" class="join-button">Join Room</button>
+                <p class="room-date">{{ room.createdAt | date : "medium" }}</p>
+                <button
+                  (click)="joinRoom(room.roomId, room.title)"
+                  class="join-button"
+                >
+                  Join Room
+                </button>
               </div>
             </div>
           </div>
         </div>
-        <div class="chat-rooms-wrapper" >
+        <div class="chat-rooms-wrapper">
           <h1 class="chat-rooms-title">CHAT ROOMS</h1>
           <div class="create-room-panel">
             <h2 class="create-room-heading">New Chat Room</h2>
             <div class="create-room-form">
-              <input type="text" [(ngModel)]="newRoomId" placeholder="Room ID (e.g., my-room)" class="form-input">
-              <input type="text" [(ngModel)]="newRoomTitle" placeholder="Room Title (e.g., My Chat Room)" class="form-input">
-              <button (click)="createRoom()" class="create-button">Create Room</button>
+              <input
+                type="text"
+                [(ngModel)]="newRoomId"
+                placeholder="Room ID (e.g., my-room)"
+                class="form-input"
+              />
+              <input
+                type="text"
+                [(ngModel)]="newRoomTitle"
+                placeholder="Room Title (e.g., My Chat Room)"
+                class="form-input"
+              />
+              <button (click)="createRoom()" class="create-button">
+                Create Room
+              </button>
               <div *ngIf="error" class="error-note">{{ error }}</div>
             </div>
           </div>
-          <hr><br>
-          <div *ngIf="rooms.length === 0" class="no-rooms-note">No chat rooms yet. Create one to get started!</div>
+          <hr />
+          <br />
+          <div *ngIf="rooms.length === 0" class="no-rooms-note">
+            No chat rooms yet. Create one to get started!
+          </div>
           <div class="rooms-grid">
-            <div *ngFor="let room of rooms" class="room-card"
-            (mousemove)="onMouseMove($event, $event.currentTarget)"
-            (mouseleave)="onMouseLeave($event.currentTarget)"
+            <div
+              *ngFor="let room of rooms"
+              class="room-card"
+              (mousemove)="onMouseMove($event, $event.currentTarget)"
+              (mouseleave)="onMouseLeave($event.currentTarget)"
             >
               <h3 class="room-name">{{ room.title }}</h3>
               <p class="room-info">ID: {{ room.roomId }}</p>
               <p class="room-info">Created by: {{ room.creatorUsername }}</p>
-              <p class="room-date">{{ room.createdAt | date:'medium' }}</p>
-              <button (click)="joinRoom(room.roomId,room.title)" class="join-button">Join Room</button>
+              <p class="room-date">{{ room.createdAt | date : "medium" }}</p>
+              <button
+                (click)="joinRoom(room.roomId, room.title)"
+                class="join-button"
+              >
+                Join Room
+              </button>
             </div>
           </div>
         </div>
+      </div>
     </div>
   </div>
-</div>
-<div class="seemorebutton">
-  <button (click)="seemore()">Whats Next?</button>
-</div>
+  <div class="seemorebutton">
+    <button (click)="seemore()">Whats Next?</button>
+  </div>
 
-<div class="ai-summary-card" [ngClass]="{ 'visible': showSummaryCard }">
-  <div class="card-header">
-    <h3>AI Summary</h3>
-    <button class="close-btn" (click)="closeSummary()">
-      <i class="fas fa-times"></i>
-    </button>
-  </div>
-  <div class="summary-content">
-    <div *ngIf="currentSummaryPost" [innerHTML]="currentSummaryPost.aiInsights?.summary ">
+  <div class="ai-summary-card" [ngClass]="{ visible: showSummaryCard }">
+    <div class="card-header">
+      <h3>AI Summary</h3>
+      <button class="close-btn" (click)="closeSummary()">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
-  </div>
-  <div class="audio-controls">
-    <button (click)="readSummaryAloud(currentSummaryPost.aiInsights?.summary)">
-      <i class="fas fa-play"></i> Read Again
-    </button>
-    <button (click)="window.speechSynthesis.pause()">
-      <i class="fas fa-pause"></i> Pause
-    </button>
-    <button (click)="closeSummary()">
-      <i class="fas fa-stop"></i> Stop
-    </button>
+    <div class="summary-content">
+      <div
+        *ngIf="currentSummaryPost"
+        [innerHTML]="currentSummaryPost.aiInsights?.summary"
+      ></div>
+    </div>
+    <div class="audio-controls">
+      <button
+        (click)="readSummaryAloud(currentSummaryPost.aiInsights?.summary)"
+      >
+        <i class="fas fa-play"></i> Read Again
+      </button>
+      <button (click)="window.speechSynthesis.pause()">
+        <i class="fas fa-pause"></i> Pause
+      </button>
+      <button (click)="closeSummary()"><i class="fas fa-stop"></i> Stop</button>
+    </div>
   </div>
 </div>

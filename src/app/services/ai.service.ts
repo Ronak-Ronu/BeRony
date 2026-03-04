@@ -4,7 +4,7 @@ import { Observable, from, of, throwError, timer } from 'rxjs';
 import { catchError, delayWhen, map,retryWhen, delay, scan, switchMap, concatMap, reduce, mergeMap, retry } from 'rxjs/operators';
 import { model } from '../../../firebase-config';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
 function splitIntoChunks(text: string): string[] {
@@ -460,6 +460,92 @@ HOST: Short reaction or question.
 GUEST: Short response with an example.
 `;
   return this.generatePlainText(prompt);
+}
+
+
+editImageWithNanoBanana(prompt: string, file: File): Observable<Blob> {
+  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent';
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'x-goog-api-key': environment.GEMINI_API_KEY,
+  });
+
+  return from(file.arrayBuffer()).pipe(
+    map(buf => {
+      const bytes = new Uint8Array(buf);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      return btoa(binary);
+    }),
+    switchMap(base64 => {
+      const body = {
+        contents: [{
+          parts: [
+            { text: prompt },
+            {
+              inline_data: {
+                mime_type: file.type || 'image/png',
+                data: base64,
+              }
+            }
+          ]
+        }]
+      };
+      return this.http.post<any>(endpoint, body, { headers });
+    }),
+    map(res => {
+      const parts = res?.candidates?.[0]?.content?.parts || [];
+      const imgPart = parts.find((p: any) => p.inline_data?.data);
+      if (!imgPart) {
+        throw new Error('No image returned from Nano Banana');
+      }
+      const b64 = imgPart.inline_data.data;
+      const mime = imgPart.inline_data.mime_type || 'image/png';
+      const byteChars = atob(b64);
+      const bytes = new Uint8Array(byteChars.length);
+      for (let i = 0; i < byteChars.length; i++) {
+        bytes[i] = byteChars.charCodeAt(i);
+      }
+      return new Blob([bytes], { type: mime });
+    })
+  );
+}
+
+// Optional: multi-image style transfer/composition
+editWithMultipleImages(prompt: string, files: File[]): Observable<Blob> {
+  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent';
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'x-goog-api-key': environment.GEMINI_API_KEY,
+  });
+
+  return from(Promise.all(files.map(f => f.arrayBuffer().then(buf => ({
+    mimeType: f.type || 'image/png',
+    data: btoa(String.fromCharCode(...new Uint8Array(buf))),
+  }))))).pipe(
+    switchMap(inlineImages => {
+      const parts = [{ text: prompt }, ...inlineImages.map(img => ({
+        inline_data: { mime_type: img.mimeType, data: img.data }
+      }))];
+      const body = { contents: [{ parts }] };
+      return this.http.post<any>(endpoint, body, { headers });
+    }),
+    map(res => {
+      const parts = res?.candidates?.[0]?.content?.parts || [];
+      const imgPart = parts.find((p: any) => p.inline_data?.data);
+      if (!imgPart) {
+        throw new Error('No image returned from Nano Banana');
+      }
+      const b64 = imgPart.inline_data.data;
+      const mime = imgPart.inline_data.mime_type || 'image/png';
+      const byteChars = atob(b64);
+      const bytes = new Uint8Array(byteChars.length);
+      for (let i = 0; i < byteChars.length; i++) {
+        bytes[i] = byteChars.charCodeAt(i);
+      }
+      return new Blob([bytes], { type: mime });
+    })
+  );
 }
 
 }

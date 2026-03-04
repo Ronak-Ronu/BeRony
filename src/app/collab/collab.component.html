@@ -4,65 +4,151 @@
   </div>
 
   <div class="bodyofwriting">
-    <div class="container">
+    <div class="collab-layout">
+      <div class="container">
+
       <header>
-        <div *ngIf="postdata.imageUrl">
+        <div *ngIf="postdata?.imageUrl">
           <img [src]="postdata.imageUrl" [alt]="postdata.title" class="featured-image" />
         </div>
-        <div *ngIf="postdata.videoUrl && !postdata.imageUrl">
-          <video [src]="postdata.videoUrl" controls class="featured-image">
-            Your browser does not support the video tag.
-          </video>
+        <div *ngIf="postdata?.videoUrl && !postdata?.imageUrl">
+          <video [src]="postdata.videoUrl" controls class="featured-image"></video>
         </div>
-        <h2>Collaborative Editor for: <span [innerHTML]="postdata.title"></span></h2>
-        <p>Author: <b>{{postdata.username}}</b></p>
+        <h2>Collaborative Editor for: <span [innerHTML]="postdata?.title"></span></h2>
+        <p>Author: <b>{{ postdata?.username }}</b></p>
       </header>
 
-      <div class="editing-indicator">
-        {{ editingUser ? editingUser + ' is editing...' : 'No one is editing' }}
+      <!-- Editing indicator -->
+      <div class="editing-indicator" *ngIf="editingUser">
+        <span class="typing-dot"></span>
+        {{ editingUser }} is editing...
       </div>
 
-      <div class="writecontentarea paper-style">
-        <div class="format-toolbar" *ngIf="showFormatToolbar" 
-             [style.top.px]="toolbarPosition.top" 
+        <div class="writecontentarea paper-style">
+
+        <!-- ── Floating format toolbar (shown on text selection) ──── -->
+        <div class="format-toolbar" *ngIf="showFormatToolbar"
+             [style.top.px]="toolbarPosition.top"
              [style.left.px]="toolbarPosition.left">
-          <button title="Heading 1" (click)="formatText('h1')"><b>H1</b></button>
-          <button title="Bold" (click)="formatText('bold')"><b>B</b></button>
-          <button title="Italic" (click)="formatText('italic')"><i>I</i></button>
-          <button title="Code Block" (click)="formatText('code')"><i class="fas fa-code"></i></button>
-          <select title="Text Color" (change)="formatText('color', $event)">
+          <button title="Heading" (click)="formatText('h1')"><b>H</b></button>
+          <button title="Bold"    (click)="formatText('bold')"><b>B</b></button>
+          <button title="Italic"  (click)="formatText('italic')"><i>I</i></button>
+          <button title="Code"    (click)="formatText('code')"><i class="fas fa-code"></i></button>
+          <div class="toolbar-divider"></div>
+          <button title="Align Left"   (click)="formatText('align-left')">   <i class="fas fa-align-left"></i></button>
+          <button title="Align Center" (click)="formatText('align-center')"> <i class="fas fa-align-center"></i></button>
+          <button title="Align Right"  (click)="formatText('align-right')">  <i class="fas fa-align-right"></i></button>
+          <div class="toolbar-divider"></div>
+          <select title="Color" (change)="formatText('color', $event)">
             <option value="" disabled selected>Color</option>
             <option value="#000000">Black</option>
-            <option value="#ff0000">Red</option>
-            <option value="#0000ff">Blue</option>
-            <option value="#008000">Green</option>
-            <option value="#ffa500">Orange</option>
+            <option value="#ef4444">Red</option>
+            <option value="#3b82f6">Blue</option>
+            <option value="#10b981">Green</option>
+            <option value="#f59e0b">Amber</option>
           </select>
-          <button title="Align Left" (click)="formatText('align-left')"><i class="fas fa-align-left"></i></button>
-          <button title="Align Center" (click)="formatText('align-center')"><i class="fas fa-align-center"></i></button>
-          <button title="Align Right" (click)="formatText('align-right')"><i class="fas fa-align-right"></i></button>
-          <select title="Font Size" (change)="formatText('font-size', $event)">
-            <option value="" disabled selected>Size</option>
-            <option value="1">Small</option>
-            <option value="3">Medium</option>
-            <option value="5">Large</option>
-            <option value="7">X-Large</option>
-          </select>
+          <div class="toolbar-divider"></div>
+          <!-- Bug 2 fix: reactions use savedRange captured at selectionchange time -->
+          <button *ngFor="let emoji of availableReactions"
+                  class="reaction-btn"
+                  (click)="triggerReaction(emoji)"
+                  [title]="'React ' + emoji">
+            {{ emoji }}
+          </button>
         </div>
 
-        <div
-          #bodyEditor
-          class="editor"
-          contenteditable="true"
-          (input)="onTextChange()"
-          (focus)="startEditing()"
-        >
-        <div class="cursor-container"></div>
+        <div class="editor-wrapper">
+          <div
+            #bodyEditor
+            class="editor"
+            contenteditable="true"
+            (input)="onTextChange()"
+            (focus)="startEditing()"
+          ></div>
 
-      </div>
+          <!-- reaction overlay -->
+          <div class="reaction-layer" aria-hidden="true">
+            <div
+              *ngFor="let r of reactions; trackBy: trackById"
+              class="reaction-float"
+              [style.top.px]="r.top"
+              [style.left.px]="r.left"
+              [style.font-size.px]="r.size"
+              [style.--drift]="r.drift + 'px'"
+              [style.animation-delay.s]="r.delay"
+            >{{ r.emoji }}</div>
+          </div>
+        </div>
 
         <div class="footerbuttons">
-          <button class="publish-btn" (click)="onSaveChanges()">
+          <button class="save-btn" (click)="onSaveChanges()">
             <i class="fas fa-save"></i> Save Changes
           </button>
+        </div>
+
+        </div><!-- /writecontentarea -->
+
+      </div><!-- /container -->
+
+      <!-- ── Viewers comments column ── -->
+      <div class="collab-chat-section">
+        <div class="collab-chat-header">
+          <h3>Viewers comments</h3>
+          <button class="collab-refresh-btn" (click)="refreshComments()">⟳</button>
+        </div>
+
+        <div class="collab-add-comment" *ngIf="loggedInUserAccount; else collabLoginPrompt">
+          <div class="collab-textarea-row">
+            <textarea
+              [(ngModel)]="newCommentText"
+              maxlength="1000"
+              placeholder="Share your thoughts with the author and collaborators..."
+              (keydown.enter)="addComment()"
+            ></textarea>
+            <button class="collab-submit-btn" (click)="addComment()">Post</button>
           </div>
+
+          <input
+            class="collab-gif-input"
+            type="text"
+            [(ngModel)]="gifSearchQuery"
+            (input)="searchGifs()"
+            placeholder="Search a reaction GIF (optional)…"
+          />
+
+          <div *ngIf="gifs.length" class="collab-gif-grid">
+            <div
+              class="collab-gif-item"
+              *ngFor="let gif of gifs"
+              (click)="selectGif(gif)"
+            >
+              <img
+                [src]="gif.images.fixed_height_small.url"
+                [alt]="gif.title"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+        <ng-template #collabLoginPrompt>
+          <p class="collab-login-hint">Log in to join the discussion.</p>
+        </ng-template>
+
+        <div class="collab-comment-list">
+          <div *ngFor="let comment of comments" class="collab-comment">
+            <div class="collab-comment-avatar"></div>
+            <div class="collab-comment-body">
+              <div class="collab-comment-meta">
+                <span class="collab-comment-author">{{ comment.username }}</span>
+                <small class="collab-comment-date">
+                  {{ comment.createdAt | date: 'short' }}
+                </small>
+              </div>
+              <div class="collab-comment-text" [innerHTML]="getSanitizedHtml(comment.commentText)"></div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /collab-chat-section -->
+    </div><!-- /collab-layout -->
+  </div><!-- /bodyofwriting -->
+</div>

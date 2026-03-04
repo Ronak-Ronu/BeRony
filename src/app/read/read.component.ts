@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Renderer2, ElementRef } from '@angular/core';
 import { WriteserviceService } from '../writeservice.service';
 import { WriteModel } from '../Models/writemodel';
 import { account } from '../../lib/appwrite';
@@ -79,19 +79,33 @@ export class ReadComponent implements OnInit, OnDestroy {
   showSummaryCard = false;
   currentSummaryPostId: string | null = null;
   window = window; 
+
+  displayStyles = [
+    { name: 'Grid', value: 'grid', icon: 'fa-th-large' },
+    { name: 'List', value: 'list', icon: 'fa-list' },
+    { name: 'Magazine', value: 'magazine', icon: 'fa-newspaper' },
+  ];
+  currentView = 'list'; 
   
   constructor(
     private readsevice: WriteserviceService,
     private toastr: ToastrService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private aiService: AiService 
-  ) {}
+    private aiService: AiService ,
+    private renderer: Renderer2,
+    private el: ElementRef
+
+  ) {
+    this.currentView = localStorage.getItem('blogDisplayStyle') || 'list';
+
+  }
 
   async ngOnInit(): Promise<void> {
     this.bucketName = encodeURIComponent(environment.bucketName);
     this.project = encodeURIComponent(environment.project);
     this.mode = encodeURIComponent(environment.mode);
+    this.initializeDisplayStyle();
 
     // Fetch user data first
     await this.getloggedinuserdata();
@@ -139,6 +153,79 @@ export class ReadComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.searchSubject.complete();
     this.subscriptions.unsubscribe();
+  }
+
+  initializeDisplayStyle(): void {
+    setTimeout(() => {
+      this.setDisplayStyle(this.currentView, false);
+    }, 100);
+  }
+  setDisplayStyle(viewType: string, showNotification: boolean = true): void {
+    if (!['list', 'grid', 'magazine'].includes(viewType)) return;
+
+    const blogsContainer = this.el.nativeElement.querySelector('.blogscontainer');
+    if (!blogsContainer) return;
+
+    // Remove existing view classes
+    this.renderer.removeClass(blogsContainer, 'grid-view');
+    this.renderer.removeClass(blogsContainer, 'magazine-view');
+    
+    // Add new view class
+    if (viewType === 'grid') {
+      this.renderer.addClass(blogsContainer, 'grid-view');
+    } else if (viewType === 'magazine') {
+      this.renderer.addClass(blogsContainer, 'magazine-view');
+    }
+
+    // Update current view
+    this.currentView = viewType;
+
+    // Save preference
+    localStorage.setItem('blogDisplayStyle', viewType);
+
+    // Show notification
+    if (showNotification) {
+      this.showViewChangeNotification(viewType);
+    }
+
+    // Update UI
+    this.cdr.detectChanges();
+  }
+
+  onDisplayStyleChange(viewType: string): void {
+    this.setDisplayStyle(viewType);
+  }
+  showViewChangeNotification(viewType: string): void {
+    const viewNames: { [key: string]: string } = {
+      'list': 'List',
+      'grid': 'Grid',
+      'magazine': 'Magazine'
+    };
+
+    this.toastr.success(`Switched to ${viewNames[viewType]} View`, '', {
+      timeOut: 2000,
+      positionClass: 'toast-top-right'
+    });
+  }
+
+  // Keyboard shortcuts for display styles
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.ctrlKey || event.metaKey) {
+      switch(event.key) {
+        case '1':
+          event.preventDefault();
+          this.setDisplayStyle('list');
+          break;
+        case '2':
+          event.preventDefault();
+          this.setDisplayStyle('grid');
+          break;
+        case '3':
+          event.preventDefault();
+          this.setDisplayStyle('magazine');
+          break;
+      }
+    }
   }
 
   onMouseMove(event: MouseEvent, element: EventTarget | null) {
@@ -585,8 +672,8 @@ vote(pollId: string, optionIndex: number): void {
             next: (response) => {
               if (!item.aiInsights) item.aiInsights = {};
               item.aiInsights.summary = response;
-              this.showSummaryCard = true; // This should show the card
-              this.readSummaryAloud(response);
+              this.showSummaryCard = true; 
+              this.readSummaryAloud(this.stripHTML(response));
               this.cdr.detectChanges();
             },
             error: (error) => {
@@ -598,7 +685,7 @@ vote(pollId: string, optionIndex: number): void {
           });
         } else {
           this.showSummaryCard = true; 
-          this.readSummaryAloud(item.aiInsights.summary);
+          this.readSummaryAloud(this.stripHTML(item.aiInsights.summary));
           this.isAiLoading = false;
           this.cdr.detectChanges();
         }

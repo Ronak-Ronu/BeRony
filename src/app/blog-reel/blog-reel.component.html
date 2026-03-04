@@ -1,56 +1,144 @@
-<div class="readingreel">
-    <div #sliderContainer class="slider-container" 
-         (touchstart)="onTouchStart($event)" 
-         (touchend)="onTouchEnd($event)"
-         (touchmove)="onTouchMove($event)" 
-         [style.transform]="'translateX(' + offsetX + 'px)'"
-         [style.transition]="isSwiping ? 'none' : 'transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1)'">
-      
-      <div *ngFor="let item of blogs" class="slide">
-        <div class="blog-card">
-          <div class="blog-media">
-            <img *ngIf="item.imageUrl" [src]="item.imageUrl" [alt]="item.title" />
-            <video *ngIf="item.videoUrl && !item.imageUrl" [src]="item.videoUrl" controls>
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          
-          <div class="blog-content">
-            <div [innerHTML]="item.title"></div>
-            <h3><span class="author">by {{item.username}}</span></h3>
-            
-            <div class="content" [innerHTML]="item.bodyofcontent"></div>
-            
-            <div class="blog-footer">
-              <div class="reactions">
-                <span class="likes">{{item.sadcount + item.loveitcount + item.funnycount}} Likes</span>
-                <span class="emotion">Author feels: {{item.userEmotion}}</span>
-              </div>
-              <div class="publish-date">{{item.createdAt | date:'MMM d, yyyy'}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Navigation Indicators -->
-    <div class="navigation-indicators">
-      <button class="nav-button prev" (click)="prevSlide()" [disabled]="currentIndex === 0">
-        &lt;
-      </button>
-      
-      <div class="slide-indicator">
-        <div *ngFor="let _ of [].constructor(blogs.length); let i = index" 
-             [class.active]="i === currentIndex"></div>
-      </div>
-      
-      <button class="nav-button next" (click)="nextSlide()" [disabled]="currentIndex === blogs.length - 1 && loadingBlogs">
-        &gt;
-      </button>
-    </div>
-    
-    <!-- Loading Indicator -->
-    <div *ngIf="loadingBlogs" class="loading-indicator">
-      Loading more blogs...
+<div class="reel-viewport"
+     (touchstart)="onTouchStart($event)"
+     (touchend)="onTouchEnd($event)">
+
+  <!-- Progress dots (left side) -->
+  <div class="reel-dots">
+    <div *ngFor="let b of blogs; let i = index"
+         class="reel-dot"
+         [class.active]="i === currentIndex"
+         (click)="goTo(i)">
     </div>
   </div>
+
+  <!-- Slides wrapper (snap scroll) -->
+  <div class="reel-track">
+
+    <div #reelSlide
+         *ngFor="let item of blogs; let i = index; trackBy: trackByPost"
+         class="reel-slide"
+         [class.is-active]="i === currentIndex">
+
+      <!-- ── Background image / gradient ───────────────────────────── -->
+      <div class="reel-bg">
+        <img *ngIf="item.imageUrl"
+             [src]="item.imageUrl"
+             [alt]="stripHTML(item.title)"
+             class="reel-bg-img" />
+        <div class="reel-bg-gradient"></div>
+      </div>
+
+      <!-- ── Main card ──────────────────────────────────────────────── -->
+      <div class="reel-card">
+
+        <!-- Author row -->
+        <div class="reel-author-row">
+          <div class="reel-avatar">
+            {{ (item.username || 'A').charAt(0).toUpperCase() }}
+          </div>
+          <div class="reel-author-info">
+            <span class="reel-author-name">{{ item.username }}</span>
+            <span class="reel-date">{{ item.createdAt | date:'MMM d, yyyy' }}</span>
+          </div>
+          <div class="reel-emotion-badge" *ngIf="item.userEmotion">
+            {{ item.userEmotion }}
+          </div>
+        </div>
+
+        <!-- Title -->
+        <h2 class="reel-title" [innerHTML]="item.title"></h2>
+
+        <!-- Tags -->
+        <div class="reel-tags" *ngIf="item.tags?.length">
+          <span class="reel-tag" *ngFor="let tag of item.tags">#{{ tag }}</span>
+        </div>
+
+        <!-- Full content (scrollable on desktop) -->
+        <div class="reel-body" [innerHTML]="item.bodyofcontent"></div>
+
+      </div><!-- /reel-card -->
+
+      <!-- ── Right action bar ────────────────────────────────────────── -->
+      <div class="reel-actions">
+
+        <!-- Loveit -->
+        <button class="reel-action-btn"
+                [class.reacted]="hasReacted(item._id, 'loveit')"
+                (click)="addLike(item, 'loveit')"
+                [title]="loggedInUserAccount ? 'Love it' : 'Log in to react'">
+          <span class="action-emoji">😘</span>
+          <span class="action-count">{{ item.loveitcount || 0 }}</span>
+        </button>
+
+        <!-- Funny -->
+        <button class="reel-action-btn"
+                [class.reacted]="hasReacted(item._id, 'funny')"
+                (click)="addLike(item, 'funny')"
+                [title]="loggedInUserAccount ? 'Funny' : 'Log in to react'">
+          <span class="action-emoji">🤣</span>
+          <span class="action-count">{{ item.funnycount || 0 }}</span>
+        </button>
+
+        <!-- Sad -->
+        <button class="reel-action-btn"
+                [class.reacted]="hasReacted(item._id, 'sad')"
+                (click)="addLike(item, 'sad')"
+                [title]="loggedInUserAccount ? 'Sad' : 'Log in to react'">
+          <span class="action-emoji">😢</span>
+          <span class="action-count">{{ item.sadcount || 0 }}</span>
+        </button>
+
+        <!-- Total likes summary -->
+        <div class="reel-total-likes">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42
+                     4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81
+                     14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4
+                     6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <span>{{ totalLikes(item) }}</span>
+        </div>
+
+      </div><!-- /reel-actions -->
+
+    </div><!-- /reel-slide -->
+
+  </div><!-- /reel-track -->
+
+  <!-- Navigation arrows -->
+  <button class="reel-nav reel-nav-up"
+          (click)="prev()"
+          [class.hidden]="currentIndex === 0"
+          aria-label="Previous">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <path d="M18 15l-6-6-6 6"/>
+    </svg>
+  </button>
+
+  <button class="reel-nav reel-nav-down"
+          (click)="next()"
+          [class.hidden]="currentIndex === blogs.length - 1 && !loadingBlogs"
+          aria-label="Next">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <path d="M6 9l6 6 6-6"/>
+    </svg>
+  </button>
+
+  <!-- Counter -->
+  <div class="reel-counter">{{ currentIndex + 1 }} / {{ blogs.length }}</div>
+
+  <!-- Loading shimmer -->
+  <div *ngIf="loadingBlogs" class="reel-loading">
+    <div class="reel-loading-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loadingBlogs && blogs.length === 0" class="reel-empty">
+    <p>No stories yet. Be the first to write one.</p>
+  </div>
+
+</div>

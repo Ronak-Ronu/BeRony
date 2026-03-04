@@ -45,19 +45,21 @@ export class WriteserviceService {
   private startEditingSubject = new Subject<string>();
   private cursorUpdateSubject = new Subject<any>();
   private cursorRemoveSubject = new Subject<string>();
+  private vibeUpdateSubject = new Subject<any>();
+  private reactionSubject = new Subject<any>();
   
   constructor(private http: HttpClient) {
-    // this.url = 'http://localhost:3000/api/posts';
-    // this.drafturl = 'http://localhost:3000/api/drafts';
-    // this.findposturl = 'http://localhost:3000/api/findpost';
-    // this.baseurl = 'http://localhost:3000';
+    this.url = 'http://localhost:3000/api/posts';
+    this.drafturl = 'http://localhost:3000/api/drafts';
+    this.findposturl = 'http://localhost:3000/api/findpost';
+    this.baseurl = 'http://localhost:3000';
     this.accessKey = environment.Unsplash_ACCESSKEY;
 
 
-    this.url = `${environment.beronyAPI}/api/posts`;
-    this.drafturl = `${environment.beronyAPI}/api/drafts`;
-    this.findposturl = `${environment.beronyAPI}/api/findpost`;
-    this.baseurl = environment.beronyAPI;
+    // this.url = `${environment.beronyAPI}/api/posts`;
+    // this.drafturl = `${environment.beronyAPI}/api/drafts`;
+    // this.findposturl = `${environment.beronyAPI}/api/findpost`;
+    // this.baseurl = environment.beronyAPI;
 
     // console.log('Initializing Socket.io client to:', this.baseurl);
     this.socket1 = io(this.baseurl, { autoConnect: false });
@@ -131,6 +133,12 @@ export class WriteserviceService {
     this.socket1.on('cursorRemove', ({ socketId }) => {
       this.cursorRemoveSubject.next(socketId);
     });
+    this.socket1.on('vibeUpdate', (payload) => {
+      this.vibeUpdateSubject.next(payload);
+    });
+    this.socket1.on('reactionAdded', (reaction) => {
+      this.reactionSubject.next(reaction);
+    });
     
     this.socket1.on('error', (error: { message: string }) => {
       // console.error('Socket error:', error.message);
@@ -192,6 +200,24 @@ export class WriteserviceService {
   }
   listenForCursorRemovals(): Observable<string> {
     return this.cursorRemoveSubject.asObservable();
+  }
+
+  listenForVibeUpdates(): Observable<any> {
+    return this.vibeUpdateSubject.asObservable();
+  }
+
+  listenForReactions(): Observable<any> {
+    return this.reactionSubject.asObservable();
+  }
+
+  setEmotion(emotion: string): void {
+    if (!emotion) { return; }
+    this.socket1.emit('setEmotion', emotion);
+  }
+
+  addReaction(postId: string, position: { top: number; left: number }, emoji: string): void {
+    if (!emoji || !position) { return; }
+    this.socket1.emit('addReaction', { postId, position, emoji });
   }
   
   joinRoom(roomId: string, userId: string, username: string): void {

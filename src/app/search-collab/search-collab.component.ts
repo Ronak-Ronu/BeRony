@@ -51,8 +51,8 @@ export class SearchCollabComponent implements OnInit {
       console.log(this.username);
       console.log(this.userId);
       console.log(this.authorEmail);
-      // this.currenturl=`http://localhost:4200/collab/${this.userId}/${this.postId}`
-      this.currenturl=`http://berony.web.app/collab/${this.userId}/${this.postId}`
+      this.currenturl=`http://localhost:4200/collab/${this.userId}/${this.postId}`
+      // this.currenturl=`http://berony.web.app/collab/${this.userId}/${this.postId}`
       
       console.log(this.currenturl);
 
